@@ -121,8 +121,8 @@ export default function Footer() {
               maxWidth: "440px",
             }}
           >
-            Disponível para projetos freelance, consultoria técnica ou posições
-            full-time como Tech Lead / Senior Developer.
+            Disponível para projetos freelance, consultoria técnica ou
+            oportunidades full-time como Full Stack Developer.
           </p>
         </motion.div>
 

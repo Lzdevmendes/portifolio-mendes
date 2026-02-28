@@ -118,21 +118,6 @@ function ProjectCard({ repo, index }: { repo: GithubRepo; index: number }) {
           "var(--color-border)";
       }}
     >
-      {/* Subtle teal shine on hover — top edge */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: "1px",
-          background:
-            "linear-gradient(90deg, transparent, rgba(13,148,136,0.5), transparent)",
-          opacity: 0,
-        }}
-        className="card-shine"
-      />
-
       {/* Header row */}
       <div
         style={{
