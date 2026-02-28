@@ -20,16 +20,16 @@ const experiences: Experience[] = [
   {
     period: "2023 — Presente",
     current: true,
-    role: "Tech Lead & Full Stack Developer",
+    role: "Full Stack Developer Pleno",
     company: "Obracon",
     client: "Sabesp",
     description:
-      "Liderança técnica no desenvolvimento de sistemas de inspeção e gerenciamento de infraestrutura hídrica para a Sabesp. Responsável por decisões de arquitetura, coordenação do time e entrega de features críticas em produção.",
+      "Desenvolvimento de sistemas de inspeção e gerenciamento de infraestrutura hídrica para a Sabesp. Atuação em features críticas de produção, integrações com APIs externas e manutenção de arquitetura escalável.",
     stack: ["Node.js", "React", ".NET", "PostgreSQL", "Docker", "Azure"],
     highlights: [
-      "Arquitetura de microsserviços para sistemas de checklist em campo",
+      "Implementação de módulos de checklist para inspeção em campo",
       "Integração com APIs de geolocalização e IoT",
-      "Liderança de time multidisciplinar de 5 desenvolvedores",
+      "Entrega de features end-to-end em ambiente de alta disponibilidade",
     ],
   },
   {

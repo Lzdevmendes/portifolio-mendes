@@ -179,14 +179,23 @@ export default function Hero() {
             <RolePill>Full Stack Developer</RolePill>
             <span
               style={{
-                width: "5px",
-                height: "5px",
-                borderRadius: "50%",
-                background: "var(--color-teal)",
-                flexShrink: 0,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "4px 12px",
+                borderRadius: "9999px",
+                border: "1px solid var(--color-border)",
+                fontFamily: "var(--font-inter)",
+                fontSize: "0.75rem",
+                fontWeight: 500,
+                color: "var(--color-muted)",
+                letterSpacing: "0.04em",
               }}
-            />
-            <RolePill>Tech Lead</RolePill>
+            >
+              <span style={{ color: "var(--color-teal)", fontWeight: 700 }}>Junior</span>
+              <span style={{ opacity: 0.4 }}>→</span>
+              <span style={{ color: "var(--color-teal-light)", fontWeight: 700 }}>Pleno</span>
+            </span>
           </motion.div>
 
           {/* Bio */}
@@ -200,9 +209,9 @@ export default function Hero() {
               maxWidth: "520px",
             }}
           >
-            Especialista em arquiteturas escaláveis com{" "}
-            <Highlight>.NET, Go, Node.js</Highlight> e{" "}
-            <Highlight>Flutter</Highlight>. Mais de{" "}
+            Desenvolvedor Full Stack com foco em{" "}
+            <Highlight>React, Next.js e Flutter</Highlight> no frontend e{" "}
+            <Highlight>Node.js, .NET e Go</Highlight> no backend. Mais de{" "}
             <span
               style={{
                 color: "var(--color-teal-light)",

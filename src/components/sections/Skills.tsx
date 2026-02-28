@@ -201,7 +201,7 @@ export default function Skills() {
           </div>
         </motion.div>
 
-        {/* Grid */}
+        {/* Frontend + Backend — destaque */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -209,11 +209,29 @@ export default function Skills() {
           viewport={{ once: true, margin: "-60px" }}
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))",
+            gap: "16px",
+            marginBottom: "16px",
+          }}
+        >
+          {categories.slice(0, 2).map((cat) => (
+            <CategoryCard key={cat.label} cat={cat} featured />
+          ))}
+        </motion.div>
+
+        {/* Demais categorias */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-60px" }}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
             gap: "16px",
           }}
         >
-          {categories.map((cat) => (
+          {categories.slice(2).map((cat) => (
             <CategoryCard key={cat.label} cat={cat} />
           ))}
         </motion.div>
@@ -222,7 +240,7 @@ export default function Skills() {
   );
 }
 
-function CategoryCard({ cat }: { cat: SkillCategory }) {
+function CategoryCard({ cat, featured = false }: { cat: SkillCategory; featured?: boolean }) {
   const [hovered, setHovered] = useState<string | null>(null);
 
   return (
@@ -230,9 +248,9 @@ function CategoryCard({ cat }: { cat: SkillCategory }) {
       variants={cardVariants}
       style={{
         background: "var(--color-bg-card)",
-        border: "1px solid var(--color-border)",
+        border: `1px solid ${featured ? `${cat.color}30` : "var(--color-border)"}`,
         borderRadius: "16px",
-        padding: "28px",
+        padding: featured ? "32px" : "28px",
         display: "flex",
         flexDirection: "column",
         gap: "20px",
@@ -240,16 +258,30 @@ function CategoryCard({ cat }: { cat: SkillCategory }) {
         overflow: "hidden",
       }}
     >
+      {/* Featured top bar */}
+      {featured && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: "2px",
+            background: `linear-gradient(90deg, ${cat.color}, ${cat.color}44, transparent)`,
+          }}
+        />
+      )}
+
       {/* Color orb in corner */}
       <div
         style={{
           position: "absolute",
           top: "-40px",
           right: "-40px",
-          width: "120px",
-          height: "120px",
+          width: featured ? "180px" : "120px",
+          height: featured ? "180px" : "120px",
           borderRadius: "50%",
-          background: `radial-gradient(circle, ${cat.color}22 0%, transparent 70%)`,
+          background: `radial-gradient(circle, ${cat.color}${featured ? "28" : "18"} 0%, transparent 70%)`,
           pointerEvents: "none",
         }}
       />
