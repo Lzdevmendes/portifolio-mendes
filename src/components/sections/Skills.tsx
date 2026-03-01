@@ -38,6 +38,7 @@ const categories: SkillCategory[] = [
       "Go",
       "Java / Spring",
       "Python",
+      "Flask / FastAPI",
       "REST & GraphQL",
     ],
   },
@@ -68,6 +69,7 @@ const categories: SkillCategory[] = [
       "Linux",
       "Nginx",
       "Git",
+      "Automação & Bots",
     ],
   },
   {

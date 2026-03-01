@@ -71,7 +71,7 @@ export default function Navbar() {
               letterSpacing: "0.05em",
             }}
           >
-            lzmen
+            lzmendesdev
           </span>
         </Link>
 

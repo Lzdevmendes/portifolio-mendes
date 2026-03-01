@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mail, MapPin, ArrowUpRight } from "lucide-react";
+import { Mail, MapPin, ArrowUpRight, ArrowUp } from "lucide-react";
 
 const socials = [
   {
@@ -20,7 +20,7 @@ const socials = [
   },
   {
     label: "LinkedIn",
-    href: "https://linkedin.com/in/luiz-mendes-dev",
+    href: "https://linkedin.com/in/lzmendess",
     icon: (
       <svg
         width="16"
@@ -34,17 +34,11 @@ const socials = [
   },
   {
     label: "Email",
-    href: "mailto:luizfelipebarretomendes@gmail.com",
+    href: "mailto:Lzmendestechdev@gmail.com",
     icon: <Mail size={16} />,
   },
 ];
 
-const navLinks = [
-  { label: "About", href: "#about" },
-  { label: "Projects", href: "#projects" },
-  { label: "Experience", href: "#experience" },
-  { label: "Skills", href: "#skills" },
-];
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -140,7 +134,7 @@ export default function Footer() {
           }}
         >
           <a
-            href="mailto:luizfelipebarretomendes@gmail.com"
+            href="mailto:Lzmendestechdev@gmail.com"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -170,7 +164,7 @@ export default function Footer() {
           </a>
 
           <a
-            href="https://linkedin.com/in/luiz-mendes-dev"
+            href="https://linkedin.com/in/lzmendess"
             target="_blank"
             rel="noopener noreferrer"
             style={{
@@ -267,33 +261,38 @@ export default function Footer() {
             </span>
           </div>
 
-          {/* Nav links */}
-          <nav
-            style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}
+          {/* Back to top */}
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              padding: "7px 16px",
+              borderRadius: "9999px",
+              border: "1px solid var(--color-border)",
+              background: "transparent",
+              color: "var(--color-muted)",
+              fontFamily: "var(--font-inter)",
+              fontSize: "0.8125rem",
+              fontWeight: 500,
+              cursor: "pointer",
+              transition: "border-color 0.2s, color 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              const el = e.currentTarget as HTMLElement;
+              el.style.borderColor = "var(--color-teal)";
+              el.style.color = "var(--color-teal-light)";
+            }}
+            onMouseLeave={(e) => {
+              const el = e.currentTarget as HTMLElement;
+              el.style.borderColor = "var(--color-border)";
+              el.style.color = "var(--color-muted)";
+            }}
           >
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                style={{
-                  fontFamily: "var(--font-inter)",
-                  fontSize: "0.8125rem",
-                  color: "var(--color-muted)",
-                  transition: "color 0.2s",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.color =
-                    "var(--color-text)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.color =
-                    "var(--color-muted)";
-                }}
-              >
-                {link.label}
-              </a>
-            ))}
-          </nav>
+            <ArrowUp size={12} />
+            Voltar ao topo
+          </button>
 
           {/* Copyright */}
           <span
