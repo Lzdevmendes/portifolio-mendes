@@ -218,7 +218,7 @@ export default function About() {
             }}
           >
             {[
-              { n: "2+", l: "anos de exp." },
+              { n: "1,5+", l: "anos de exp." },
               { n: "3", l: "clientes reais" },
               { n: "10+", l: "projetos" },
             ].map((s) => (

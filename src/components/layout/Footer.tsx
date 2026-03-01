@@ -232,10 +232,8 @@ export default function Footer() {
             gap: "12px",
           }}
         >
-          {/* Brand */}
-          <div
-            style={{ display: "flex", alignItems: "center", gap: "16px" }}
-          >
+          {/* Brand — esquerda */}
+          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
             <span
               style={{
                 fontFamily: "var(--font-syne)",
@@ -261,7 +259,7 @@ export default function Footer() {
             </span>
           </div>
 
-          {/* Back to top */}
+          {/* Back to top — centro */}
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             style={{
@@ -294,7 +292,7 @@ export default function Footer() {
             Voltar ao topo
           </button>
 
-          {/* Copyright */}
+          {/* Copyright — direita */}
           <span
             style={{
               fontFamily: "var(--font-inter)",
