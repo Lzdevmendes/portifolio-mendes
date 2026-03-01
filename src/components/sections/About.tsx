@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { Code2, Server, Smartphone } from "lucide-react";
+import { Code2, Server, Smartphone, GitPullRequest } from "lucide-react";
 
 const focusAreas = [
   {
@@ -25,6 +25,13 @@ const focusAreas = [
     color: "#00B4AB",
     techs: "Flutter · Dart",
     desc: "Apps multiplataforma com experiência nativa e fluida.",
+  },
+  {
+    icon: <GitPullRequest size={16} />,
+    title: "Colaboração",
+    color: "#F59E0B",
+    techs: "Git · PR Review · Orgs",
+    desc: "Membro de 2 GitHub Organizations. Experiência com PR review, code review e versionamento colaborativo em times.",
   },
 ];
 
