@@ -1,7 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowRight, LucideGithub, MapPin } from "lucide-react";
+import { useState } from "react";
 
 const container = {
   hidden: { opacity: 0 },
@@ -33,9 +34,36 @@ const stats = [
 ];
 
 export default function Hero() {
+  const [active, setActive] = useState(false);
+
+  // Raw mouse position (instantaneous)
+  const rawX = useMotionValue(0);
+  const rawY = useMotionValue(0);
+
+  // Spotlight: slow, dreamy lag
+  const glowX = useSpring(rawX, { stiffness: 40, damping: 16, mass: 0.8 });
+  const glowY = useSpring(rawY, { stiffness: 40, damping: 16, mass: 0.8 });
+
+  // Cursor ring: snappy but still smooth
+  const ringX = useSpring(rawX, { stiffness: 220, damping: 24 });
+  const ringY = useSpring(rawY, { stiffness: 220, damping: 24 });
+
+  // Subtle parallax on heading (±12px)
+  const headX = useTransform(rawX, [0, 1440], [-12, 12]);
+  const headY = useTransform(rawY, [0, 900], [-8, 8]);
+
+  function onMove(e: React.MouseEvent<HTMLElement>) {
+    const r = e.currentTarget.getBoundingClientRect();
+    rawX.set(e.clientX - r.left);
+    rawY.set(e.clientY - r.top);
+  }
+
   return (
     <section
       id="about"
+      onMouseMove={onMove}
+      onMouseEnter={() => setActive(true)}
+      onMouseLeave={() => setActive(false)}
       style={{
         position: "relative",
         minHeight: "100vh",
@@ -44,6 +72,7 @@ export default function Hero() {
         justifyContent: "center",
         padding: "0 24px",
         overflow: "hidden",
+        cursor: "none",
       }}
     >
       {/* Grid background */}
@@ -90,6 +119,68 @@ export default function Hero() {
           borderRadius: "50%",
           filter: "blur(64px)",
           pointerEvents: "none",
+        }}
+      />
+
+      {/* ── Mouse spotlight glow ── */}
+      <motion.div
+        aria-hidden="true"
+        animate={{ opacity: active ? 1 : 0 }}
+        transition={{ duration: 0.5 }}
+        style={{
+          position: "absolute",
+          left: glowX,
+          top: glowY,
+          translateX: "-50%",
+          translateY: "-50%",
+          width: "750px",
+          height: "750px",
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(13,148,136,0.14) 0%, rgba(13,148,136,0.04) 45%, transparent 70%)",
+          pointerEvents: "none",
+          zIndex: 1,
+        }}
+      />
+
+      {/* ── Cursor ring ── */}
+      <motion.div
+        aria-hidden="true"
+        animate={{ opacity: active ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
+        style={{
+          position: "absolute",
+          left: ringX,
+          top: ringY,
+          translateX: "-50%",
+          translateY: "-50%",
+          width: "38px",
+          height: "38px",
+          borderRadius: "50%",
+          border: "1.5px solid rgba(13,148,136,0.65)",
+          pointerEvents: "none",
+          zIndex: 50,
+        }}
+      />
+
+      {/* ── Cursor dot ── */}
+      <motion.div
+        aria-hidden="true"
+        animate={{ opacity: active ? 1 : 0 }}
+        transition={{ duration: 0.15 }}
+        style={{
+          position: "absolute",
+          left: rawX,
+          top: rawY,
+          translateX: "-50%",
+          translateY: "-50%",
+          width: "5px",
+          height: "5px",
+          borderRadius: "50%",
+          background: "var(--color-teal)",
+          boxShadow: "0 0 8px rgba(13,148,136,0.8)",
+          pointerEvents: "none",
+          zIndex: 51,
         }}
       />
 
@@ -149,7 +240,7 @@ export default function Hero() {
             </span>
           </motion.div>
 
-          {/* Main heading */}
+          {/* Main heading — parallax on mouse move */}
           <motion.h1
             variants={item}
             style={{
@@ -159,6 +250,8 @@ export default function Hero() {
               letterSpacing: "-0.035em",
               color: "var(--color-text)",
               fontSize: "clamp(3.5rem, 10vw, 8rem)",
+              x: headX,
+              y: headY,
             }}
           >
             Luiz
