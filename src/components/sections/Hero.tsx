@@ -29,7 +29,7 @@ const item = {
 
 const stats = [
   { value: "1,5+", label: "Anos de experiência" },
-  { value: "R$1.5M+", label: "Em pagamentos processados" },
+  { value: "R$1.0M+", label: "Em pagamentos processados" },
   { value: "3", label: "Grandes clientes" },
 ];
 

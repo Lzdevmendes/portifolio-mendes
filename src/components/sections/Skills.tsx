@@ -57,7 +57,7 @@ const SKILL_URLS: Record<string, string> = {
   "Gateways de Pagamento": "https://stripe.com/docs",
   Webhooks: "https://stripe.com/docs/webhooks",
   Conciliação: "https://stripe.com/docs/reports",
-  "+R$1.5M processados": "https://github.com/Lzdevmendes",
+  "+R$1.0M processados": "https://github.com/Lzdevmendes",
 };
 
 interface SkillCategory {
