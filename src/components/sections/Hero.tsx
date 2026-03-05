@@ -504,8 +504,9 @@ function GhostButton({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      whileHover={{ scale: 1.03, y: -1 }}
+      whileHover={{ scale: 1.03, y: -1, borderColor: "#0D9488", color: "#14B8A6" }}
       whileTap={{ scale: 0.97 }}
+      transition={{ duration: 0.2 }}
       style={{
         display: "inline-flex",
         alignItems: "center",
@@ -518,17 +519,6 @@ function GhostButton({
         fontSize: "0.875rem",
         fontWeight: 500,
         cursor: "pointer",
-        transition: "border-color 0.2s, color 0.2s",
-      }}
-      onMouseEnter={(e) => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.borderColor = "var(--color-teal)";
-        el.style.color = "var(--color-teal-light)";
-      }}
-      onMouseLeave={(e) => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.borderColor = "var(--color-border)";
-        el.style.color = "var(--color-muted)";
       }}
     >
       {children}

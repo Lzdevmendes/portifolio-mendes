@@ -35,8 +35,16 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Luiz Mendes — Full Stack Developer & Tech Lead",
     description:
-      "Desenvolvedor Full Stack especializado em arquiteturas escaláveis.",
+      "Desenvolvedor Full Stack especializado em arquiteturas escaláveis com .NET, Go, Node.js e Flutter. Tech Lead com mais de R$ 1,5 milhão processados em soluções de pagamento.",
     type: "website",
+    locale: "pt_BR",
+    siteName: "Luiz Mendes",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Luiz Mendes — Full Stack Developer & Tech Lead",
+    description:
+      "Desenvolvedor Full Stack especializado em arquiteturas escaláveis com .NET, Go, Node.js e Flutter.",
   },
 };
 
