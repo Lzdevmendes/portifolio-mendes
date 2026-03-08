@@ -116,6 +116,18 @@ const categories: SkillCategory[] = [
     ],
   },
   {
+    label: "Testes",
+    tag: "QA",
+    color: "#F97316",
+    skills: [
+      "Jest",
+      "Vitest",
+      "React Testing Library",
+      "Cypress",
+      "Supertest",
+    ],
+  },
+  {
     label: "Banco de Dados",
     tag: "Data",
     color: "#F59E0B",
@@ -127,18 +139,6 @@ const categories: SkillCategory[] = [
       "Prisma ORM",
       "TypeORM",
       "Migrations",
-    ],
-  },
-  {
-    label: "Testes",
-    tag: "QA",
-    color: "#F97316",
-    skills: [
-      "Jest",
-      "Vitest",
-      "React Testing Library",
-      "Cypress",
-      "Supertest",
     ],
   },
   {
@@ -288,7 +288,7 @@ export default function Skills() {
           </div>
         </motion.div>
 
-        {/* Frontend + Backend — destaque */}
+        {/* Linha 1 — Frontend, Backend, Testes */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -296,17 +296,17 @@ export default function Skills() {
           viewport={{ once: true, margin: "-60px" }}
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))",
+            gridTemplateColumns: "repeat(3, 1fr)",
             gap: "16px",
             marginBottom: "16px",
           }}
         >
-          {categories.slice(0, 2).map((cat) => (
+          {categories.slice(0, 3).map((cat) => (
             <CategoryCard key={cat.label} cat={cat} featured />
           ))}
         </motion.div>
 
-        {/* Demais categorias */}
+        {/* Linha 2 — Banco de Dados, DevOps, Arquitetura, Pagamentos */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -314,11 +314,11 @@ export default function Skills() {
           viewport={{ once: true, margin: "-60px" }}
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+            gridTemplateColumns: "repeat(4, 1fr)",
             gap: "16px",
           }}
         >
-          {categories.slice(2).map((cat) => (
+          {categories.slice(3).map((cat) => (
             <CategoryCard key={cat.label} cat={cat} />
           ))}
         </motion.div>
