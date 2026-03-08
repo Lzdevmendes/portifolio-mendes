@@ -41,7 +41,7 @@ const experiences: Experience[] = [
       "Desenvolvimento de plataforma de gestão de pacientes, prontuários e faturamento. Implementação de soluções de pagamento que processaram mais de R$ 1,5 milhão em transações.",
     stack: ["React", "Node.js", "TypeScript", "PostgreSQL", "Stripe", "AWS"],
     highlights: [
-      "Integração de gateway de pagamento com +R$1,5M processados",
+      "Integração de gateway de pagamento com +R$1,0M processados",
       "Sistema de agendamento em tempo real com WebSockets",
       "Redução de 40% no tempo de atendimento via automação de prontuários",
     ],

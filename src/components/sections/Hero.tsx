@@ -311,7 +311,7 @@ export default function Hero() {
                 fontWeight: 600,
               }}
             >
-              R$&nbsp;1,5 milhão
+              R$&nbsp;1,0 milhão
             </span>{" "}
             processados em soluções de pagamento. Obracon (Sabesp), Multiclínica, GCB (Petrobras).
           </motion.p>
