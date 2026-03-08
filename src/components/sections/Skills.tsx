@@ -13,6 +13,9 @@ const SKILL_URLS: Record<string, string> = {
   "Tailwind CSS": "https://tailwindcss.com",
   "Framer Motion": "https://www.framer.com/motion",
   "HTML & CSS": "https://developer.mozilla.org/en-US/docs/Web/HTML",
+  Zustand: "https://zustand-demo.pmnd.rs",
+  "Context API": "https://react.dev/reference/react/useContext",
+  Zod: "https://zod.dev",
   // Backend
   "Node.js": "https://nodejs.org",
   NestJS: "https://nestjs.com",
@@ -23,6 +26,8 @@ const SKILL_URLS: Record<string, string> = {
   Python: "https://www.python.org",
   "Flask / FastAPI": "https://fastapi.tiangolo.com",
   "REST & GraphQL": "https://graphql.org",
+  JWT: "https://jwt.io",
+  OAuth2: "https://oauth.net/2",
   // Banco de Dados
   PostgreSQL: "https://www.postgresql.org",
   "SQL Server": "https://www.microsoft.com/sql-server",
@@ -31,6 +36,12 @@ const SKILL_URLS: Record<string, string> = {
   "Prisma ORM": "https://www.prisma.io",
   TypeORM: "https://typeorm.io",
   Migrations: "https://www.prisma.io/docs/orm/prisma-migrate",
+  // Testes
+  Jest: "https://jestjs.io",
+  Vitest: "https://vitest.dev",
+  "React Testing Library": "https://testing-library.com/react",
+  Cypress: "https://www.cypress.io",
+  Supertest: "https://github.com/ladjs/supertest",
   // DevOps & Cloud
   Docker: "https://www.docker.com",
   AWS: "https://aws.amazon.com",
@@ -81,6 +92,9 @@ const categories: SkillCategory[] = [
       "Tailwind CSS",
       "Framer Motion",
       "HTML & CSS",
+      "Zustand",
+      "Context API",
+      "Zod",
     ],
   },
   {
@@ -97,6 +111,8 @@ const categories: SkillCategory[] = [
       "Python",
       "Flask / FastAPI",
       "REST & GraphQL",
+      "JWT",
+      "OAuth2",
     ],
   },
   {
@@ -111,6 +127,18 @@ const categories: SkillCategory[] = [
       "Prisma ORM",
       "TypeORM",
       "Migrations",
+    ],
+  },
+  {
+    label: "Testes",
+    tag: "QA",
+    color: "#F97316",
+    skills: [
+      "Jest",
+      "Vitest",
+      "React Testing Library",
+      "Cypress",
+      "Supertest",
     ],
   },
   {
