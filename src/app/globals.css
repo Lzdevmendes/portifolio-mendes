@@ -40,11 +40,34 @@ body {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* Touch targets mínimos de 44px para acessibilidade mobile */
+@media (pointer: coarse) {
+  button, a {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+}
+
+/* Safe area para dispositivos com notch */
+body {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Desativa animações pesadas em dispositivos com preferência de movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Custom scrollbar */
