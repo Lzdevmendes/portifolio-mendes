@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowRight, LucideGithub, MapPin } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const container = {
   hidden: { opacity: 0 },
@@ -35,6 +35,11 @@ const stats = [
 
 export default function Hero() {
   const [active, setActive] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
+
+  useEffect(() => {
+    setIsTouch(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
 
   // Raw mouse position (instantaneous)
   const rawX = useMotionValue(0);
@@ -61,9 +66,9 @@ export default function Hero() {
   return (
     <section
       id="about"
-      onMouseMove={onMove}
-      onMouseEnter={() => setActive(true)}
-      onMouseLeave={() => setActive(false)}
+      onMouseMove={isTouch ? undefined : onMove}
+      onMouseEnter={isTouch ? undefined : () => setActive(true)}
+      onMouseLeave={isTouch ? undefined : () => setActive(false)}
       style={{
         position: "relative",
         minHeight: "100vh",
@@ -72,9 +77,17 @@ export default function Hero() {
         justifyContent: "center",
         padding: "0 24px",
         overflow: "hidden",
-        cursor: "none",
+        cursor: isTouch ? "auto" : "none",
       }}
     >
+      <style>{`
+        @media (max-width: 480px) {
+          .hero-content { padding-top: 80px !important; padding-bottom: 48px !important; }
+          .hero-stats { gap: 24px !important; }
+          .hero-ctas { flex-direction: column !important; align-items: flex-start !important; }
+          .hero-ctas a { width: 100%; justify-content: center; }
+        }
+      `}</style>
       {/* Grid background */}
       <div
         style={{
@@ -122,10 +135,10 @@ export default function Hero() {
         }}
       />
 
-      {/* ── Mouse spotlight glow ── */}
+      {/* ── Mouse spotlight glow ── (hidden on touch) */}
       <motion.div
         aria-hidden="true"
-        animate={{ opacity: active ? 1 : 0 }}
+        animate={{ opacity: active && !isTouch ? 1 : 0 }}
         transition={{ duration: 0.5 }}
         style={{
           position: "absolute",
@@ -143,10 +156,10 @@ export default function Hero() {
         }}
       />
 
-      {/* ── Cursor ring ── */}
+      {/* ── Cursor ring ── (hidden on touch) */}
       <motion.div
         aria-hidden="true"
-        animate={{ opacity: active ? 1 : 0 }}
+        animate={{ opacity: active && !isTouch ? 1 : 0 }}
         transition={{ duration: 0.3 }}
         style={{
           position: "absolute",
@@ -163,10 +176,10 @@ export default function Hero() {
         }}
       />
 
-      {/* ── Cursor dot ── */}
+      {/* ── Cursor dot ── (hidden on touch) */}
       <motion.div
         aria-hidden="true"
-        animate={{ opacity: active ? 1 : 0 }}
+        animate={{ opacity: active && !isTouch ? 1 : 0 }}
         transition={{ duration: 0.15 }}
         style={{
           position: "absolute",
@@ -186,6 +199,7 @@ export default function Hero() {
 
       {/* Content */}
       <div
+        className="hero-content"
         style={{
           position: "relative",
           maxWidth: "1280px",
@@ -318,6 +332,7 @@ export default function Hero() {
 
           {/* CTAs */}
           <motion.div
+            className="hero-ctas"
             variants={item}
             style={{
               display: "flex",
@@ -337,6 +352,7 @@ export default function Hero() {
 
           {/* Stats */}
           <motion.div
+            className="hero-stats"
             variants={item}
             style={{
               display: "flex",
