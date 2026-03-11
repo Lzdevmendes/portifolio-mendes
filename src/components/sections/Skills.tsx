@@ -213,6 +213,25 @@ export default function Skills() {
       id="skills"
       style={{ padding: "100px 24px", position: "relative" }}
     >
+      <style>{`
+        .skills-row-1 { grid-template-columns: 1fr; }
+        .skills-row-2 { grid-template-columns: 1fr; }
+        @media (min-width: 560px) {
+          .skills-row-1 { grid-template-columns: repeat(2, 1fr); }
+          .skills-row-2 { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 900px) {
+          .skills-row-1 { grid-template-columns: repeat(3, 1fr); }
+          .skills-row-2 { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 1100px) {
+          .skills-row-2 { grid-template-columns: repeat(4, 1fr); }
+        }
+        @media (max-width: 480px) {
+          #skills { padding: 64px 16px !important; }
+          .skills-header-desc { text-align: left !important; }
+        }
+      `}</style>
       {/* Separator */}
       <div
         style={{
@@ -273,6 +292,7 @@ export default function Skills() {
               <span style={{ color: "var(--color-teal)" }}>Skills</span>
             </h2>
             <p
+              className="skills-header-desc"
               style={{
                 fontFamily: "var(--font-inter)",
                 fontSize: "0.875rem",
@@ -290,13 +310,13 @@ export default function Skills() {
 
         {/* Linha 1 — Frontend, Backend, Testes */}
         <motion.div
+          className="skills-row-1"
           variants={containerVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-60px" }}
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
             gap: "16px",
             marginBottom: "16px",
           }}
@@ -308,13 +328,13 @@ export default function Skills() {
 
         {/* Linha 2 — Banco de Dados, DevOps, Arquitetura, Pagamentos */}
         <motion.div
+          className="skills-row-2"
           variants={containerVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-60px" }}
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
             gap: "16px",
           }}
         >
