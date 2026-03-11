@@ -2,6 +2,7 @@
 
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { Star, ExternalLink, ArrowUpRight } from "lucide-react";
+import { useEffect, useState } from "react";
 import type { GithubRepo } from "@/lib/github";
 
 const LANG_COLORS: Record<string, string> = {
@@ -19,6 +20,12 @@ const LANG_COLORS: Record<string, string> = {
 };
 
 export default function ProjectsGrid({ repos }: { repos: GithubRepo[] }) {
+  const [isTouch, setIsTouch] = useState(false);
+
+  useEffect(() => {
+    setIsTouch(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
+
   return (
     <>
       <div
@@ -29,7 +36,7 @@ export default function ProjectsGrid({ repos }: { repos: GithubRepo[] }) {
         }}
       >
         {repos.map((repo, i) => (
-          <ProjectCard key={repo.id} repo={repo} index={i} />
+          <ProjectCard key={repo.id} repo={repo} index={i} isTouch={isTouch} />
         ))}
       </div>
 
@@ -81,7 +88,7 @@ export default function ProjectsGrid({ repos }: { repos: GithubRepo[] }) {
   );
 }
 
-function ProjectCard({ repo, index }: { repo: GithubRepo; index: number }) {
+function ProjectCard({ repo, index, isTouch }: { repo: GithubRepo; index: number; isTouch: boolean }) {
   const langColor = repo.language ? (LANG_COLORS[repo.language] ?? "#555") : null;
   const colDelay = (index % 3) * 0.08;
 
@@ -92,6 +99,7 @@ function ProjectCard({ repo, index }: { repo: GithubRepo; index: number }) {
   const springRotY = useSpring(rotY, { stiffness: 200, damping: 22 });
 
   function onTiltMove(e: React.MouseEvent<HTMLElement>) {
+    if (isTouch) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
@@ -107,8 +115,9 @@ function ProjectCard({ repo, index }: { repo: GithubRepo; index: number }) {
 
   return (
     <motion.article
-      onMouseMove={onTiltMove}
-      onMouseLeave={onTiltEnd}
+      onMouseMove={isTouch ? undefined : onTiltMove}
+      onMouseLeave={isTouch ? undefined : onTiltEnd}
+      whileTap={isTouch ? { scale: 0.97, borderColor: "rgba(13,148,136,0.5)" } : undefined}
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
