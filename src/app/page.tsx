@@ -1,4 +1,5 @@
 import Navbar from "@/components/layout/Navbar";
+import MobileBottomNav from "@/components/layout/MobileBottomNav";
 import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
 import Projects from "@/components/sections/Projects";
@@ -18,6 +19,7 @@ export default function Home() {
         <Skills />
       </main>
       <Footer />
+      <MobileBottomNav />
     </>
   );
 }
