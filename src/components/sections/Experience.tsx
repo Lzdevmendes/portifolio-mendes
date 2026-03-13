@@ -18,8 +18,8 @@ interface Experience {
 
 const experiences: Experience[] = [
   {
-    period: "2023 — Presente",
-    current: true,
+    period: "2023 — Mar. 2026",
+    current: false,
     role: "Full Stack Developer Pleno",
     company: "Obracon",
     client: "Sabesp",
