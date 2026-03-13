@@ -5,6 +5,7 @@ import About from "@/components/sections/About";
 import Projects from "@/components/sections/Projects";
 import Experience from "@/components/sections/Experience";
 import Skills from "@/components/sections/Skills";
+import Certifications from "@/components/sections/Certifications";
 import Footer from "@/components/layout/Footer";
 
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
         <Projects />
         <Experience />
         <Skills />
+        <Certifications />
       </main>
       <Footer />
       <MobileBottomNav />
