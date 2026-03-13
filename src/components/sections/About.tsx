@@ -180,13 +180,69 @@ export default function About() {
             entregando produtos completos com qualidade e atenção aos detalhes.
           </p>
 
+          {/* Open to work badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "12px",
+              marginTop: "36px",
+              padding: "12px 20px",
+              borderRadius: "12px",
+              background: "rgba(13,148,136,0.08)",
+              border: "1px solid rgba(13,148,136,0.3)",
+              boxShadow: "0 0 24px rgba(13,148,136,0.08)",
+            }}
+          >
+            <motion.span
+              animate={{ opacity: [1, 0.3, 1], scale: [1, 0.85, 1] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+              style={{
+                display: "inline-block",
+                width: "8px",
+                height: "8px",
+                borderRadius: "50%",
+                background: "var(--color-teal)",
+                boxShadow: "0 0 10px rgba(13,148,136,0.9)",
+                flexShrink: 0,
+              }}
+            />
+            <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+              <span
+                style={{
+                  fontFamily: "var(--font-syne)",
+                  fontWeight: 700,
+                  fontSize: "0.875rem",
+                  color: "var(--color-teal-light)",
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                Disponível para contratações
+              </span>
+              <span
+                style={{
+                  fontFamily: "var(--font-inter)",
+                  fontSize: "0.75rem",
+                  color: "var(--color-muted)",
+                  lineHeight: 1.4,
+                }}
+              >
+                Aberto a oportunidades CLT, PJ ou freelance
+              </span>
+            </div>
+          </motion.div>
+
           {/* Decorative divider */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
               gap: "12px",
-              marginTop: "40px",
+              marginTop: "32px",
             }}
           >
             <div
