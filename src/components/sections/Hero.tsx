@@ -83,9 +83,13 @@ export default function Hero() {
       <style>{`
         @media (max-width: 480px) {
           .hero-content { padding-top: 80px !important; padding-bottom: 48px !important; }
-          .hero-stats { gap: 24px !important; }
-          .hero-ctas { flex-direction: column !important; align-items: flex-start !important; }
-          .hero-ctas a { width: 100%; justify-content: center; }
+          .hero-stats { gap: 24px !important; flex-wrap: wrap !important; }
+          .hero-ctas { flex-direction: column !important; align-items: stretch !important; }
+          .hero-ctas a { width: 100% !important; justify-content: center !important; }
+          .hero-scroll-indicator { display: none !important; }
+        }
+        @media (max-width: 768px) {
+          .hero-scroll-indicator { bottom: 90px !important; }
         }
       `}</style>
       {/* Grid background */}
@@ -396,6 +400,7 @@ export default function Hero() {
 
       {/* Scroll indicator */}
       <motion.div
+        className="hero-scroll-indicator"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.6, duration: 0.6 }}
