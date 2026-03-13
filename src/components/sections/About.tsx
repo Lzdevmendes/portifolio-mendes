@@ -127,6 +127,7 @@ export default function About() {
       >
         {/* ── LEFT: sticky panel ── */}
         <motion.div
+          className="about-sticky"
           style={{
             position: "sticky",
             top: "120px",
@@ -266,6 +267,7 @@ export default function About() {
 
           {/* Mini stats */}
           <div
+            className="about-stats"
             style={{
               display: "flex",
               gap: "32px",
@@ -370,7 +372,25 @@ export default function About() {
         @media (max-width: 768px) {
           .about-grid {
             grid-template-columns: 1fr !important;
-            gap: 48px !important;
+            gap: 40px !important;
+          }
+          #about-section {
+            padding: 80px 20px !important;
+          }
+          .about-sticky {
+            position: static !important;
+          }
+          .about-right {
+            transform: none !important;
+            opacity: 1 !important;
+          }
+        }
+        @media (max-width: 480px) {
+          #about-section {
+            padding: 64px 16px !important;
+          }
+          .about-stats {
+            gap: 20px !important;
           }
         }
       `}</style>
