@@ -56,9 +56,18 @@ a {
   }
 }
 
-/* Safe area para dispositivos com notch */
-body {
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+/* Safe area + espaço para MobileBottomNav em dispositivos touch/mobile */
+@media (pointer: coarse), (max-width: 768px) {
+  body {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Safe area em desktop (sem bottom nav) */
+@media (pointer: fine) and (min-width: 769px) {
+  body {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
 }
 
 /* Desativa animações pesadas em dispositivos com preferência de movimento reduzido */
