@@ -2,13 +2,14 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Briefcase, Code2, Home, Layers, Mail } from "lucide-react";
+import { Award, Briefcase, Code2, Home, Layers, Mail } from "lucide-react";
 
 const NAV_ITEMS = [
   { id: "about", label: "Início", icon: Home },
   { id: "projects", label: "Projetos", icon: Code2 },
   { id: "experience", label: "Exp.", icon: Briefcase },
   { id: "skills", label: "Skills", icon: Layers },
+  { id: "certifications", label: "Certs", icon: Award },
   { id: "contact", label: "Contato", icon: Mail },
 ];
 
