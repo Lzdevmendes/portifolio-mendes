@@ -41,8 +41,19 @@ export default function Footer() {
         background: "var(--color-bg-secondary)",
       }}
     >
+      <style>{`
+        @media (max-width: 480px) {
+          .footer-cta-band { padding: 56px 16px !important; gap: 24px !important; }
+          .footer-contact-btns { flex-direction: column !important; width: 100% !important; }
+          .footer-contact-btns a { width: 100% !important; justify-content: center !important; }
+          .footer-bottom-bar { flex-direction: column !important; align-items: center !important; text-align: center !important; gap: 16px !important; }
+          .footer-back-top { display: none !important; }
+        }
+      `}</style>
+
       {/* CTA band */}
       <div
+        className="footer-cta-band"
         style={{
           padding: "80px 24px",
           maxWidth: "1280px",
@@ -127,6 +138,7 @@ export default function Footer() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.15 }}
+          className="footer-contact-btns"
           style={{
             display: "flex",
             flexWrap: "wrap",
@@ -208,6 +220,7 @@ export default function Footer() {
         }}
       >
         <div
+          className="footer-bottom-bar"
           style={{
             maxWidth: "1280px",
             margin: "0 auto",
@@ -247,6 +260,7 @@ export default function Footer() {
 
           {/* Back to top — centro */}
           <motion.button
+            className="footer-back-top"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             whileHover={{
               borderColor: "var(--color-teal)",
