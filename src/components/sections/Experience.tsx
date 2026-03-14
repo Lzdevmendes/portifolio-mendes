@@ -274,6 +274,7 @@ function ExperienceItem({
           y: -3,
         }}
         transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] }}
+        className="exp-card"
         style={{
           background: "var(--color-bg-card)",
           border: "1px solid var(--color-border)",
@@ -403,6 +404,7 @@ function ExperienceItem({
 
         {/* Highlights */}
         <ul
+          className="exp-highlights"
           style={{
             display: "flex",
             flexDirection: "column",
@@ -449,7 +451,7 @@ function ExperienceItem({
         </ul>
 
         {/* Stack tags */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+        <div className="exp-stack" style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
           {exp.stack.map((tech) => (
             <span
               key={tech}
@@ -475,6 +477,13 @@ function ExperienceItem({
         @media (max-width: 767px) {
           .exp-item { grid-template-columns: 1fr !important; gap: 12px !important; }
           .exp-period { align-items: flex-start !important; flex-direction: row !important; }
+          .exp-card { padding: 20px 18px !important; }
+          .exp-highlights { gap: 6px !important; }
+          .exp-stack { gap: 4px !important; }
+        }
+        @media (max-width: 480px) {
+          .exp-card { padding: 16px 14px !important; }
+          #experience { padding: 64px 16px !important; }
         }
       `}</style>
     </motion.div>
