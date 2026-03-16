@@ -33,10 +33,10 @@ export default function MobileBottomNav() {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries.filter((e) => e.isIntersecting);
-        if (visible.length > 0) {
+        const visibleEntries = entries.filter((e) => e.isIntersecting);
+        if (visibleEntries.length > 0) {
           // Pick the one with the highest intersection ratio
-          const top = visible.reduce((a, b) =>
+          const top = visibleEntries.reduce((a, b) =>
             a.intersectionRatio > b.intersectionRatio ? a : b
           );
           setActive(top.target.id);
@@ -53,7 +53,11 @@ export default function MobileBottomNav() {
 
   function scrollTo(id: string) {
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    if (el) {
+      const navbarHeight = 72;
+      const top = el.getBoundingClientRect().top + window.scrollY - navbarHeight;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
   }
 
   return (
@@ -62,6 +66,7 @@ export default function MobileBottomNav() {
         initial={{ y: 80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1], delay: 0.5 }}
+        className="mobile-bottom-nav"
         aria-label="Navegação mobile"
         style={{
           position: "fixed",
