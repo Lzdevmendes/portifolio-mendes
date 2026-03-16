@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { Briefcase, ExternalLink } from "lucide-react";
+import { Briefcase, ExternalLink, ArrowUpRight } from "lucide-react";
 
 interface Experience {
   period: string;
@@ -434,17 +434,17 @@ function ExperienceItem({
                 lineHeight: 1.6,
               }}
             >
-              <motion.span
-                whileInView={{ color: "var(--color-teal)" }}
+              <span
                 style={{
                   color: "var(--color-teal)",
-                  fontWeight: 700,
                   flexShrink: 0,
                   marginTop: "1px",
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
-                ↗
-              </motion.span>
+                <ArrowUpRight size={13} />
+              </span>
               {h}
             </motion.li>
           ))}
