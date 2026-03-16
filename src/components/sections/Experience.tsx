@@ -475,8 +475,14 @@ function ExperienceItem({
 
       <style>{`
         @media (max-width: 767px) {
-          .exp-item { grid-template-columns: 1fr !important; gap: 12px !important; }
-          .exp-period { align-items: flex-start !important; flex-direction: row !important; }
+          .exp-item { grid-template-columns: 1fr !important; gap: 10px !important; }
+          .exp-period {
+            align-items: center !important;
+            flex-direction: row !important;
+            gap: 10px !important;
+            flex-wrap: wrap !important;
+          }
+          .exp-period span:first-child { white-space: nowrap !important; }
           .exp-card { padding: 20px 18px !important; }
           .exp-highlights { gap: 6px !important; }
           .exp-stack { gap: 4px !important; }
@@ -484,6 +490,11 @@ function ExperienceItem({
         @media (max-width: 480px) {
           .exp-card { padding: 16px 14px !important; }
           #experience { padding: 64px 16px !important; }
+          .exp-stack span { font-size: 0.625rem !important; padding: 2px 8px !important; }
+        }
+        /* Touch: aumenta área de toque do card */
+        @media (pointer: coarse) {
+          .exp-card { cursor: pointer !important; }
         }
       `}</style>
     </motion.div>
