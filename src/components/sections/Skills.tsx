@@ -232,6 +232,14 @@ export default function Skills() {
           #skills { padding: 64px 16px !important; }
           .skills-header-desc { text-align: left !important; }
         }
+        /* Touch devices: pills maiores para facilitar o tap */
+        @media (pointer: coarse) {
+          .skill-pill {
+            padding: 7px 14px !important;
+            font-size: 0.8125rem !important;
+            min-height: 36px !important;
+          }
+        }
       `}</style>
       {/* Separator */}
       <div
@@ -505,6 +513,7 @@ function SkillPill({
         onMouseLeave={onLeave}
         animate={sharedAnimate}
         transition={{ duration: 0.18 }}
+        className="skill-pill"
         style={{ ...sharedStyle, cursor: "pointer" }}
       >
         {skill}
@@ -525,6 +534,7 @@ function SkillPill({
       onMouseLeave={onLeave}
       animate={sharedAnimate}
       transition={{ duration: 0.18 }}
+      className="skill-pill"
       style={{ ...sharedStyle, cursor: "default" }}
     >
       {skill}
