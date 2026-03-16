@@ -311,6 +311,7 @@ export default function About() {
 
         {/* ── RIGHT: scroll-linked content ── */}
         <motion.div
+          className="about-right"
           style={{
             display: "flex",
             flexDirection: "column",
