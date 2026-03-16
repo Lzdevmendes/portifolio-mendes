@@ -28,17 +28,22 @@ export default function ProjectsGrid({ repos }: { repos: GithubRepo[] }) {
 
   return (
     <>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-          gap: "16px",
-        }}
-      >
+      <style>{`
+        .projects-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+          gap: 16px;
+        }
+        @media (max-width: 480px) {
+          .projects-grid { gap: 12px; }
+        }
+      `}</style>
+      <div className="projects-grid">
         {repos.map((repo, i) => (
           <ProjectCard key={repo.id} repo={repo} index={i} isTouch={isTouch} />
         ))}
       </div>
+
 
       {/* Bottom CTA */}
       <motion.div
