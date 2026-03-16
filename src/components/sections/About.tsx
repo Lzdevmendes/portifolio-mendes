@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { Code2, Server, Smartphone, GitPullRequest } from "lucide-react";
+import { Code2, Server, Smartphone, GitPullRequest, ArrowUpRight } from "lucide-react";
 
 const focusAreas = [
   {
@@ -504,13 +504,13 @@ function FocusCard({
       <span
         style={{
           color: area.color,
-          fontSize: "0.875rem",
           flexShrink: 0,
           opacity: 0.6,
           marginTop: "2px",
+          display: "flex",
         }}
       >
-        ↗
+        <ArrowUpRight size={14} />
       </span>
     </motion.div>
   );

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { ArrowUpRight } from "lucide-react";
 
 const SKILL_URLS: Record<string, string> = {
   // Frontend
@@ -510,9 +511,9 @@ function SkillPill({
         <motion.span
           animate={{ opacity: isHovered ? 1 : 0, x: isHovered ? 0 : -3 }}
           transition={{ duration: 0.15 }}
-          style={{ fontSize: "0.65rem", lineHeight: 1 }}
+          style={{ display: "flex", alignItems: "center" }}
         >
-          ↗
+          <ArrowUpRight size={10} />
         </motion.span>
       </motion.a>
     );
