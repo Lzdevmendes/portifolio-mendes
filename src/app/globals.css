@@ -28,12 +28,19 @@ body {
   scroll-behavior: smooth;
 }
 
+html {
+  /* Offset anchor links para não ficarem sob o navbar fixo (80px) */
+  scroll-padding-top: 80px;
+}
+
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-inter), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Evita pull-to-refresh acidental ao scrollar seções animadas */
+  overscroll-behavior-y: contain;
 }
 
 * {
@@ -53,6 +60,11 @@ a {
   button, a {
     min-height: 44px;
     touch-action: manipulation;
+  }
+
+  /* Seções com scroll próprio ganham momentum nativo no iOS */
+  [data-scroll], section {
+    -webkit-overflow-scrolling: touch;
   }
 }
 
