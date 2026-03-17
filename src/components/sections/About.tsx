@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { memo, useRef } from "react";
 import { Code2, Server, Smartphone, GitPullRequest, ArrowUpRight } from "lucide-react";
 
 const focusAreas = [
@@ -400,7 +400,7 @@ export default function About() {
   );
 }
 
-function FocusCard({
+const FocusCard = memo(function FocusCard({
   area,
   index,
 }: {
@@ -518,4 +518,4 @@ function FocusCard({
       </span>
     </motion.div>
   );
-}
+});

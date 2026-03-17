@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowRight, MapPin } from "lucide-react";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
 const container = {
   hidden: { opacity: 0 },
@@ -442,7 +442,7 @@ export default function Hero() {
   );
 }
 
-function PulseDot() {
+const PulseDot = memo(function PulseDot() {
   return (
     <motion.span
       animate={{ opacity: [1, 0.3, 1] }}
@@ -457,9 +457,9 @@ function PulseDot() {
       }}
     />
   );
-}
+});
 
-function RolePill({ children }: { children: React.ReactNode }) {
+const RolePill = memo(function RolePill({ children }: { children: React.ReactNode }) {
   return (
     <span
       style={{
@@ -473,17 +473,17 @@ function RolePill({ children }: { children: React.ReactNode }) {
       {children}
     </span>
   );
-}
+});
 
-function Highlight({ children }: { children: React.ReactNode }) {
+const Highlight = memo(function Highlight({ children }: { children: React.ReactNode }) {
   return (
     <span style={{ color: "var(--color-text)", fontWeight: 500 }}>
       {children}
     </span>
   );
-}
+});
 
-function PrimaryButton({
+const PrimaryButton = memo(function PrimaryButton({
   href,
   children,
   "aria-label": ariaLabel,
@@ -515,9 +515,9 @@ function PrimaryButton({
       {children}
     </motion.a>
   );
-}
+});
 
-function GhostButton({
+const GhostButton = memo(function GhostButton({
   href,
   children,
   "aria-label": ariaLabel,
@@ -552,4 +552,4 @@ function GhostButton({
       {children}
     </motion.a>
   );
-}
+});

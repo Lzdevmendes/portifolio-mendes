@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 
 const SKILL_URLS: Record<string, string> = {
@@ -357,7 +357,7 @@ export default function Skills() {
   );
 }
 
-function CategoryCard({ cat, featured = false }: { cat: SkillCategory; featured?: boolean }) {
+const CategoryCard = memo(function CategoryCard({ cat, featured = false }: { cat: SkillCategory; featured?: boolean }) {
   const [hovered, setHovered] = useState<string | null>(null);
 
   return (
@@ -469,7 +469,7 @@ function CategoryCard({ cat, featured = false }: { cat: SkillCategory; featured?
       </div>
     </motion.div>
   );
-}
+});
 
 function SkillPill({
   skill,
@@ -545,3 +545,6 @@ function SkillPill({
     </motion.span>
   );
 }
+
+// SkillPill não usa memo pois recebe onEnter/onLeave como funções inline
+// e o memo seria ineficaz sem useCallback no pai
