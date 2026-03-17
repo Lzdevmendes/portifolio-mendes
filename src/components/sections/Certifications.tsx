@@ -95,6 +95,7 @@ export default function Certifications() {
   return (
     <section
       id="certifications"
+      aria-label="Certificações e Cursos"
       style={{ padding: "100px 24px", position: "relative" }}
     >
       <style>{`
@@ -212,6 +213,8 @@ function CertCard({ cert }: { cert: Certification }) {
   return (
     <motion.div
       variants={cardVariants}
+      role="article"
+      aria-label={`Certificação: ${cert.title} — ${cert.issuer}, ${cert.date}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -375,6 +378,7 @@ function CertCard({ cert }: { cert: Certification }) {
           href={cert.credentialUrl}
           target="_blank"
           rel="noopener noreferrer"
+          aria-label={`Ver credencial de ${cert.title} em ${cert.issuer} (abre em nova aba)`}
           animate={{
             color: hovered ? cert.color : "var(--color-muted)",
           }}
