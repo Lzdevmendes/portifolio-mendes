@@ -76,6 +76,7 @@ export default function Experience() {
     <section
       ref={sectionRef}
       id="experience"
+      aria-label="Experiência Profissional"
       style={{
         padding: "100px 24px",
         position: "relative",
@@ -207,6 +208,8 @@ function ExperienceItem({
         delay: index * 0.1,
         ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
       }}
+      role="article"
+      aria-label={`${exp.role} na ${exp.company}${exp.client ? ` para ${exp.client}` : ""}, ${exp.period}`}
       style={{
         display: "grid",
         gridTemplateColumns: "140px 1fr",
