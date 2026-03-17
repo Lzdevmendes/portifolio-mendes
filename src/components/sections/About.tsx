@@ -62,6 +62,7 @@ export default function About() {
     <section
       ref={sectionRef}
       id="about-section"
+      aria-label="Sobre mim"
       style={{
         position: "relative",
         padding: "140px 24px",
@@ -417,6 +418,8 @@ function FocusCard({
         ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
       }}
       whileHover={{ x: 4 }}
+      role="article"
+      aria-label={`${area.title}: ${area.desc}`}
       style={{
         display: "flex",
         gap: "20px",
