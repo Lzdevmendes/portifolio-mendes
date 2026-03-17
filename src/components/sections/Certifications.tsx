@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { ExternalLink, Award } from "lucide-react";
 
 interface Certification {
@@ -207,7 +207,7 @@ export default function Certifications() {
   );
 }
 
-function CertCard({ cert }: { cert: Certification }) {
+const CertCard = memo(function CertCard({ cert }: { cert: Certification }) {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -402,4 +402,4 @@ function CertCard({ cert }: { cert: Certification }) {
       )}
     </motion.div>
   );
-}
+});
