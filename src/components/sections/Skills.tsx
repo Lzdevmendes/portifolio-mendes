@@ -212,6 +212,7 @@ export default function Skills() {
   return (
     <section
       id="skills"
+      aria-label="Stack e Habilidades Técnicas"
       style={{ padding: "100px 24px", position: "relative" }}
     >
       <style>{`
@@ -362,6 +363,8 @@ function CategoryCard({ cat, featured = false }: { cat: SkillCategory; featured?
   return (
     <motion.div
       variants={cardVariants}
+      role="region"
+      aria-label={`${cat.label} — ${cat.skills.length} tecnologias`}
       style={{
         background: "var(--color-bg-card)",
         border: `1px solid ${featured ? `${cat.color}30` : "var(--color-border)"}`,
@@ -509,6 +512,7 @@ function SkillPill({
         href={url}
         target="_blank"
         rel="noopener noreferrer"
+        aria-label={`${skill} (abre documentação em nova aba)`}
         onMouseEnter={onEnter}
         onMouseLeave={onLeave}
         animate={sharedAnimate}
