@@ -65,7 +65,7 @@ export default function Hero() {
 
   return (
     <section
-      id="about"
+      id="hero"
       aria-label="Apresentação — Luiz Mendes, Desenvolvedor Full Stack"
       onMouseMove={isTouch ? undefined : onMove}
       onMouseEnter={isTouch ? undefined : () => setActive(true)}
