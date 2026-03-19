@@ -38,11 +38,39 @@ export default function ProjectsGrid({ repos }: { repos: GithubRepo[] }) {
           .projects-grid { gap: 12px; }
         }
       `}</style>
-      <div className="projects-grid">
-        {repos.map((repo, i) => (
-          <ProjectCard key={repo.id} repo={repo} index={i} isTouch={isTouch} />
-        ))}
-      </div>
+      {repos.length === 0 ? (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "12px",
+            padding: "80px 24px",
+            color: "var(--color-muted)",
+            fontFamily: "var(--font-inter)",
+            fontSize: "0.875rem",
+            textAlign: "center",
+          }}
+        >
+          <span style={{ fontSize: "1.5rem" }}>🔌</span>
+          <p>Não foi possível carregar os repositórios no momento.</p>
+          <a
+            href="https://github.com/Lzdevmendes?tab=repositories"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "var(--color-teal)", textDecoration: "underline" }}
+          >
+            Ver repositórios no GitHub
+          </a>
+        </div>
+      ) : (
+        <div className="projects-grid">
+          {repos.map((repo, i) => (
+            <ProjectCard key={repo.id} repo={repo} index={i} isTouch={isTouch} />
+          ))}
+        </div>
+      )}
 
 
       {/* Bottom CTA */}
