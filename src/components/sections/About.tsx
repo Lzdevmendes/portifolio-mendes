@@ -61,7 +61,7 @@ export default function About() {
   return (
     <section
       ref={sectionRef}
-      id="about-section"
+      id="about"
       aria-label="Sobre mim"
       style={{
         position: "relative",
