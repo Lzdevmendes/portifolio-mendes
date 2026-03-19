@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { memo, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 
 const SKILL_URLS: Record<string, string> = {
@@ -360,6 +360,9 @@ export default function Skills() {
 const CategoryCard = memo(function CategoryCard({ cat, featured = false }: { cat: SkillCategory; featured?: boolean }) {
   const [hovered, setHovered] = useState<string | null>(null);
 
+  const handleEnter = useCallback((skill: string) => setHovered(skill), []);
+  const handleLeave = useCallback(() => setHovered(null), []);
+
   return (
     <motion.div
       variants={cardVariants}
@@ -462,8 +465,8 @@ const CategoryCard = memo(function CategoryCard({ cat, featured = false }: { cat
             skill={skill}
             color={cat.color}
             isHovered={hovered === skill}
-            onEnter={() => setHovered(skill)}
-            onLeave={() => setHovered(null)}
+            onEnter={handleEnter}
+            onLeave={handleLeave}
           />
         ))}
       </div>
@@ -471,7 +474,7 @@ const CategoryCard = memo(function CategoryCard({ cat, featured = false }: { cat
   );
 });
 
-function SkillPill({
+const SkillPill = memo(function SkillPill({
   skill,
   color,
   isHovered,
@@ -481,7 +484,7 @@ function SkillPill({
   skill: string;
   color: string;
   isHovered: boolean;
-  onEnter: () => void;
+  onEnter: (skill: string) => void;
   onLeave: () => void;
 }) {
   const url = SKILL_URLS[skill];
@@ -513,7 +516,7 @@ function SkillPill({
         target="_blank"
         rel="noopener noreferrer"
         aria-label={`${skill} (abre documentação em nova aba)`}
-        onMouseEnter={onEnter}
+        onMouseEnter={() => onEnter(skill)}
         onMouseLeave={onLeave}
         animate={sharedAnimate}
         transition={{ duration: 0.18 }}
@@ -534,7 +537,7 @@ function SkillPill({
 
   return (
     <motion.span
-      onMouseEnter={onEnter}
+      onMouseEnter={() => onEnter(skill)}
       onMouseLeave={onLeave}
       animate={sharedAnimate}
       transition={{ duration: 0.18 }}
@@ -544,7 +547,4 @@ function SkillPill({
       {skill}
     </motion.span>
   );
-}
-
-// SkillPill não usa memo pois recebe onEnter/onLeave como funções inline
-// e o memo seria ineficaz sem useCallback no pai
+});
