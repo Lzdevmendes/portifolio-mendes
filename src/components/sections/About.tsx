@@ -10,28 +10,28 @@ const focusAreas = [
     title: "Frontend",
     color: "#6366F1",
     techs: "React · Next.js · Flutter",
-    desc: "Interfaces rápidas, acessíveis e com foco em experiência do usuário.",
+    desc: "Fast, accessible interfaces focused on user experience.",
   },
   {
     icon: <Server size={16} />,
     title: "Backend",
     color: "#0D9488",
     techs: "Node.js · .NET · Go",
-    desc: "APIs escaláveis, arquitetura limpa e integrações robustas.",
+    desc: "Scalable APIs, clean architecture, and robust integrations.",
   },
   {
     icon: <Smartphone size={16} />,
     title: "Mobile",
     color: "#00B4AB",
     techs: "Flutter · Dart",
-    desc: "Apps multiplataforma com experiência nativa e fluida.",
+    desc: "Cross-platform apps with native, fluid experience.",
   },
   {
     icon: <GitPullRequest size={16} />,
-    title: "Colaboração",
+    title: "Collaboration",
     color: "#F59E0B",
     techs: "Git · PR Review · Orgs",
-    desc: "Membro de 2 GitHub Organizations. Experiência com PR review, code review e versionamento colaborativo em times.",
+    desc: "Member of 2 GitHub Organizations. Experience with PR review, code review and collaborative versioning in teams.",
   },
 ];
 
@@ -71,7 +71,7 @@ export default function About() {
     <section
       ref={sectionRef}
       id="about"
-      aria-label="Sobre mim"
+      aria-label="About me"
       style={{
         position: "relative",
         padding: "140px 24px",
@@ -118,7 +118,7 @@ export default function About() {
             display: "block",
           }}
         >
-          SOBRE
+          ABOUT
         </span>
       </motion.div>
 
@@ -157,7 +157,7 @@ export default function About() {
               marginBottom: "20px",
             }}
           >
-            Sobre mim
+            About me
           </span>
 
           <h2
@@ -171,10 +171,10 @@ export default function About() {
               marginBottom: "28px",
             }}
           >
-            Construindo o{" "}
-            <span style={{ color: "var(--color-teal)" }}>futuro</span>
+            Building the{" "}
+            <span style={{ color: "var(--color-teal)" }}>future</span>
             <br />
-            com código.
+            with code.
           </h2>
 
           <p
@@ -186,9 +186,9 @@ export default function About() {
               maxWidth: "400px",
             }}
           >
-            Full Stack Developer apaixonado por código limpo, boas práticas e
-            experiências de usuário memoráveis. Atuo do frontend ao backend,
-            entregando produtos completos com qualidade e atenção aos detalhes.
+            Full Stack Developer passionate about clean code, best practices and
+            memorable user experiences. I work from frontend to backend,
+            delivering complete products with quality and attention to detail.
           </p>
 
           {/* Open to Work badge */}
@@ -259,7 +259,7 @@ export default function About() {
                   lineHeight: 1.4,
                 }}
               >
-                Disponível imediatamente · CLT, PJ ou freelance
+                Available immediately · Full-time, contract or freelance
               </span>
             </div>
           </motion.div>
@@ -303,9 +303,9 @@ export default function About() {
             }}
           >
             {[
-              { n: "10+", l: "projetos entregues" },
+              { n: "10+", l: "projects delivered" },
               { n: "2", l: "GitHub orgs" },
-              { n: "7+", l: "stacks dominadas" },
+              { n: "7+", l: "stacks mastered" },
             ].map((s) => (
               <div
                 key={s.l}

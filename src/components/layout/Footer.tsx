@@ -91,7 +91,7 @@ export default function Footer() {
               textTransform: "uppercase",
             }}
           >
-            Contato
+            Contact
           </motion.span>
 
           <motion.h2
@@ -109,9 +109,9 @@ export default function Footer() {
               maxWidth: "640px",
             }}
           >
-            Vamos construir algo{" "}
-            <span style={{ color: "var(--color-teal)" }}>incrível</span>{" "}
-            juntos?
+            Let&apos;s build something{" "}
+            <span style={{ color: "var(--color-teal)" }}>incredible</span>{" "}
+            together?
           </motion.h2>
 
           <motion.p
@@ -127,8 +127,8 @@ export default function Footer() {
               maxWidth: "440px",
             }}
           >
-            Disponível para projetos freelance, consultoria técnica ou
-            oportunidades full-time como Full Stack Developer.
+            Available for freelance projects, technical consulting or
+            full-time opportunities as a Full Stack Developer.
           </motion.p>
         </motion.div>
 
@@ -164,7 +164,7 @@ export default function Footer() {
             }}
           >
             <Mail size={15} />
-            Enviar e-mail
+            Send email
           </motion.a>
 
           <motion.a
@@ -254,7 +254,7 @@ export default function Footer() {
               }}
             >
               <MapPin size={11} />
-              Brasil
+              Brazil
             </span>
           </div>
 
@@ -284,7 +284,7 @@ export default function Footer() {
             }}
           >
             <ArrowUp size={12} />
-            Voltar ao topo
+            Back to top
           </motion.button>
 
           {/* Copyright — direita */}
@@ -295,7 +295,7 @@ export default function Footer() {
               color: "var(--color-muted)",
             }}
           >
-            © {year} Luiz Mendes. Todos os direitos reservados.
+            © {year} Luiz Mendes. All rights reserved.
           </span>
         </div>
       </div>

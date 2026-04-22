@@ -20,16 +20,16 @@ const experiences: Experience[] = [
   {
     period: "Mar. 2023 — 12 Mar. 2026",
     current: false,
-    role: "Full Stack Developer Pleno",
+    role: "Full Stack Developer",
     company: "Obracon",
     client: "Sabesp",
     description:
-      "Desenvolvimento de sistemas de inspeção e gerenciamento de infraestrutura hídrica para a Sabesp. Atuação em features críticas de produção, integrações com APIs externas e manutenção de arquitetura escalável.",
+      "Development of water infrastructure inspection and management systems for Sabesp. Worked on critical production features, external API integrations and scalable architecture maintenance.",
     stack: ["Node.js", "React", ".NET", "PostgreSQL", "Docker", "Azure"],
     highlights: [
-      "Implementação de módulos de checklist para inspeção em campo",
-      "Integração com APIs de geolocalização e IoT",
-      "Entrega de features end-to-end em ambiente de alta disponibilidade",
+      "Implementation of checklist modules for field inspection",
+      "Integration with geolocation and IoT APIs",
+      "End-to-end feature delivery in a high-availability environment",
     ],
   },
   {
@@ -38,12 +38,12 @@ const experiences: Experience[] = [
     role: "Full Stack Developer",
     company: "Multiclínica",
     description:
-      "Desenvolvimento de plataforma de gestão de pacientes, prontuários e faturamento. Implementação de soluções de pagamento que processaram mais de R$ 1,5 milhão em transações.",
+      "Development of a patient management, medical records and billing platform. Implementation of payment solutions that processed over $1.5M in transactions.",
     stack: ["React", "Node.js", "TypeScript", "PostgreSQL", "Stripe", "AWS"],
     highlights: [
-      "Integração de gateway de pagamento com +R$1,0M processados",
-      "Sistema de agendamento em tempo real com WebSockets",
-      "Redução de 40% no tempo de atendimento via automação de prontuários",
+      "Payment gateway integration with +$1.0M processed",
+      "Real-time scheduling system with WebSockets",
+      "40% reduction in service time through medical record automation",
     ],
   },
   {
@@ -53,12 +53,12 @@ const experiences: Experience[] = [
     company: "GCB",
     client: "Petrobras",
     description:
-      "Desenvolvimento de sistemas internos de gestão operacional para a Petrobras via GCB. Foco em performance e confiabilidade de aplicações críticas de negócio.",
+      "Development of internal operational management systems for Petrobras via GCB. Focus on performance and reliability of critical business applications.",
     stack: [".NET", "React", "SQL Server", "C#", "Azure DevOps"],
     highlights: [
-      "Sistemas de relatórios operacionais para unidades offshore",
-      "Otimização de queries SQL com redução de 60% no tempo de resposta",
-      "Implementação de CI/CD com Azure DevOps",
+      "Operational reporting systems for offshore units",
+      "SQL query optimization with 60% reduction in response time",
+      "CI/CD implementation with Azure DevOps",
     ],
   },
 ];
@@ -76,7 +76,7 @@ export default function Experience() {
     <section
       ref={sectionRef}
       id="experience"
-      aria-label="Experiência Profissional"
+      aria-label="Professional Experience"
       style={{
         padding: "100px 24px",
         position: "relative",
@@ -117,7 +117,7 @@ export default function Experience() {
               marginBottom: "16px",
             }}
           >
-            Trajetória
+            Career
           </span>
           <h2
             style={{
@@ -129,8 +129,8 @@ export default function Experience() {
               color: "var(--color-text)",
             }}
           >
-            Experiência{" "}
-            <span style={{ color: "var(--color-teal)" }}>Profissional</span>
+            Professional{" "}
+            <span style={{ color: "var(--color-teal)" }}>Experience</span>
           </h2>
         </motion.div>
 
@@ -264,7 +264,7 @@ function ExperienceItem({
                 background: "var(--color-teal)",
               }}
             />
-            atual
+            current
           </span>
         )}
       </div>

@@ -5,11 +5,11 @@ import { useEffect, useState } from "react";
 import { Briefcase, Code2, Home, Layers, Mail } from "lucide-react";
 
 const NAV_ITEMS = [
-  { id: "about", label: "Início", icon: Home },
-  { id: "projects", label: "Projetos", icon: Code2 },
+  { id: "about", label: "About", icon: Home },
+  { id: "projects", label: "Projects", icon: Code2 },
   { id: "experience", label: "Exp.", icon: Briefcase },
   { id: "skills", label: "Skills", icon: Layers },
-  { id: "contact", label: "Contato", icon: Mail },
+  { id: "contact", label: "Contact", icon: Mail },
 ];
 
 export default function MobileBottomNav() {
