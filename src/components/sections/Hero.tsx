@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { ArrowRight, MapPin } from "lucide-react";
+import { ArrowRight, MapPin, Briefcase } from "lucide-react";
 import { memo, useEffect, useState } from "react";
 
 const container = {
@@ -78,7 +78,7 @@ export default function Hero() {
         justifyContent: "center",
         padding: "0 24px",
         overflow: "hidden",
-        cursor: isTouch ? "auto" : "none",
+        cursor: "auto",
       }}
     >
       <style>{`
@@ -223,7 +223,7 @@ export default function Hero() {
           {/* Availability badge */}
           <motion.div
             variants={item}
-            style={{ display: "flex", alignItems: "center", gap: "16px" }}
+            style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}
           >
             <span
               style={{
@@ -232,17 +232,34 @@ export default function Hero() {
                 gap: "8px",
                 padding: "6px 14px",
                 borderRadius: "9999px",
-                background: "rgba(13,148,136,0.1)",
-                border: "1px solid rgba(13,148,136,0.3)",
+                background: "rgba(13,148,136,0.12)",
+                border: "1px solid rgba(13,148,136,0.4)",
                 color: "var(--color-teal-light)",
                 fontFamily: "var(--font-inter)",
                 fontSize: "0.75rem",
-                fontWeight: 500,
-                letterSpacing: "0.02em",
+                fontWeight: 600,
+                letterSpacing: "0.04em",
               }}
             >
               <PulseDot />
-              Disponível para projetos
+              Open to Work
+            </span>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "6px 12px",
+                borderRadius: "9999px",
+                border: "1px solid var(--color-border)",
+                fontFamily: "var(--font-inter)",
+                fontSize: "0.75rem",
+                fontWeight: 500,
+                color: "var(--color-muted)",
+              }}
+            >
+              <Briefcase size={11} />
+              Disponível imediatamente
             </span>
             <span
               style={{
@@ -265,7 +282,7 @@ export default function Hero() {
             style={{
               fontFamily: "var(--font-syne)",
               fontWeight: 800,
-              lineHeight: 0.95,
+              lineHeight: 1.0,
               letterSpacing: "-0.035em",
               color: "var(--color-text)",
               fontSize: "clamp(3.5rem, 10vw, 8rem)",
