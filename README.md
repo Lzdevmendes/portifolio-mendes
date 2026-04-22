@@ -13,15 +13,15 @@ Portfólio pessoal de **Luiz Mendes** ([@Lzdevmendes](https://github.com/Lzdevme
 
 ## Seções
 
-| Seção | ID | Descrição |
-|---|---|---|
-| Hero | `#about` | Apresentação, stats e CTA |
-| About | `#about` | Áreas de foco (Frontend, Backend, Mobile) |
-| Projects | `#projects` | Repos do GitHub via API |
-| Experience | `#experience` | Histórico profissional (timeline) |
-| Skills | `#skills` | Stack técnica por categoria |
-| Certifications | `#certifications` | Certificações e cursos |
-| Footer | `#contact` | Contato e redes sociais |
+| Seção          | ID                | Descrição                                 |
+| -------------- | ----------------- | ----------------------------------------- |
+| Hero           | `#about`          | Apresentação, stats e CTA                 |
+| About          | `#about`          | Áreas de foco (Frontend, Backend, Mobile) |
+| Projects       | `#projects`       | Repos do GitHub via API                   |
+| Experience     | `#experience`     | Histórico profissional (timeline)         |
+| Skills         | `#skills`         | Stack técnica por categoria               |
+| Certifications | `#certifications` | Certificações e cursos                    |
+| Footer         | `#contact`        | Contato e redes sociais                   |
 
 ## Rodando localmente
 
