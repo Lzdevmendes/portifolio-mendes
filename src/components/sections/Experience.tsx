@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { Briefcase, ExternalLink, ArrowUpRight } from "lucide-react";
+import { Briefcase, ArrowUpRight } from "lucide-react";
 
 interface Experience {
   period: string;
@@ -18,7 +18,7 @@ interface Experience {
 
 const experiences: Experience[] = [
   {
-    period: "2023 — Mar. 2026",
+    period: "Mar. 2023 — 12 Mar. 2026",
     current: false,
     role: "Full Stack Developer Pleno",
     company: "Obracon",
@@ -384,11 +384,6 @@ function ExperienceItem({
             </p>
           </div>
 
-          <ExternalLink
-            size={14}
-            color="var(--color-border)"
-            style={{ flexShrink: 0, marginTop: "4px" }}
-          />
         </div>
 
         {/* Description */}
