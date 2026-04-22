@@ -82,7 +82,20 @@ a {
   }
 }
 
-/* Desativa animações pesadas em dispositivos com preferência de movimento reduzido */
+/* Focus rings visíveis para navegação por teclado */
+:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Remove outline no clique (mantém apenas no foco por teclado) */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Desativa animações em dispositivos com preferência de movimento reduzido */
+/* framer-motion respeita via MotionConfig reducedMotion="user" no page.tsx */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
