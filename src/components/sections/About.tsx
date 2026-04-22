@@ -1,8 +1,8 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { memo, useRef } from "react";
-import { Code2, Server, Smartphone, GitPullRequest, ArrowUpRight } from "lucide-react";
+import { memo, useRef, useEffect, useState } from "react";
+import { Code2, Server, Smartphone, GitPullRequest, ArrowUpRight, Briefcase } from "lucide-react";
 
 const focusAreas = [
   {
@@ -37,6 +37,15 @@ const focusAreas = [
 
 export default function About() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -46,7 +55,7 @@ export default function About() {
   // Background "SOBRE" text parallax
   const bgY = useTransform(scrollYProgress, [0, 1], ["-12%", "12%"]);
 
-  // Right column subtle upward drift
+  // Right column subtle upward drift — disabled on mobile (CSS can't override framer-motion inline styles)
   const rightY = useTransform(
     scrollYProgress,
     [0.05, 0.85],
@@ -182,7 +191,7 @@ export default function About() {
             entregando produtos completos com qualidade e atenção aos detalhes.
           </p>
 
-          {/* Open to work badge */}
+          {/* Open to Work badge */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -196,35 +205,52 @@ export default function About() {
               padding: "12px 20px",
               borderRadius: "12px",
               background: "rgba(13,148,136,0.08)",
-              border: "1px solid rgba(13,148,136,0.3)",
-              boxShadow: "0 0 24px rgba(13,148,136,0.08)",
+              border: "1px solid rgba(13,148,136,0.35)",
+              boxShadow: "0 0 24px rgba(13,148,136,0.1)",
             }}
           >
-            <motion.span
-              animate={{ opacity: [1, 0.3, 1], scale: [1, 0.85, 1] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+            <div
               style={{
-                display: "inline-block",
-                width: "8px",
-                height: "8px",
-                borderRadius: "50%",
-                background: "var(--color-teal)",
-                boxShadow: "0 0 10px rgba(13,148,136,0.9)",
+                width: "36px",
+                height: "36px",
+                borderRadius: "10px",
+                background: "rgba(13,148,136,0.15)",
+                border: "1px solid rgba(13,148,136,0.3)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
                 flexShrink: 0,
               }}
-            />
-            <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-              <span
-                style={{
-                  fontFamily: "var(--font-syne)",
-                  fontWeight: 700,
-                  fontSize: "0.875rem",
-                  color: "var(--color-teal-light)",
-                  letterSpacing: "-0.01em",
-                }}
-              >
-                Disponível para contratações
-              </span>
+            >
+              <Briefcase size={16} color="var(--color-teal-light)" />
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <span
+                  style={{
+                    fontFamily: "var(--font-syne)",
+                    fontWeight: 700,
+                    fontSize: "0.875rem",
+                    color: "var(--color-teal-light)",
+                    letterSpacing: "-0.01em",
+                  }}
+                >
+                  Open to Work
+                </span>
+                <motion.span
+                  animate={{ opacity: [1, 0.3, 1] }}
+                  transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                  style={{
+                    display: "inline-block",
+                    width: "6px",
+                    height: "6px",
+                    borderRadius: "50%",
+                    background: "var(--color-teal)",
+                    boxShadow: "0 0 8px rgba(13,148,136,0.9)",
+                    flexShrink: 0,
+                  }}
+                />
+              </div>
               <span
                 style={{
                   fontFamily: "var(--font-inter)",
@@ -233,7 +259,7 @@ export default function About() {
                   lineHeight: 1.4,
                 }}
               >
-                Aberto a oportunidades CLT, PJ ou freelance
+                Disponível imediatamente · CLT, PJ ou freelance
               </span>
             </div>
           </motion.div>
@@ -277,9 +303,9 @@ export default function About() {
             }}
           >
             {[
-              { n: "1,5+", l: "anos de exp." },
-              { n: "3", l: "clientes reais" },
-              { n: "10+", l: "projetos" },
+              { n: "10+", l: "projetos entregues" },
+              { n: "2", l: "GitHub orgs" },
+              { n: "7+", l: "stacks dominadas" },
             ].map((s) => (
               <div
                 key={s.l}
@@ -317,8 +343,8 @@ export default function About() {
             display: "flex",
             flexDirection: "column",
             gap: "20px",
-            y: rightY,
-            opacity: rightOpacity,
+            y: isMobile ? 0 : rightY,
+            opacity: isMobile ? 1 : rightOpacity,
           }}
         >
           {focusAreas.map((area, i) => (
