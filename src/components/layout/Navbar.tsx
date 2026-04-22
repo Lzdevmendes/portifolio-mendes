@@ -8,12 +8,12 @@ import { Menu, X } from "lucide-react";
 type DotStrength = "none" | "dim" | "bright";
 
 const navLinks = [
-  { label: "About", href: "#about" },
-  { label: "Projects", href: "#projects" },
-  { label: "Experience", href: "#experience" },
+  { label: "Sobre", href: "#about" },
+  { label: "Projetos", href: "#projects" },
+  { label: "Experiência", href: "#experience" },
   { label: "Skills", href: "#skills" },
   { label: "Certs", href: "#certifications" },
-  { label: "Contact", href: "#contact" },
+  { label: "Contato", href: "#contact" },
 ];
 
 export default function Navbar() {
