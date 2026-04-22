@@ -16,7 +16,7 @@ interface Certification {
 
 const certifications: Certification[] = [
   {
-    title: "Formação Full-Stack",
+    title: "Full-Stack Training",
     issuer: "Rocketseat",
     date: "2024",
     credentialUrl: "https://app.rocketseat.com.br",
@@ -58,16 +58,16 @@ const certifications: Certification[] = [
     credentialUrl: "https://www.freecodecamp.org",
     skills: ["JavaScript", "Algorithms", "ES6+"],
     color: "#3B82F6",
-    tag: "Fundamentos",
+    tag: "Fundamentals",
   },
   {
-    title: "TypeScript Avançado",
+    title: "Advanced TypeScript",
     issuer: "DIO",
     date: "2023",
     credentialUrl: "https://www.dio.me",
     skills: ["TypeScript", "Generics", "Decorators", "OOP"],
     color: "#EC4899",
-    tag: "Linguagem",
+    tag: "Language",
   },
 ];
 
@@ -95,7 +95,7 @@ export default function Certifications() {
   return (
     <section
       id="certifications"
-      aria-label="Certificações e Cursos"
+      aria-label="Certifications and Courses"
       style={{ padding: "100px 24px", position: "relative" }}
     >
       <style>{`
@@ -146,7 +146,7 @@ export default function Certifications() {
               marginBottom: "16px",
             }}
           >
-            Formação
+            Education
           </span>
           <div
             style={{
@@ -167,8 +167,8 @@ export default function Certifications() {
                 color: "var(--color-text)",
               }}
             >
-              Certificações &{" "}
-              <span style={{ color: "var(--color-teal)" }}>Cursos</span>
+              Certifications &{" "}
+              <span style={{ color: "var(--color-teal)" }}>Courses</span>
             </h2>
             <p
               style={{
@@ -180,8 +180,8 @@ export default function Certifications() {
                 textAlign: "right",
               }}
             >
-              {certifications.length} certificações em plataformas reconhecidas
-              globalmente
+              {certifications.length} certifications on globally recognized
+              platforms
             </p>
           </div>
         </motion.div>
@@ -214,7 +214,7 @@ const CertCard = memo(function CertCard({ cert }: { cert: Certification }) {
     <motion.div
       variants={cardVariants}
       role="article"
-      aria-label={`Certificação: ${cert.title} — ${cert.issuer}, ${cert.date}`}
+      aria-label={`Certification: ${cert.title} — ${cert.issuer}, ${cert.date}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -378,7 +378,7 @@ const CertCard = memo(function CertCard({ cert }: { cert: Certification }) {
           href={cert.credentialUrl}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label={`Ver credencial de ${cert.title} em ${cert.issuer} (abre em nova aba)`}
+          aria-label={`View credential for ${cert.title} at ${cert.issuer} (opens in new tab)`}
           animate={{
             color: hovered ? cert.color : "var(--color-muted)",
           }}
@@ -396,7 +396,7 @@ const CertCard = memo(function CertCard({ cert }: { cert: Certification }) {
             paddingTop: "4px",
           }}
         >
-          Ver credencial
+          View credential
           <ExternalLink size={12} strokeWidth={2} />
         </motion.a>
       )}

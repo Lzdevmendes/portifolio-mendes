@@ -52,9 +52,9 @@ const SKILL_URLS: Record<string, string> = {
   Linux: "https://www.linux.org",
   Nginx: "https://nginx.org",
   Git: "https://git-scm.com",
-  "Automação & Bots": "https://github.com/Lzdevmendes",
-  // Arquitetura
-  Microsserviços: "https://microservices.io",
+  "Automation & Bots": "https://github.com/Lzdevmendes",
+  // Architecture
+  Microservices: "https://microservices.io",
   "Clean Architecture":
     "https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html",
   DDD: "https://martinfowler.com/tags/domain%20driven%20design.html",
@@ -62,14 +62,14 @@ const SKILL_URLS: Record<string, string> = {
   SOLID: "https://en.wikipedia.org/wiki/SOLID",
   Monorepos: "https://nx.dev",
   "API Gateway": "https://www.nginx.com/resources/glossary/api-gateway",
-  // Pagamentos
+  // Payments
   Stripe: "https://stripe.com/docs",
   PIX: "https://www.bcb.gov.br/estabilidadefinanceira/pix",
   PagSeguro: "https://dev.pagseguro.uol.com.br",
-  "Gateways de Pagamento": "https://stripe.com/docs",
+  "Payment Gateways": "https://stripe.com/docs",
   Webhooks: "https://stripe.com/docs/webhooks",
-  Conciliação: "https://stripe.com/docs/reports",
-  "+R$1.0M processados": "https://github.com/Lzdevmendes",
+  Reconciliation: "https://stripe.com/docs/reports",
+  "+$1.0M processed": "https://github.com/Lzdevmendes",
 };
 
 interface SkillCategory {
@@ -155,15 +155,15 @@ const categories: SkillCategory[] = [
       "Linux",
       "Nginx",
       "Git",
-      "Automação & Bots",
+      "Automation & Bots",
     ],
   },
   {
-    label: "Arquitetura",
+    label: "Architecture",
     tag: "Design",
     color: "#8B5CF6",
     skills: [
-      "Microsserviços",
+      "Microservices",
       "Clean Architecture",
       "DDD",
       "Event-Driven",
@@ -173,17 +173,17 @@ const categories: SkillCategory[] = [
     ],
   },
   {
-    label: "Pagamentos",
+    label: "Payments",
     tag: "Fintech",
     color: "#10B981",
     skills: [
       "Stripe",
       "PIX",
       "PagSeguro",
-      "Gateways de Pagamento",
+      "Payment Gateways",
       "Webhooks",
-      "Conciliação",
-      "+R$1.0M processados",
+      "Reconciliation",
+      "+$1.0M processed",
     ],
   },
 ];
@@ -212,7 +212,7 @@ export default function Skills() {
   return (
     <section
       id="skills"
-      aria-label="Stack e Habilidades Técnicas"
+      aria-label="Tech Stack and Skills"
       style={{ padding: "100px 24px", position: "relative" }}
     >
       <style>{`
