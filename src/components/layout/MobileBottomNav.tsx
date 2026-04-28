@@ -19,6 +19,7 @@ export default function MobileBottomNav() {
   useEffect(() => {
     // Only show on touch/mobile devices
     const mq = window.matchMedia("(pointer: coarse), (max-width: 768px)");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setVisible(mq.matches);
     const handler = (e: MediaQueryListEvent) => setVisible(e.matches);
     mq.addEventListener("change", handler);
