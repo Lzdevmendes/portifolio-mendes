@@ -1,29 +1,29 @@
 "use client";
 
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, useScroll } from "framer-motion";
 import { ArrowRight, MapPin, Briefcase } from "lucide-react";
 import { memo, useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 
-const container = {
+const Character3D = dynamic(() => import("./Character3DScene"), {
+  ssr: false,
+  loading: () => null,
+});
+
+const contentVariants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.35,
-    },
+    transition: { staggerChildren: 0.1, delayChildren: 0.5 },
   },
 };
 
-const item = {
-  hidden: { opacity: 0, y: 32 },
+const itemVariants = {
+  hidden: { opacity: 0, y: 28 },
   show: {
     opacity: 1,
     y: 0,
-    transition: {
-      duration: 0.75,
-      ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
-    },
+    transition: { duration: 0.7, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] },
   },
 };
 
@@ -41,21 +41,16 @@ export default function Hero() {
     setIsTouch(window.matchMedia("(pointer: coarse)").matches);
   }, []);
 
-  // Raw mouse position (instantaneous)
   const rawX = useMotionValue(0);
   const rawY = useMotionValue(0);
-
-  // Spotlight: slow, dreamy lag
   const glowX = useSpring(rawX, { stiffness: 40, damping: 16, mass: 0.8 });
   const glowY = useSpring(rawY, { stiffness: 40, damping: 16, mass: 0.8 });
-
-  // Cursor ring: snappy but still smooth
   const ringX = useSpring(rawX, { stiffness: 220, damping: 24 });
   const ringY = useSpring(rawY, { stiffness: 220, damping: 24 });
+  const headX = useTransform(rawX, [0, 1440], [-10, 10]);
+  const headY = useTransform(rawY, [0, 900], [-6, 6]);
 
-  // Subtle parallax on heading (±12px)
-  const headX = useTransform(rawX, [0, 1440], [-12, 12]);
-  const headY = useTransform(rawY, [0, 900], [-8, 8]);
+  const { scrollYProgress } = useScroll();
 
   function onMove(e: React.MouseEvent<HTMLElement>) {
     const r = e.currentTarget.getBoundingClientRect();
@@ -70,77 +65,100 @@ export default function Hero() {
       onMouseMove={isTouch ? undefined : onMove}
       onMouseEnter={isTouch ? undefined : () => setActive(true)}
       onMouseLeave={isTouch ? undefined : () => setActive(false)}
-      style={{
-        position: "relative",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        padding: "0 24px",
-        overflow: "hidden",
-        cursor: "auto",
-      }}
+      style={{ position: "relative", minHeight: "100vh", overflow: "hidden", background: "#080a0e" }}
     >
       <style>{`
         @media (max-width: 480px) {
-          .hero-content { padding-top: 80px !important; padding-bottom: 48px !important; }
+          .hero-heading { font-size: clamp(3.8rem, 18vw, 5.5rem) !important; }
+          .hero-bottom { padding: 0 20px 56px !important; }
+          .hero-badges-wrap { padding: 84px 20px 0 !important; }
           .hero-stats { gap: 24px !important; flex-wrap: wrap !important; }
           .hero-ctas { flex-direction: column !important; align-items: stretch !important; }
-          .hero-ctas a { width: 100% !important; justify-content: center !important; }
-          .hero-scroll-indicator { display: none !important; }
+          .hero-ctas a { justify-content: center !important; }
+          .hero-scroll-hint { display: none !important; }
+          .hero-side-label { display: none !important; }
         }
         @media (max-width: 768px) {
-          .hero-scroll-indicator { bottom: 90px !important; }
+          .hero-scroll-hint { bottom: 90px !important; }
+          .hero-side-label { display: none !important; }
+        }
+        @media (max-width: 1023px) {
+          .hero-left-grad { opacity: 0 !important; }
+          .hero-bottom-grad { opacity: 1 !important; }
         }
       `}</style>
-      {/* Grid background */}
+
+      {/* ── LAYER 0: 3D CHARACTER FULLSCREEN ── */}
       <div
+        aria-hidden="true"
+        style={{ position: "absolute", inset: 0, zIndex: 0 }}
+      >
+        <Character3D scrollProgress={scrollYProgress} />
+      </div>
+
+      {/* ── Grid texture ── */}
+      <div
+        aria-hidden="true"
         style={{
           position: "absolute",
           inset: 0,
-          backgroundImage: `
-            linear-gradient(var(--color-border) 1px, transparent 1px),
-            linear-gradient(90deg, var(--color-border) 1px, transparent 1px)
-          `,
-          backgroundSize: "80px 80px",
-          opacity: 0.2,
+          zIndex: 1,
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)",
+          backgroundSize: "72px 72px",
           pointerEvents: "none",
         }}
       />
 
-      {/* Teal orb — top right */}
+      {/* ── Left gradient: text area readability (desktop) ── */}
       <div
+        className="hero-left-grad"
+        aria-hidden="true"
         style={{
           position: "absolute",
-          top: "-15%",
-          right: "-8%",
-          width: "600px",
-          height: "600px",
+          inset: 0,
+          zIndex: 2,
           background:
-            "radial-gradient(circle, rgba(13,148,136,0.18) 0%, transparent 70%)",
-          borderRadius: "50%",
-          filter: "blur(48px)",
+            "linear-gradient(100deg, rgba(8,10,14,0.95) 0%, rgba(8,10,14,0.82) 28%, rgba(8,10,14,0.42) 52%, rgba(8,10,14,0.08) 70%, transparent 84%)",
           pointerEvents: "none",
         }}
       />
 
-      {/* Teal orb — bottom left */}
+      {/* ── Bottom gradient: bottom text readability (always) ── */}
       <div
+        className="hero-bottom-grad"
+        aria-hidden="true"
         style={{
           position: "absolute",
-          bottom: "-5%",
-          left: "-5%",
-          width: "380px",
-          height: "380px",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: "60%",
+          zIndex: 2,
           background:
-            "radial-gradient(circle, rgba(13,148,136,0.09) 0%, transparent 70%)",
-          borderRadius: "50%",
-          filter: "blur(64px)",
+            "linear-gradient(to top, rgba(8,10,14,0.96) 0%, rgba(8,10,14,0.72) 35%, rgba(8,10,14,0.2) 65%, transparent 100%)",
           pointerEvents: "none",
         }}
       />
 
-      {/* ── Mouse spotlight glow ── (hidden on touch) */}
+      {/* ── Teal glow orb (top right, behind character) ── */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          top: "-10%",
+          right: "-5%",
+          width: "640px",
+          height: "640px",
+          background: "radial-gradient(circle, rgba(13,148,136,0.12) 0%, transparent 70%)",
+          borderRadius: "50%",
+          filter: "blur(56px)",
+          pointerEvents: "none",
+          zIndex: 2,
+        }}
+      />
+
+      {/* ── Mouse spotlight ── */}
       <motion.div
         aria-hidden="true"
         animate={{ opacity: active && !isTouch ? 1 : 0 }}
@@ -151,17 +169,17 @@ export default function Hero() {
           top: glowY,
           translateX: "-50%",
           translateY: "-50%",
-          width: "750px",
-          height: "750px",
+          width: "700px",
+          height: "700px",
           borderRadius: "50%",
           background:
-            "radial-gradient(circle, rgba(13,148,136,0.14) 0%, rgba(13,148,136,0.04) 45%, transparent 70%)",
+            "radial-gradient(circle, rgba(13,148,136,0.11) 0%, rgba(13,148,136,0.03) 45%, transparent 70%)",
           pointerEvents: "none",
-          zIndex: 1,
+          zIndex: 4,
         }}
       />
 
-      {/* ── Cursor ring ── (hidden on touch) */}
+      {/* ── Cursor ring ── */}
       <motion.div
         aria-hidden="true"
         animate={{ opacity: active && !isTouch ? 1 : 0 }}
@@ -172,16 +190,16 @@ export default function Hero() {
           top: ringY,
           translateX: "-50%",
           translateY: "-50%",
-          width: "38px",
-          height: "38px",
+          width: "36px",
+          height: "36px",
           borderRadius: "50%",
-          border: "1.5px solid rgba(13,148,136,0.65)",
+          border: "1.5px solid rgba(13,148,136,0.5)",
           pointerEvents: "none",
-          zIndex: 50,
+          zIndex: 55,
         }}
       />
 
-      {/* ── Cursor dot ── (hidden on touch) */}
+      {/* ── Cursor dot ── */}
       <motion.div
         aria-hidden="true"
         animate={{ opacity: active && !isTouch ? 1 : 0 }}
@@ -196,96 +214,117 @@ export default function Hero() {
           height: "5px",
           borderRadius: "50%",
           background: "var(--color-teal)",
-          boxShadow: "0 0 8px rgba(13,148,136,0.8)",
+          boxShadow: "0 0 8px rgba(13,148,136,0.9)",
           pointerEvents: "none",
-          zIndex: 51,
+          zIndex: 56,
         }}
       />
 
-      {/* Content */}
+      {/* ── CONTENT ── */}
       <div
-        className="hero-content"
         style={{
           position: "relative",
-          maxWidth: "1280px",
-          margin: "0 auto",
-          width: "100%",
-          paddingTop: "96px",
-          paddingBottom: "64px",
+          zIndex: 10,
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
+        {/* Top: availability badges */}
         <motion.div
-          variants={container}
+          className="hero-badges-wrap"
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.35, ease: [0.4, 0, 0.2, 1] }}
+          style={{
+            paddingTop: "108px",
+            paddingLeft: "48px",
+            paddingRight: "48px",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            flexWrap: "wrap",
+          }}
+        >
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "6px 14px",
+              borderRadius: "9999px",
+              background: "rgba(13,148,136,0.13)",
+              border: "1px solid rgba(13,148,136,0.38)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+              color: "var(--color-teal-light)",
+              fontFamily: "var(--font-inter)",
+              fontSize: "0.75rem",
+              fontWeight: 600,
+              letterSpacing: "0.04em",
+            }}
+          >
+            <PulseDot />
+            Open to Work
+          </span>
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              padding: "6px 12px",
+              borderRadius: "9999px",
+              border: "1px solid rgba(255,255,255,0.08)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+              fontFamily: "var(--font-inter)",
+              fontSize: "0.75rem",
+              fontWeight: 500,
+              color: "var(--color-muted)",
+            }}
+          >
+            <Briefcase size={11} />
+            Available immediately
+          </span>
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "4px",
+              fontFamily: "var(--font-inter)",
+              fontSize: "0.75rem",
+              color: "var(--color-muted)",
+              opacity: 0.7,
+            }}
+          >
+            <MapPin size={11} />
+            Brazil
+          </span>
+        </motion.div>
+
+        {/* Spacer — 3D fills this area */}
+        <div style={{ flex: 1 }} />
+
+        {/* Bottom: main editorial content */}
+        <motion.div
+          className="hero-bottom"
+          variants={contentVariants}
           initial="hidden"
           animate="show"
-          style={{ display: "flex", flexDirection: "column", gap: "28px" }}
+          style={{ padding: "0 48px 72px", maxWidth: "740px" }}
         >
-          {/* Availability badge */}
-          <motion.div
-            variants={item}
-            style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}
-          >
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "6px 14px",
-                borderRadius: "9999px",
-                background: "rgba(13,148,136,0.12)",
-                border: "1px solid rgba(13,148,136,0.4)",
-                color: "var(--color-teal-light)",
-                fontFamily: "var(--font-inter)",
-                fontSize: "0.75rem",
-                fontWeight: 600,
-                letterSpacing: "0.04em",
-              }}
-            >
-              <PulseDot />
-              Open to Work
-            </span>
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "6px 12px",
-                borderRadius: "9999px",
-                border: "1px solid var(--color-border)",
-                fontFamily: "var(--font-inter)",
-                fontSize: "0.75rem",
-                fontWeight: 500,
-                color: "var(--color-muted)",
-              }}
-            >
-              <Briefcase size={11} />
-              Available immediately
-            </span>
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "4px",
-                fontFamily: "var(--font-inter)",
-                fontSize: "0.75rem",
-                color: "var(--color-muted)",
-              }}
-            >
-              <MapPin size={11} />
-              Brazil
-            </span>
-          </motion.div>
-
-          {/* Main heading — parallax on mouse move */}
+          {/* Giant heading — Metalab style */}
           <motion.h1
-            variants={item}
+            className="hero-heading"
+            variants={itemVariants}
             style={{
               fontFamily: "var(--font-syne)",
               fontWeight: 800,
-              lineHeight: 1.0,
-              letterSpacing: "-0.035em",
+              lineHeight: 0.92,
+              letterSpacing: "-0.04em",
               color: "var(--color-text)",
-              fontSize: "clamp(3.5rem, 10vw, 8rem)",
+              fontSize: "clamp(4.5rem, 11vw, 9.5rem)",
+              marginBottom: "24px",
               x: headX,
               y: headY,
             }}
@@ -295,120 +334,123 @@ export default function Hero() {
             <span style={{ color: "var(--color-teal)" }}>Mendes</span>
           </motion.h1>
 
-          {/* Role pills */}
+          {/* Role row */}
           <motion.div
-            variants={item}
+            variants={itemVariants}
             style={{
               display: "flex",
               flexWrap: "wrap",
               alignItems: "center",
-              gap: "12px",
+              gap: "14px",
+              marginBottom: "14px",
             }}
           >
-            <RolePill>Full Stack Developer</RolePill>
+            <span
+              style={{
+                fontFamily: "var(--font-syne)",
+                fontWeight: 600,
+                fontSize: "clamp(0.9rem, 1.6vw, 1.2rem)",
+                color: "var(--color-muted)",
+                letterSpacing: "-0.01em",
+              }}
+            >
+              Full Stack Developer
+            </span>
             <span
               style={{
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "6px",
-                padding: "4px 12px",
+                padding: "3px 10px",
                 borderRadius: "9999px",
-                border: "1px solid var(--color-border)",
+                border: "1px solid rgba(255,255,255,0.08)",
                 fontFamily: "var(--font-inter)",
-                fontSize: "0.75rem",
+                fontSize: "0.7rem",
                 fontWeight: 500,
                 color: "var(--color-muted)",
                 letterSpacing: "0.04em",
               }}
             >
               <span style={{ color: "var(--color-teal)", fontWeight: 700 }}>Junior</span>
-              <span style={{ opacity: 0.4 }} aria-hidden="true">→</span>
+              <span style={{ opacity: 0.35 }}>→</span>
               <span style={{ color: "var(--color-teal-light)", fontWeight: 700 }}>Mid</span>
             </span>
           </motion.div>
 
-          {/* Bio */}
+          {/* Bio — concise */}
           <motion.p
-            variants={item}
+            variants={itemVariants}
             style={{
               fontFamily: "var(--font-inter)",
-              fontSize: "clamp(0.9rem, 1.4vw, 1.0625rem)",
+              fontSize: "clamp(0.82rem, 1.2vw, 0.9375rem)",
               color: "var(--color-muted)",
-              lineHeight: 1.75,
-              maxWidth: "520px",
+              lineHeight: 1.7,
+              maxWidth: "440px",
+              marginBottom: "26px",
+              opacity: 0.8,
             }}
           >
-            Full Stack Developer focused on{" "}
-            <Highlight>React, Next.js and Flutter</Highlight> on the frontend and{" "}
-            <Highlight>Node.js, .NET and Go</Highlight> on the backend. Over{" "}
-            <span
-              style={{
-                color: "var(--color-teal-light)",
-                fontWeight: 600,
-              }}
-            >
-              $1.0M
-            </span>{" "}
-            processed in payment solutions. Obracon (Sabesp), Multiclínica, GCB (Petrobras).
+            React, Next.js, Flutter · Node.js, .NET, Go ·{" "}
+            <span style={{ color: "var(--color-teal-light)", fontWeight: 600 }}>$1.0M+</span>
+            {" "}in payment solutions.
+            <br />
+            Obracon (Sabesp) · Multiclínica · GCB (Petrobras).
           </motion.p>
 
           {/* CTAs */}
           <motion.div
             className="hero-ctas"
-            variants={item}
+            variants={itemVariants}
             style={{
               display: "flex",
               flexWrap: "wrap",
               alignItems: "center",
-              gap: "16px",
-              paddingTop: "4px",
+              gap: "14px",
+              marginBottom: "36px",
             }}
           >
-            <PrimaryButton href="#projects" aria-label="See my projects">
-              See Projects <ArrowRight size={14} />
+            <PrimaryButton href="#projects">
+              See Projects <ArrowRight size={13} />
             </PrimaryButton>
-            <GhostButton href="https://github.com/Lzdevmendes" aria-label="Perfil no GitHub (abre em nova aba)">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg> GitHub
+            <GhostButton href="https://github.com/Lzdevmendes">
+              <GitHubIcon /> GitHub
             </GhostButton>
           </motion.div>
 
           {/* Stats */}
           <motion.div
             className="hero-stats"
-            variants={item}
+            variants={itemVariants}
             style={{
               display: "flex",
               flexWrap: "wrap",
-              gap: "40px",
-              paddingTop: "32px",
-              borderTop: "1px solid var(--color-border)",
-              marginTop: "4px",
+              gap: "36px",
+              paddingTop: "24px",
+              borderTop: "1px solid rgba(255,255,255,0.05)",
             }}
           >
-            {stats.map((stat) => (
-              <div
-                key={stat.label}
-                style={{ display: "flex", flexDirection: "column", gap: "4px" }}
-              >
+            {stats.map((s) => (
+              <div key={s.label} style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
                 <span
                   style={{
                     fontFamily: "var(--font-syne)",
                     fontWeight: 700,
-                    fontSize: "clamp(1.25rem, 2.5vw, 1.625rem)",
+                    fontSize: "clamp(1.1rem, 1.8vw, 1.45rem)",
                     color: "var(--color-text)",
                     letterSpacing: "-0.02em",
                   }}
                 >
-                  {stat.value}
+                  {s.value}
                 </span>
                 <span
                   style={{
                     fontFamily: "var(--font-inter)",
-                    fontSize: "0.8125rem",
+                    fontSize: "0.7rem",
                     color: "var(--color-muted)",
+                    opacity: 0.7,
                   }}
                 >
-                  {stat.label}
+                  {s.label}
                 </span>
               </div>
             ))}
@@ -416,48 +458,83 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* ── Side label: "scroll to interact" (vertical, desktop) ── */}
       <motion.div
-        className="hero-scroll-indicator"
+        className="hero-side-label"
+        aria-hidden="true"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.6, duration: 0.6 }}
+        transition={{ delay: 2.0, duration: 0.8 }}
         style={{
           position: "absolute",
-          bottom: "32px",
+          right: "26px",
+          top: "50%",
+          transform: "translateY(-50%)",
+          zIndex: 10,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "10px",
+          fontFamily: "var(--font-inter)",
+          fontSize: "0.625rem",
+          color: "var(--color-muted)",
+          letterSpacing: "0.2em",
+          textTransform: "uppercase",
+          writingMode: "vertical-rl",
+          opacity: 0.4,
+          pointerEvents: "none",
+        }}
+      >
+        <span style={{ width: "1px", height: "32px", background: "rgba(255,255,255,0.12)", display: "inline-block" }} />
+        scroll to interact
+        <span style={{ width: "1px", height: "32px", background: "rgba(255,255,255,0.12)", display: "inline-block" }} />
+      </motion.div>
+
+      {/* ── Scroll down indicator ── */}
+      <motion.div
+        className="hero-scroll-hint"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.8, duration: 0.6 }}
+        style={{
+          position: "absolute",
+          bottom: "28px",
           left: "50%",
           transform: "translateX(-50%)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           gap: "8px",
+          zIndex: 10,
         }}
       >
         <span
           style={{
             fontFamily: "var(--font-inter)",
-            fontSize: "0.6875rem",
+            fontSize: "0.625rem",
             color: "var(--color-muted)",
-            letterSpacing: "0.18em",
+            letterSpacing: "0.2em",
             textTransform: "uppercase",
+            opacity: 0.45,
           }}
         >
           scroll
         </span>
         <motion.div
-          animate={{ y: [0, 8, 0] }}
+          animate={{ y: [0, 9, 0] }}
           transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
           style={{
             width: "1px",
-            height: "36px",
-            background:
-              "linear-gradient(to bottom, var(--color-teal), transparent)",
+            height: "38px",
+            background: "linear-gradient(to bottom, var(--color-teal), transparent)",
           }}
         />
       </motion.div>
     </section>
   );
 }
+
+/* ─── Sub-components ─────────────────────────────────── */
 
 const PulseDot = memo(function PulseDot() {
   return (
@@ -476,50 +553,23 @@ const PulseDot = memo(function PulseDot() {
   );
 });
 
-const RolePill = memo(function RolePill({ children }: { children: React.ReactNode }) {
-  return (
-    <span
-      style={{
-        fontFamily: "var(--font-syne)",
-        fontWeight: 600,
-        fontSize: "clamp(0.95rem, 2vw, 1.375rem)",
-        color: "var(--color-muted)",
-        letterSpacing: "-0.01em",
-      }}
-    >
-      {children}
-    </span>
-  );
-});
-
-const Highlight = memo(function Highlight({ children }: { children: React.ReactNode }) {
-  return (
-    <span style={{ color: "var(--color-text)", fontWeight: 500 }}>
-      {children}
-    </span>
-  );
-});
-
 const PrimaryButton = memo(function PrimaryButton({
   href,
   children,
-  "aria-label": ariaLabel,
 }: {
   href: string;
   children: React.ReactNode;
-  "aria-label"?: string;
 }) {
   return (
     <motion.a
       href={href}
-      aria-label={ariaLabel}
       whileHover={{ scale: 1.03, y: -1 }}
       whileTap={{ scale: 0.97 }}
       style={{
         display: "inline-flex",
         alignItems: "center",
         gap: "8px",
-        padding: "12px 24px",
+        padding: "11px 22px",
         borderRadius: "9999px",
         background: "var(--color-teal)",
         color: "#fff",
@@ -537,18 +587,15 @@ const PrimaryButton = memo(function PrimaryButton({
 const GhostButton = memo(function GhostButton({
   href,
   children,
-  "aria-label": ariaLabel,
 }: {
   href: string;
   children: React.ReactNode;
-  "aria-label"?: string;
 }) {
   return (
     <motion.a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={ariaLabel}
       whileHover={{ scale: 1.03, y: -1, borderColor: "#0D9488", color: "#14B8A6" }}
       whileTap={{ scale: 0.97 }}
       transition={{ duration: 0.2 }}
@@ -556,17 +603,27 @@ const GhostButton = memo(function GhostButton({
         display: "inline-flex",
         alignItems: "center",
         gap: "8px",
-        padding: "12px 24px",
+        padding: "11px 22px",
         borderRadius: "9999px",
-        border: "1px solid var(--color-border)",
+        border: "1px solid rgba(255,255,255,0.1)",
         color: "var(--color-muted)",
         fontFamily: "var(--font-inter)",
         fontSize: "0.875rem",
         fontWeight: 500,
         cursor: "pointer",
+        backdropFilter: "blur(8px)",
+        WebkitBackdropFilter: "blur(8px)",
       }}
     >
       {children}
     </motion.a>
   );
 });
+
+function GitHubIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+    </svg>
+  );
+}
