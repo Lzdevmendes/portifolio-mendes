@@ -41,6 +41,7 @@ export default function About() {
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 768px)");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMobile(mq.matches);
     const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
     mq.addEventListener("change", handler);
@@ -379,8 +380,8 @@ export default function About() {
                 letterSpacing: "-0.01em",
               }}
             >
-              "Código bom não é o que funciona — é o que qualquer pessoa
-              consegue entender e manter."
+              &ldquo;Código bom não é o que funciona — é o que qualquer pessoa
+              consegue entender e manter.&rdquo;
             </p>
             <footer
               style={{
