@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useSpring, useTransform, useScroll } from "framer-motion";
 import { ArrowRight, MapPin, Briefcase } from "lucide-react";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 
 const Character3D = dynamic(() => import("./Character3DScene"), {
@@ -28,14 +28,15 @@ const itemVariants = {
 };
 
 const stats = [
-  { value: "1.5+", label: "Years of experience" },
-  { value: "$1.0M+", label: "In payments processed" },
-  { value: "3", label: "Major clients" },
+  { value: "1.5+", label: "Anos de experiência" },
+  { value: "$1.0M+", label: "Em pagamentos processados" },
+  { value: "3", label: "Principais clientes" },
 ];
 
 export default function Hero() {
   const [active, setActive] = useState(false);
   const [isTouch, setIsTouch] = useState(false);
+  const heroRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -51,7 +52,11 @@ export default function Hero() {
   const headX = useTransform(rawX, [0, 1440], [-10, 10]);
   const headY = useTransform(rawY, [0, 900], [-6, 6]);
 
-  const { scrollYProgress } = useScroll();
+  // Scroll relativo ao hero: 0 quando o hero está no topo, 1 quando sai da tela
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
 
   function onMove(e: React.MouseEvent<HTMLElement>) {
     const r = e.currentTarget.getBoundingClientRect();
@@ -61,6 +66,7 @@ export default function Hero() {
 
   return (
     <section
+      ref={heroRef}
       id="hero"
       aria-label="Apresentação — Luiz Mendes, Desenvolvedor Full Stack"
       onMouseMove={isTouch ? undefined : onMove}
@@ -92,7 +98,7 @@ export default function Hero() {
       {/* ── LAYER 0: 3D CHARACTER FULLSCREEN ── */}
       <div
         aria-hidden="true"
-        style={{ position: "absolute", inset: 0, zIndex: 0 }}
+        style={{ position: "absolute", inset: 0, zIndex: 0, height: "100%" }}
       >
         <Character3D scrollProgress={scrollYProgress} />
       </div>
@@ -111,7 +117,7 @@ export default function Hero() {
         }}
       />
 
-      {/* ── Left gradient: text area readability (desktop) ── */}
+      {/* ── Left gradient: legibilidade do texto (desktop) ── */}
       <div
         className="hero-left-grad"
         aria-hidden="true"
@@ -125,7 +131,7 @@ export default function Hero() {
         }}
       />
 
-      {/* ── Bottom gradient: bottom text readability (always) ── */}
+      {/* ── Bottom gradient: sempre visível ── */}
       <div
         className="hero-bottom-grad"
         aria-hidden="true"
@@ -142,7 +148,7 @@ export default function Hero() {
         }}
       />
 
-      {/* ── Teal glow orb (top right, behind character) ── */}
+      {/* ── Teal glow orb ── */}
       <div
         aria-hidden="true"
         style={{
@@ -151,7 +157,7 @@ export default function Hero() {
           right: "-5%",
           width: "640px",
           height: "640px",
-          background: "radial-gradient(circle, rgba(13,148,136,0.12) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(13,148,136,0.14) 0%, transparent 70%)",
           borderRadius: "50%",
           filter: "blur(56px)",
           pointerEvents: "none",
@@ -221,7 +227,7 @@ export default function Hero() {
         }}
       />
 
-      {/* ── CONTENT ── */}
+      {/* ── CONTEÚDO ── */}
       <div
         style={{
           position: "relative",
@@ -231,7 +237,7 @@ export default function Hero() {
           flexDirection: "column",
         }}
       >
-        {/* Top: availability badges */}
+        {/* Topo: badges de disponibilidade */}
         <motion.div
           className="hero-badges-wrap"
           initial={{ opacity: 0, y: -12 }}
@@ -266,7 +272,7 @@ export default function Hero() {
             }}
           >
             <PulseDot />
-            Open to Work
+            Disponível para Trabalho
           </span>
           <span
             style={{
@@ -285,7 +291,7 @@ export default function Hero() {
             }}
           >
             <Briefcase size={11} />
-            Available immediately
+            Disponível imediatamente
           </span>
           <span
             style={{
@@ -299,14 +305,14 @@ export default function Hero() {
             }}
           >
             <MapPin size={11} />
-            Brazil
+            Brasil
           </span>
         </motion.div>
 
-        {/* Spacer — 3D fills this area */}
+        {/* Espaço — 3D preenche essa área */}
         <div style={{ flex: 1 }} />
 
-        {/* Bottom: main editorial content */}
+        {/* Rodapé: conteúdo editorial principal */}
         <motion.div
           className="hero-bottom"
           variants={contentVariants}
@@ -314,7 +320,7 @@ export default function Hero() {
           animate="show"
           style={{ padding: "0 48px 72px", maxWidth: "740px" }}
         >
-          {/* Giant heading — Metalab style */}
+          {/* Título principal */}
           <motion.h1
             className="hero-heading"
             variants={itemVariants}
@@ -335,7 +341,7 @@ export default function Hero() {
             <span style={{ color: "var(--color-teal)" }}>Mendes</span>
           </motion.h1>
 
-          {/* Role row */}
+          {/* Linha de cargo */}
           <motion.div
             variants={itemVariants}
             style={{
@@ -355,7 +361,7 @@ export default function Hero() {
                 letterSpacing: "-0.01em",
               }}
             >
-              Full Stack Developer
+              Desenvolvedor Full Stack
             </span>
             <span
               style={{
@@ -372,13 +378,13 @@ export default function Hero() {
                 letterSpacing: "0.04em",
               }}
             >
-              <span style={{ color: "var(--color-teal)", fontWeight: 700 }}>Junior</span>
+              <span style={{ color: "var(--color-teal)", fontWeight: 700 }}>Júnior</span>
               <span style={{ opacity: 0.35 }}>→</span>
-              <span style={{ color: "var(--color-teal-light)", fontWeight: 700 }}>Mid</span>
+              <span style={{ color: "var(--color-teal-light)", fontWeight: 700 }}>Pleno</span>
             </span>
           </motion.div>
 
-          {/* Bio — concise */}
+          {/* Bio */}
           <motion.p
             variants={itemVariants}
             style={{
@@ -393,7 +399,7 @@ export default function Hero() {
           >
             React, Next.js, Flutter · Node.js, .NET, Go ·{" "}
             <span style={{ color: "var(--color-teal-light)", fontWeight: 600 }}>$1.0M+</span>
-            {" "}in payment solutions.
+            {" "}em soluções de pagamento.
             <br />
             Obracon (Sabesp) · Multiclínica · GCB (Petrobras).
           </motion.p>
@@ -411,7 +417,7 @@ export default function Hero() {
             }}
           >
             <PrimaryButton href="#projects">
-              See Projects <ArrowRight size={13} />
+              Ver Projetos <ArrowRight size={13} />
             </PrimaryButton>
             <GhostButton href="https://github.com/Lzdevmendes">
               <GitHubIcon /> GitHub
@@ -459,7 +465,7 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* ── Side label: "scroll to interact" (vertical, desktop) ── */}
+      {/* ── Label lateral: "role para interagir" (vertical, desktop) ── */}
       <motion.div
         className="hero-side-label"
         aria-hidden="true"
@@ -487,11 +493,11 @@ export default function Hero() {
         }}
       >
         <span style={{ width: "1px", height: "32px", background: "rgba(255,255,255,0.12)", display: "inline-block" }} />
-        scroll to interact
+        role para interagir
         <span style={{ width: "1px", height: "32px", background: "rgba(255,255,255,0.12)", display: "inline-block" }} />
       </motion.div>
 
-      {/* ── Scroll down indicator ── */}
+      {/* ── Indicador de scroll ── */}
       <motion.div
         className="hero-scroll-hint"
         initial={{ opacity: 0 }}
@@ -519,7 +525,7 @@ export default function Hero() {
             opacity: 0.45,
           }}
         >
-          scroll
+          rolar
         </span>
         <motion.div
           animate={{ y: [0, 9, 0] }}
