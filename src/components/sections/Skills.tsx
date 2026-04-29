@@ -159,7 +159,7 @@ const categories: SkillCategory[] = [
     ],
   },
   {
-    label: "Architecture",
+    label: "Arquitetura",
     tag: "Design",
     color: "#8B5CF6",
     skills: [
@@ -173,7 +173,7 @@ const categories: SkillCategory[] = [
     ],
   },
   {
-    label: "Payments",
+    label: "Pagamentos",
     tag: "Fintech",
     color: "#10B981",
     skills: [
@@ -212,7 +212,7 @@ export default function Skills() {
   return (
     <section
       id="skills"
-      aria-label="Tech Stack and Skills"
+      aria-label="Stack e Habilidades"
       style={{ padding: "100px 24px", position: "relative" }}
     >
       <style>{`

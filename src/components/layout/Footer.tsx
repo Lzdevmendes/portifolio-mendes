@@ -91,7 +91,7 @@ export default function Footer() {
               textTransform: "uppercase",
             }}
           >
-            Contact
+            Contato
           </motion.span>
 
           <motion.h2
@@ -109,9 +109,9 @@ export default function Footer() {
               maxWidth: "640px",
             }}
           >
-            Let&apos;s build something{" "}
-            <span style={{ color: "var(--color-teal)" }}>incredible</span>{" "}
-            together?
+            Vamos construir algo{" "}
+            <span style={{ color: "var(--color-teal)" }}>incrível</span>{" "}
+            juntos?
           </motion.h2>
 
           <motion.p
@@ -127,8 +127,8 @@ export default function Footer() {
               maxWidth: "440px",
             }}
           >
-            Available for freelance projects, technical consulting or
-            full-time opportunities as a Full Stack Developer.
+            Disponível para projetos freelance, consultoria técnica ou
+            oportunidades full-time como Desenvolvedor Full Stack.
           </motion.p>
         </motion.div>
 
@@ -164,7 +164,7 @@ export default function Footer() {
             }}
           >
             <Mail size={15} />
-            Send email
+            Enviar e-mail
           </motion.a>
 
           <motion.a
@@ -284,7 +284,7 @@ export default function Footer() {
             }}
           >
             <ArrowUp size={12} />
-            Back to top
+            Voltar ao topo
           </motion.button>
 
           {/* Copyright — direita */}
@@ -295,7 +295,7 @@ export default function Footer() {
               color: "var(--color-muted)",
             }}
           >
-            © {year} Luiz Mendes. All rights reserved.
+            © {year} Luiz Mendes. Todos os direitos reservados.
           </span>
         </div>
       </div>

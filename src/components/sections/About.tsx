@@ -10,28 +10,28 @@ const focusAreas = [
     title: "Frontend",
     color: "#6366F1",
     techs: "React · Next.js · Flutter",
-    desc: "Fast, accessible interfaces focused on user experience.",
+    desc: "Interfaces rápidas e acessíveis com foco na experiência do usuário.",
   },
   {
     icon: <Server size={16} />,
     title: "Backend",
     color: "#0D9488",
     techs: "Node.js · .NET · Go",
-    desc: "Scalable APIs, clean architecture, and robust integrations.",
+    desc: "APIs escaláveis, arquitetura limpa e integrações robustas.",
   },
   {
     icon: <Smartphone size={16} />,
     title: "Mobile",
     color: "#00B4AB",
     techs: "Flutter · Dart",
-    desc: "Cross-platform apps with native, fluid experience.",
+    desc: "Apps multiplataforma com experiência nativa e fluida.",
   },
   {
     icon: <GitPullRequest size={16} />,
-    title: "Collaboration",
+    title: "Colaboração",
     color: "#F59E0B",
     techs: "Git · PR Review · Orgs",
-    desc: "Member of 2 GitHub Organizations. Experience with PR review, code review and collaborative versioning in teams.",
+    desc: "Membro de 2 Organizações no GitHub. Experiência com revisão de PR, code review e versionamento colaborativo em equipes.",
   },
 ];
 
@@ -72,7 +72,7 @@ export default function About() {
     <section
       ref={sectionRef}
       id="about"
-      aria-label="About me"
+      aria-label="Sobre mim"
       style={{
         position: "relative",
         padding: "140px 24px",
@@ -119,7 +119,7 @@ export default function About() {
             display: "block",
           }}
         >
-          ABOUT
+          SOBRE
         </span>
       </motion.div>
 
@@ -158,7 +158,7 @@ export default function About() {
               marginBottom: "20px",
             }}
           >
-            About me
+            Sobre mim
           </span>
 
           <h2
@@ -172,10 +172,10 @@ export default function About() {
               marginBottom: "28px",
             }}
           >
-            Building the{" "}
-            <span style={{ color: "var(--color-teal)" }}>future</span>
+            Construindo o{" "}
+            <span style={{ color: "var(--color-teal)" }}>futuro</span>
             <br />
-            with code.
+            com código.
           </h2>
 
           <p
@@ -187,9 +187,9 @@ export default function About() {
               maxWidth: "400px",
             }}
           >
-            Full Stack Developer passionate about clean code, best practices and
-            memorable user experiences. I work from frontend to backend,
-            delivering complete products with quality and attention to detail.
+            Desenvolvedor Full Stack apaixonado por código limpo, boas práticas
+            e experiências memoráveis. Atuo do frontend ao backend,
+            entregando produtos completos com qualidade e atenção aos detalhes.
           </p>
 
           {/* Open to Work badge */}
@@ -236,7 +236,7 @@ export default function About() {
                     letterSpacing: "-0.01em",
                   }}
                 >
-                  Open to Work
+                  Disponível para Trabalho
                 </span>
                 <motion.span
                   animate={{ opacity: [1, 0.3, 1] }}
@@ -260,7 +260,7 @@ export default function About() {
                   lineHeight: 1.4,
                 }}
               >
-                Available immediately · Full-time, contract or freelance
+                Disponível imediatamente · CLT, PJ ou freelance
               </span>
             </div>
           </motion.div>
@@ -304,9 +304,9 @@ export default function About() {
             }}
           >
             {[
-              { n: "10+", l: "projects delivered" },
-              { n: "2", l: "GitHub orgs" },
-              { n: "7+", l: "stacks mastered" },
+              { n: "10+", l: "projetos entregues" },
+              { n: "2", l: "orgs no GitHub" },
+              { n: "7+", l: "stacks dominadas" },
             ].map((s) => (
               <div
                 key={s.l}
@@ -446,7 +446,7 @@ const FocusCard = memo(function FocusCard({
       }}
       whileHover={{ x: 4 }}
       role="article"
-      aria-label={`${area.title}: ${area.desc}`}
+      aria-label={`${area.title} — ${area.desc}`}
       style={{
         display: "flex",
         gap: "20px",
