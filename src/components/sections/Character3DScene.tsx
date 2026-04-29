@@ -11,12 +11,12 @@ type Props = { scrollProgress: MotionValue<number> };
 function Lights() {
   return (
     <>
-      <ambientLight intensity={0.25} color="#ffffff" />
-      <pointLight position={[3, 4, 3]} intensity={5} color="#14B8A6" />
-      <pointLight position={[-4, -1, 2]} intensity={2.5} color="#0D9488" />
-      <pointLight position={[0, -3, 5]} intensity={1.2} color="#ffffff" />
-      {/* Rim light from behind */}
-      <pointLight position={[0, 1, -3]} intensity={1.8} color="#0f4a4a" />
+      <ambientLight intensity={0.7} color="#ffffff" />
+      <pointLight position={[3, 4, 3]} intensity={8} color="#14B8A6" />
+      <pointLight position={[-4, -1, 2]} intensity={4} color="#0D9488" />
+      <pointLight position={[0, -3, 5]} intensity={2.5} color="#ffffff" />
+      <pointLight position={[0, 1, -3]} intensity={2.2} color="#0f4a4a" />
+      <directionalLight position={[0, 2, 4]} intensity={1.5} color="#ffffff" />
     </>
   );
 }
@@ -42,8 +42,8 @@ function DevBot({ scrollProgress }: Props) {
 
   const teal = "#0D9488";
   const tealL = "#14B8A6";
-  const dark = "#0a0d14";
-  const mid = "#141c28";
+  const dark = "#1a2235";
+  const mid = "#243048";
 
   return (
     <group ref={groupRef}>
@@ -189,14 +189,14 @@ export default function Character3DScene({ scrollProgress }: Props) {
 
   return (
     <Canvas
-      camera={{ position: [0, 0.05, 2.5], fov: 48 }}
+      camera={{ position: [0, 0.05, 2.4], fov: 52 }}
       gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
       dpr={[1, 2]}
       style={{ background: "transparent", width: "100%", height: "100%" }}
     >
       <Lights />
       <Suspense fallback={null}>
-        <group position={[xOffset, 0, 0]}>
+        <group position={[xOffset, -0.1, 0]}>
           <DevBot scrollProgress={scrollProgress} />
         </group>
       </Suspense>
