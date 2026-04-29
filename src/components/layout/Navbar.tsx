@@ -8,12 +8,12 @@ import { Menu, X } from "lucide-react";
 type DotStrength = "none" | "dim" | "bright";
 
 const navLinks = [
-  { label: "About", href: "#about" },
-  { label: "Projects", href: "#projects" },
-  { label: "Experience", href: "#experience" },
+  { label: "Sobre", href: "#about" },
+  { label: "Projetos", href: "#projects" },
+  { label: "Experiência", href: "#experience" },
   { label: "Skills", href: "#skills" },
   { label: "Certs", href: "#certifications" },
-  { label: "Contact", href: "#contact" },
+  { label: "Contato", href: "#contact" },
 ];
 
 export default function Navbar() {
@@ -211,7 +211,7 @@ export default function Navbar() {
             display: "none",
           }}
           className="show-mobile"
-          aria-label="Toggle menu"
+          aria-label="Abrir menu"
         >
           <AnimatePresence mode="wait" initial={false}>
             <motion.span
@@ -379,7 +379,7 @@ function HireButton() {
         fontWeight: 500,
       }}
     >
-      Hire me
+      Me contratar
     </motion.a>
   );
 }

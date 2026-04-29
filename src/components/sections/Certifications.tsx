@@ -95,7 +95,7 @@ export default function Certifications() {
   return (
     <section
       id="certifications"
-      aria-label="Certifications and Courses"
+      aria-label="Certificações e Cursos"
       style={{ padding: "100px 24px", position: "relative" }}
     >
       <style>{`
@@ -146,7 +146,7 @@ export default function Certifications() {
               marginBottom: "16px",
             }}
           >
-            Education
+            Formação
           </span>
           <div
             style={{
@@ -167,8 +167,8 @@ export default function Certifications() {
                 color: "var(--color-text)",
               }}
             >
-              Certifications &{" "}
-              <span style={{ color: "var(--color-teal)" }}>Courses</span>
+              Certificações &{" "}
+              <span style={{ color: "var(--color-teal)" }}>Cursos</span>
             </h2>
             <p
               style={{
@@ -180,8 +180,7 @@ export default function Certifications() {
                 textAlign: "right",
               }}
             >
-              {certifications.length} certifications on globally recognized
-              platforms
+              {certifications.length} certificações em plataformas reconhecidas globalmente
             </p>
           </div>
         </motion.div>
@@ -214,7 +213,7 @@ const CertCard = memo(function CertCard({ cert }: { cert: Certification }) {
     <motion.div
       variants={cardVariants}
       role="article"
-      aria-label={`Certification: ${cert.title} — ${cert.issuer}, ${cert.date}`}
+      aria-label={`Certificação: ${cert.title} — ${cert.issuer}, ${cert.date}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -378,7 +377,7 @@ const CertCard = memo(function CertCard({ cert }: { cert: Certification }) {
           href={cert.credentialUrl}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label={`View credential for ${cert.title} at ${cert.issuer} (opens in new tab)`}
+          aria-label={`Ver certificado de ${cert.title} na ${cert.issuer} (abre em nova aba)`}
           animate={{
             color: hovered ? cert.color : "var(--color-muted)",
           }}
@@ -396,7 +395,7 @@ const CertCard = memo(function CertCard({ cert }: { cert: Certification }) {
             paddingTop: "4px",
           }}
         >
-          View credential
+          Ver certificado
           <ExternalLink size={12} strokeWidth={2} />
         </motion.a>
       )}

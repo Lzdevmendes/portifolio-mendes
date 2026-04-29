@@ -53,8 +53,8 @@ export default function ProjectsHeader() {
             color: "var(--color-text)",
           }}
         >
-          Recent{" "}
-          <span style={{ color: "var(--color-teal)" }}>Work</span>
+          Trabalhos{" "}
+          <span style={{ color: "var(--color-teal)" }}>Recentes</span>
         </motion.h2>
 
         <motion.a
@@ -77,7 +77,7 @@ export default function ProjectsHeader() {
             transition: "color 0.2s",
           }}
         >
-          See all on GitHub
+          Ver tudo no GitHub
           <ArrowUpRight size={14} />
         </motion.a>
       </div>
@@ -95,8 +95,8 @@ export default function ProjectsHeader() {
           maxWidth: "480px",
         }}
       >
-        Open source projects, experiments and solutions built with the
-        latest technologies on the market.
+        Projetos open source, experimentos e soluções construídas com as
+        tecnologias mais modernas do mercado.
       </motion.p>
     </motion.div>
   );
