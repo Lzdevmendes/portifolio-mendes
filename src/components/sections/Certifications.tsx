@@ -132,7 +132,7 @@ export default function Certifications() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          style={{ marginBottom: "72px" }}
+          style={{ marginBottom: "56px" }}
         >
           <span
             style={{
@@ -183,6 +183,49 @@ export default function Certifications() {
               {certifications.length} certificações em plataformas reconhecidas globalmente
             </p>
           </div>
+        </motion.div>
+
+        {/* Platform badges */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "8px",
+            marginBottom: "40px",
+            paddingBottom: "32px",
+            borderBottom: "1px solid var(--color-border)",
+          }}
+        >
+          {[
+            { name: "Rocketseat", color: "#7C3AED" },
+            { name: "Amazon Web Services", color: "#F59E0B" },
+            { name: "freeCodeCamp", color: "#3B82F6" },
+            { name: "DIO", color: "#EC4899" },
+          ].map((p) => (
+            <span
+              key={p.name}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "5px 12px",
+                borderRadius: "6px",
+                background: `${p.color}12`,
+                border: `1px solid ${p.color}28`,
+                fontFamily: "var(--font-inter)",
+                fontSize: "0.75rem",
+                fontWeight: 500,
+                color: p.color,
+              }}
+            >
+              <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: p.color, display: "inline-block", flexShrink: 0 }} />
+              {p.name}
+            </span>
+          ))}
         </motion.div>
 
         {/* Grid */}
