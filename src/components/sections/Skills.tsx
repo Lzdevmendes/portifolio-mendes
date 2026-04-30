@@ -318,6 +318,9 @@ export default function Skills() {
           </div>
         </motion.div>
 
+        {/* Featured tech strip */}
+        <FeaturedTech />
+
         {/* Linha 1 — Frontend, Backend, Testes */}
         <motion.div
           className="skills-row-1"
@@ -548,3 +551,98 @@ const SkillPill = memo(function SkillPill({
     </motion.span>
   );
 });
+
+// ─── Featured tech strip ──────────────────────────────────────────────────────
+const FEATURED = [
+  { name: "React", color: "#61DAFB", bg: "#61DAFB18" },
+  { name: "Next.js", color: "#FFFFFF", bg: "#ffffff12" },
+  { name: "TypeScript", color: "#3178C6", bg: "#3178C618" },
+  { name: "Node.js", color: "#8CC84B", bg: "#8CC84B18" },
+  { name: "Flutter", color: "#00B4AB", bg: "#00B4AB18" },
+  { name: ".NET / C#", color: "#9B4F96", bg: "#9B4F9618" },
+  { name: "Go", color: "#00ADD8", bg: "#00ADD818" },
+  { name: "Docker", color: "#2496ED", bg: "#2496ED18" },
+];
+
+function FeaturedTech() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      style={{ marginBottom: "40px" }}
+    >
+      <p
+        style={{
+          fontFamily: "var(--font-inter)",
+          fontSize: "0.7rem",
+          color: "var(--color-muted)",
+          letterSpacing: "0.14em",
+          textTransform: "uppercase",
+          marginBottom: "14px",
+          opacity: 0.6,
+        }}
+      >
+        Core Stack
+      </p>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "8px",
+        }}
+      >
+        {FEATURED.map((tech, i) => (
+          <motion.div
+            key={tech.name}
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: i * 0.05 }}
+            whileHover={{ scale: 1.06, y: -2 }}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "7px 14px",
+              borderRadius: "8px",
+              background: tech.bg,
+              border: `1px solid ${tech.color}30`,
+              cursor: "default",
+              transition: "box-shadow 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.boxShadow = `0 0 16px ${tech.color}25`;
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.boxShadow = "none";
+            }}
+          >
+            <span
+              style={{
+                width: "7px",
+                height: "7px",
+                borderRadius: "50%",
+                background: tech.color,
+                boxShadow: `0 0 6px ${tech.color}80`,
+                flexShrink: 0,
+              }}
+            />
+            <span
+              style={{
+                fontFamily: "var(--font-inter)",
+                fontSize: "0.8rem",
+                fontWeight: 600,
+                color: tech.color,
+                letterSpacing: "0.01em",
+              }}
+            >
+              {tech.name}
+            </span>
+          </motion.div>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
