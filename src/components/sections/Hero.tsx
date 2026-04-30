@@ -1,339 +1,134 @@
 "use client";
 
-import { motion, useMotionValue, useSpring, useTransform, useScroll } from "framer-motion";
-import { ArrowRight, MapPin, Briefcase } from "lucide-react";
-import { memo, useEffect, useRef, useState } from "react";
-import dynamic from "next/dynamic";
+import { motion } from "framer-motion";
+import { ArrowRight, MapPin } from "lucide-react";
+import { memo, useEffect, useState } from "react";
 
-const Character3D = dynamic(() => import("./Character3DScene"), {
-  ssr: false,
-  loading: () => null,
-});
+// ─── Syntax-highlighted code lines ───────────────────────────────────────────
+type Token = { t: string; c: string };
+type CodeLine = { n: number; tokens: Token[] };
 
-const contentVariants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.5 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 28 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] },
-  },
-};
-
-const stats = [
-  { value: "1.5+", label: "Anos de experiência" },
-  { value: "$1.0M+", label: "Em pagamentos processados" },
-  { value: "3", label: "Principais clientes" },
+const CODE: CodeLine[] = [
+  { n: 1, tokens: [{ t: "const ", c: "#C678DD" }, { t: "dev", c: "#E5C07B" }, { t: " = {", c: "#ABB2BF" }] },
+  { n: 2, tokens: [{ t: "  name", c: "#E06C75" }, { t: ": ", c: "#ABB2BF" }, { t: '"Luiz Mendes"', c: "#98C379" }, { t: ",", c: "#ABB2BF" }] },
+  { n: 3, tokens: [{ t: "  role", c: "#E06C75" }, { t: ": ", c: "#ABB2BF" }, { t: '"Full Stack Dev"', c: "#98C379" }, { t: ",", c: "#ABB2BF" }] },
+  { n: 4, tokens: [{ t: "  from", c: "#E06C75" }, { t: ": ", c: "#ABB2BF" }, { t: '"Brasil 🇧🇷"', c: "#98C379" }, { t: ",", c: "#ABB2BF" }] },
+  { n: 5, tokens: [{ t: "  stack", c: "#E06C75" }, { t: ": [", c: "#ABB2BF" }] },
+  { n: 6, tokens: [{ t: '    "React"', c: "#98C379" }, { t: ", ", c: "#ABB2BF" }, { t: '"Next.js"', c: "#98C379" }, { t: ",", c: "#ABB2BF" }] },
+  { n: 7, tokens: [{ t: '    "Flutter"', c: "#98C379" }, { t: ", ", c: "#ABB2BF" }, { t: '"Node.js"', c: "#98C379" }, { t: ",", c: "#ABB2BF" }] },
+  { n: 8, tokens: [{ t: '    ".NET"', c: "#98C379" }, { t: ", ", c: "#ABB2BF" }, { t: '"Go"', c: "#98C379" }] },
+  { n: 9, tokens: [{ t: "  ],", c: "#ABB2BF" }] },
+  { n: 10, tokens: [{ t: "  payments", c: "#E06C75" }, { t: ": ", c: "#ABB2BF" }, { t: '"$1.0M+"', c: "#14B8A6" }, { t: ",", c: "#ABB2BF" }] },
+  { n: 11, tokens: [{ t: "  status", c: "#E06C75" }, { t: ": ", c: "#ABB2BF" }, { t: '"available"', c: "#14B8A6" }, { t: "  // 🟢", c: "#5C6370" }] },
+  { n: 12, tokens: [{ t: "};", c: "#ABB2BF" }] },
 ];
 
+const TECH_CHIPS = ["React", "Next.js", "TypeScript", "Flutter", "Node.js", ".NET", "Go", "AWS", "Docker", "PostgreSQL"];
+
+const STATS = [
+  { value: "1.5+", label: "Anos de experiência" },
+  { value: "$1M+", label: "Em pagamentos" },
+  { value: "3", label: "Grandes clientes" },
+];
+
+// ─── Animation presets ────────────────────────────────────────────────────────
+const ease = [0.4, 0, 0.2, 1] as [number, number, number, number];
+
+const container = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.09, delayChildren: 0.25 } },
+};
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.65, ease } },
+};
+
+// ─── Hero ─────────────────────────────────────────────────────────────────────
 export default function Hero() {
-  const [active, setActive] = useState(false);
-  const [isTouch, setIsTouch] = useState(false);
-  const heroRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsTouch(window.matchMedia("(pointer: coarse)").matches);
-  }, []);
-
-  const rawX = useMotionValue(0);
-  const rawY = useMotionValue(0);
-  const glowX = useSpring(rawX, { stiffness: 40, damping: 16, mass: 0.8 });
-  const glowY = useSpring(rawY, { stiffness: 40, damping: 16, mass: 0.8 });
-  const ringX = useSpring(rawX, { stiffness: 220, damping: 24 });
-  const ringY = useSpring(rawY, { stiffness: 220, damping: 24 });
-  const headX = useTransform(rawX, [0, 1440], [-10, 10]);
-  const headY = useTransform(rawY, [0, 900], [-6, 6]);
-
-  // Scroll relativo ao hero: 0 quando o hero está no topo, 1 quando sai da tela
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-
-  function onMove(e: React.MouseEvent<HTMLElement>) {
-    const r = e.currentTarget.getBoundingClientRect();
-    rawX.set(e.clientX - r.left);
-    rawY.set(e.clientY - r.top);
-  }
-
   return (
     <section
-      ref={heroRef}
       id="hero"
       aria-label="Apresentação — Luiz Mendes, Desenvolvedor Full Stack"
-      onMouseMove={isTouch ? undefined : onMove}
-      onMouseEnter={isTouch ? undefined : () => setActive(true)}
-      onMouseLeave={isTouch ? undefined : () => setActive(false)}
-      style={{ position: "relative", minHeight: "100vh", overflow: "hidden", background: "#080a0e" }}
+      style={{ position: "relative", minHeight: "100vh", background: "#080a0e", overflow: "hidden" }}
     >
-      <style>{`
-        @media (max-width: 480px) {
-          .hero-heading { font-size: clamp(3.8rem, 18vw, 5.5rem) !important; }
-          .hero-bottom { padding: 0 20px 56px !important; }
-          .hero-badges-wrap { padding: 84px 20px 0 !important; }
-          .hero-stats { gap: 24px !important; flex-wrap: wrap !important; }
-          .hero-ctas { flex-direction: column !important; align-items: stretch !important; }
-          .hero-ctas a { justify-content: center !important; }
-          .hero-scroll-hint { display: none !important; }
-          .hero-side-label { display: none !important; }
-        }
-        @media (max-width: 768px) {
-          .hero-scroll-hint { bottom: 90px !important; }
-          .hero-side-label { display: none !important; }
-        }
-        @media (max-width: 1023px) {
-          .hero-left-grad { opacity: 0 !important; }
-          .hero-bottom-grad { opacity: 1 !important; }
-        }
-      `}</style>
+      <HeroBackground />
 
-      {/* ── LAYER 0: 3D CHARACTER FULLSCREEN ── */}
       <div
-        aria-hidden="true"
-        style={{ position: "absolute", inset: 0, zIndex: 0, height: "100%" }}
-      >
-        <Character3D scrollProgress={scrollYProgress} />
-      </div>
-
-      {/* ── Grid texture ── */}
-      <div
-        aria-hidden="true"
+        className="hero-layout"
         style={{
-          position: "absolute",
-          inset: 0,
-          zIndex: 1,
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)",
-          backgroundSize: "72px 72px",
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* ── Left gradient: legibilidade do texto (desktop) ── */}
-      <div
-        className="hero-left-grad"
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          inset: 0,
-          zIndex: 2,
-          background:
-            "linear-gradient(100deg, rgba(8,10,14,0.95) 0%, rgba(8,10,14,0.82) 28%, rgba(8,10,14,0.42) 52%, rgba(8,10,14,0.08) 70%, transparent 84%)",
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* ── Bottom gradient: sempre visível ── */}
-      <div
-        className="hero-bottom-grad"
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: "60%",
-          zIndex: 2,
-          background:
-            "linear-gradient(to top, rgba(8,10,14,0.96) 0%, rgba(8,10,14,0.72) 35%, rgba(8,10,14,0.2) 65%, transparent 100%)",
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* ── Teal glow orb ── */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          top: "-10%",
-          right: "-5%",
-          width: "640px",
-          height: "640px",
-          background: "radial-gradient(circle, rgba(13,148,136,0.14) 0%, transparent 70%)",
-          borderRadius: "50%",
-          filter: "blur(56px)",
-          pointerEvents: "none",
-          zIndex: 2,
-        }}
-      />
-
-      {/* ── Mouse spotlight ── */}
-      <motion.div
-        aria-hidden="true"
-        animate={{ opacity: active && !isTouch ? 1 : 0 }}
-        transition={{ duration: 0.5 }}
-        style={{
-          position: "absolute",
-          left: glowX,
-          top: glowY,
-          translateX: "-50%",
-          translateY: "-50%",
-          width: "700px",
-          height: "700px",
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(13,148,136,0.11) 0%, rgba(13,148,136,0.03) 45%, transparent 70%)",
-          pointerEvents: "none",
-          zIndex: 4,
-        }}
-      />
-
-      {/* ── Cursor ring ── */}
-      <motion.div
-        aria-hidden="true"
-        animate={{ opacity: active && !isTouch ? 1 : 0 }}
-        transition={{ duration: 0.3 }}
-        style={{
-          position: "absolute",
-          left: ringX,
-          top: ringY,
-          translateX: "-50%",
-          translateY: "-50%",
-          width: "36px",
-          height: "36px",
-          borderRadius: "50%",
-          border: "1.5px solid rgba(13,148,136,0.5)",
-          pointerEvents: "none",
-          zIndex: 55,
-        }}
-      />
-
-      {/* ── Cursor dot ── */}
-      <motion.div
-        aria-hidden="true"
-        animate={{ opacity: active && !isTouch ? 1 : 0 }}
-        transition={{ duration: 0.15 }}
-        style={{
-          position: "absolute",
-          left: rawX,
-          top: rawY,
-          translateX: "-50%",
-          translateY: "-50%",
-          width: "5px",
-          height: "5px",
-          borderRadius: "50%",
-          background: "var(--color-teal)",
-          boxShadow: "0 0 8px rgba(13,148,136,0.9)",
-          pointerEvents: "none",
-          zIndex: 56,
-        }}
-      />
-
-      {/* ── CONTEÚDO ── */}
-      <div
-        style={{
-          position: "relative",
-          zIndex: 10,
+          maxWidth: "1280px",
+          margin: "0 auto",
+          padding: "0 48px",
           minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
+          display: "grid",
+          gridTemplateColumns: "1.1fr 0.9fr",
+          gap: "72px",
+          alignItems: "center",
+          position: "relative",
+          zIndex: 5,
         }}
       >
-        {/* Topo: badges de disponibilidade */}
+        {/* ── Left: text content ── */}
         <motion.div
-          className="hero-badges-wrap"
-          initial={{ opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.35, ease: [0.4, 0, 0.2, 1] }}
-          style={{
-            paddingTop: "108px",
-            paddingLeft: "48px",
-            paddingRight: "48px",
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            flexWrap: "wrap",
-          }}
-        >
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "6px 14px",
-              borderRadius: "9999px",
-              background: "rgba(13,148,136,0.13)",
-              border: "1px solid rgba(13,148,136,0.38)",
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
-              color: "var(--color-teal-light)",
-              fontFamily: "var(--font-inter)",
-              fontSize: "0.75rem",
-              fontWeight: 600,
-              letterSpacing: "0.04em",
-            }}
-          >
-            <PulseDot />
-            Disponível para Trabalho
-          </span>
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "6px",
-              padding: "6px 12px",
-              borderRadius: "9999px",
-              border: "1px solid rgba(255,255,255,0.08)",
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
-              fontFamily: "var(--font-inter)",
-              fontSize: "0.75rem",
-              fontWeight: 500,
-              color: "var(--color-muted)",
-            }}
-          >
-            <Briefcase size={11} />
-            Disponível imediatamente
-          </span>
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "4px",
-              fontFamily: "var(--font-inter)",
-              fontSize: "0.75rem",
-              color: "var(--color-muted)",
-              opacity: 0.7,
-            }}
-          >
-            <MapPin size={11} />
-            Brasil
-          </span>
-        </motion.div>
-
-        {/* Espaço — 3D preenche essa área */}
-        <div style={{ flex: 1 }} />
-
-        {/* Rodapé: conteúdo editorial principal */}
-        <motion.div
-          className="hero-bottom"
-          variants={contentVariants}
+          variants={container}
           initial="hidden"
           animate="show"
-          style={{ padding: "0 48px 72px", maxWidth: "740px" }}
+          style={{ display: "flex", flexDirection: "column", paddingTop: "96px", paddingBottom: "96px" }}
         >
-          {/* Título principal */}
+          {/* Status badges */}
+          <motion.div variants={fadeUp} style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "8px", marginBottom: "28px" }}>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "7px",
+                padding: "5px 13px",
+                borderRadius: "9999px",
+                background: "rgba(13,148,136,0.12)",
+                border: "1px solid rgba(13,148,136,0.35)",
+                backdropFilter: "blur(8px)",
+                WebkitBackdropFilter: "blur(8px)",
+                fontFamily: "var(--font-inter)",
+                fontSize: "0.72rem",
+                fontWeight: 600,
+                color: "var(--color-teal-light)",
+                letterSpacing: "0.04em",
+              }}
+            >
+              <PulseDot />
+              Disponível para Trabalho
+            </span>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "5px",
+                padding: "5px 11px",
+                borderRadius: "9999px",
+                border: "1px solid rgba(255,255,255,0.07)",
+                fontFamily: "var(--font-inter)",
+                fontSize: "0.72rem",
+                fontWeight: 500,
+                color: "var(--color-muted)",
+              }}
+            >
+              <MapPin size={10} />
+              Brasil
+            </span>
+          </motion.div>
+
+          {/* Name */}
           <motion.h1
-            className="hero-heading"
-            variants={itemVariants}
+            variants={fadeUp}
             style={{
               fontFamily: "var(--font-syne)",
               fontWeight: 800,
-              lineHeight: 0.92,
+              fontSize: "clamp(3.6rem, 7vw, 6.5rem)",
+              lineHeight: 0.9,
               letterSpacing: "-0.04em",
               color: "var(--color-text)",
-              fontSize: "clamp(4.5rem, 11vw, 9.5rem)",
-              marginBottom: "24px",
-              x: headX,
-              y: headY,
+              marginBottom: "20px",
             }}
           >
             Luiz
@@ -341,22 +136,16 @@ export default function Hero() {
             <span style={{ color: "var(--color-teal)" }}>Mendes</span>
           </motion.h1>
 
-          {/* Linha de cargo */}
+          {/* Role + level */}
           <motion.div
-            variants={itemVariants}
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              alignItems: "center",
-              gap: "14px",
-              marginBottom: "14px",
-            }}
+            variants={fadeUp}
+            style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "10px", marginBottom: "18px" }}
           >
             <span
               style={{
                 fontFamily: "var(--font-syne)",
                 fontWeight: 600,
-                fontSize: "clamp(0.9rem, 1.6vw, 1.2rem)",
+                fontSize: "clamp(0.95rem, 1.6vw, 1.15rem)",
                 color: "var(--color-muted)",
                 letterSpacing: "-0.01em",
               }}
@@ -367,7 +156,7 @@ export default function Hero() {
               style={{
                 display: "inline-flex",
                 alignItems: "center",
-                gap: "6px",
+                gap: "5px",
                 padding: "3px 10px",
                 borderRadius: "9999px",
                 border: "1px solid rgba(255,255,255,0.08)",
@@ -386,35 +175,29 @@ export default function Hero() {
 
           {/* Bio */}
           <motion.p
-            variants={itemVariants}
+            variants={fadeUp}
             style={{
               fontFamily: "var(--font-inter)",
-              fontSize: "clamp(0.82rem, 1.2vw, 0.9375rem)",
+              fontSize: "clamp(0.83rem, 1.2vw, 0.9375rem)",
               color: "var(--color-muted)",
-              lineHeight: 1.7,
-              maxWidth: "440px",
-              marginBottom: "26px",
-              opacity: 0.8,
+              lineHeight: 1.75,
+              maxWidth: "430px",
+              marginBottom: "30px",
+              opacity: 0.85,
             }}
           >
             React, Next.js, Flutter · Node.js, .NET, Go ·{" "}
-            <span style={{ color: "var(--color-teal-light)", fontWeight: 600 }}>$1.0M+</span>
-            {" "}em soluções de pagamento.
+            <span style={{ color: "var(--color-teal-light)", fontWeight: 600 }}>$1.0M+</span>{" "}
+            em soluções de pagamento.
             <br />
             Obracon (Sabesp) · Multiclínica · GCB (Petrobras).
           </motion.p>
 
           {/* CTAs */}
           <motion.div
+            variants={fadeUp}
             className="hero-ctas"
-            variants={itemVariants}
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              alignItems: "center",
-              gap: "14px",
-              marginBottom: "36px",
-            }}
+            style={{ display: "flex", flexWrap: "wrap", gap: "12px", marginBottom: "40px" }}
           >
             <PrimaryButton href="#projects">
               Ver Projetos <ArrowRight size={13} />
@@ -426,25 +209,25 @@ export default function Hero() {
 
           {/* Stats */}
           <motion.div
+            variants={fadeUp}
             className="hero-stats"
-            variants={itemVariants}
             style={{
               display: "flex",
               flexWrap: "wrap",
-              gap: "36px",
-              paddingTop: "24px",
-              borderTop: "1px solid rgba(255,255,255,0.05)",
+              gap: "32px",
+              paddingTop: "28px",
+              borderTop: "1px solid rgba(255,255,255,0.06)",
             }}
           >
-            {stats.map((s) => (
-              <div key={s.label} style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+            {STATS.map((s) => (
+              <div key={s.label} style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
                 <span
                   style={{
                     fontFamily: "var(--font-syne)",
                     fontWeight: 700,
-                    fontSize: "clamp(1.1rem, 1.8vw, 1.45rem)",
+                    fontSize: "clamp(1.1rem, 1.8vw, 1.4rem)",
                     color: "var(--color-text)",
-                    letterSpacing: "-0.02em",
+                    letterSpacing: "-0.025em",
                   }}
                 >
                   {s.value}
@@ -454,7 +237,7 @@ export default function Hero() {
                     fontFamily: "var(--font-inter)",
                     fontSize: "0.7rem",
                     color: "var(--color-muted)",
-                    opacity: 0.7,
+                    opacity: 0.65,
                   }}
                 >
                   {s.label}
@@ -463,49 +246,29 @@ export default function Hero() {
             ))}
           </motion.div>
         </motion.div>
+
+        {/* ── Right: terminal + tech chips ── */}
+        <motion.div
+          className="hero-right"
+          initial={{ opacity: 0, x: 36, scale: 0.98 }}
+          animate={{ opacity: 1, x: 0, scale: 1 }}
+          transition={{ duration: 0.85, delay: 0.5, ease }}
+          style={{ display: "flex", flexDirection: "column", gap: "18px", paddingTop: "96px", paddingBottom: "96px" }}
+        >
+          <CodeTerminal />
+          <TechChips />
+        </motion.div>
       </div>
 
-      {/* ── Label lateral: "role para interagir" (vertical, desktop) ── */}
+      {/* Scroll indicator */}
       <motion.div
-        className="hero-side-label"
-        aria-hidden="true"
+        className="hero-scroll"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 2.0, duration: 0.8 }}
+        transition={{ delay: 2.8, duration: 0.6 }}
         style={{
           position: "absolute",
-          right: "26px",
-          top: "50%",
-          transform: "translateY(-50%)",
-          zIndex: 10,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "10px",
-          fontFamily: "var(--font-inter)",
-          fontSize: "0.625rem",
-          color: "var(--color-muted)",
-          letterSpacing: "0.2em",
-          textTransform: "uppercase",
-          writingMode: "vertical-rl",
-          opacity: 0.4,
-          pointerEvents: "none",
-        }}
-      >
-        <span style={{ width: "1px", height: "32px", background: "rgba(255,255,255,0.12)", display: "inline-block" }} />
-        role para interagir
-        <span style={{ width: "1px", height: "32px", background: "rgba(255,255,255,0.12)", display: "inline-block" }} />
-      </motion.div>
-
-      {/* ── Indicador de scroll ── */}
-      <motion.div
-        className="hero-scroll-hint"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.8, duration: 0.6 }}
-        style={{
-          position: "absolute",
-          bottom: "28px",
+          bottom: "32px",
           left: "50%",
           transform: "translateX(-50%)",
           display: "flex",
@@ -513,36 +276,308 @@ export default function Hero() {
           alignItems: "center",
           gap: "8px",
           zIndex: 10,
+          pointerEvents: "none",
         }}
       >
         <span
           style={{
             fontFamily: "var(--font-inter)",
-            fontSize: "0.625rem",
+            fontSize: "0.6rem",
             color: "var(--color-muted)",
             letterSpacing: "0.2em",
             textTransform: "uppercase",
-            opacity: 0.45,
+            opacity: 0.4,
           }}
         >
           rolar
         </span>
         <motion.div
           animate={{ y: [0, 9, 0] }}
-          transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
           style={{
             width: "1px",
-            height: "38px",
+            height: "36px",
             background: "linear-gradient(to bottom, var(--color-teal), transparent)",
           }}
         />
       </motion.div>
+
+      <style>{`
+        @media (max-width: 920px) {
+          .hero-layout {
+            grid-template-columns: 1fr !important;
+            padding: 0 24px !important;
+            gap: 0 !important;
+          }
+          .hero-right { display: none !important; }
+          .hero-scroll { display: none !important; }
+        }
+        @media (max-width: 480px) {
+          .hero-layout { padding: 0 20px !important; }
+          .hero-ctas { flex-direction: column !important; }
+          .hero-ctas a { justify-content: center !important; }
+          .hero-stats { gap: 20px !important; }
+        }
+      `}</style>
     </section>
   );
 }
 
-/* ─── Sub-components ─────────────────────────────────── */
+// ─── Background ───────────────────────────────────────────────────────────────
+function HeroBackground() {
+  return (
+    <>
+      {/* Dot grid */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          backgroundImage: "radial-gradient(rgba(255,255,255,0.055) 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+          pointerEvents: "none",
+          zIndex: 1,
+        }}
+      />
 
+      {/* Teal glow — right side */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          top: "15%",
+          right: "5%",
+          width: "620px",
+          height: "620px",
+          background: "radial-gradient(circle, rgba(13,148,136,0.13) 0%, transparent 68%)",
+          borderRadius: "50%",
+          filter: "blur(48px)",
+          pointerEvents: "none",
+          zIndex: 1,
+        }}
+      />
+
+      {/* Subtle purple glow — bottom left */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          bottom: "-10%",
+          left: "-5%",
+          width: "400px",
+          height: "400px",
+          background: "radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 70%)",
+          borderRadius: "50%",
+          filter: "blur(60px)",
+          pointerEvents: "none",
+          zIndex: 1,
+        }}
+      />
+
+      {/* Bottom page-transition fade */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: "25%",
+          background: "linear-gradient(to top, #080a0e 0%, transparent 100%)",
+          pointerEvents: "none",
+          zIndex: 2,
+        }}
+      />
+    </>
+  );
+}
+
+// ─── Code terminal ────────────────────────────────────────────────────────────
+function CodeTerminal() {
+  const [visible, setVisible] = useState(0);
+  const [blink, setBlink] = useState(true);
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    let i = 0;
+    const iv = setInterval(() => {
+      i++;
+      setVisible(i);
+      if (i >= CODE.length) {
+        clearInterval(iv);
+        setDone(true);
+      }
+    }, 105);
+    const blinkIv = setInterval(() => setBlink((b) => !b), 520);
+    return () => {
+      clearInterval(iv);
+      clearInterval(blinkIv);
+    };
+  }, []);
+
+  return (
+    <div
+      style={{
+        background: "rgba(13,17,23,0.94)",
+        border: "1px solid rgba(255,255,255,0.07)",
+        borderRadius: "14px",
+        overflow: "hidden",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
+        boxShadow: "0 32px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04), 0 0 40px rgba(13,148,136,0.06)",
+      }}
+    >
+      {/* Title bar */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          padding: "10px 14px",
+          borderBottom: "1px solid rgba(255,255,255,0.05)",
+          background: "rgba(255,255,255,0.02)",
+          gap: "8px",
+        }}
+      >
+        <div style={{ display: "flex", gap: "6px" }}>
+          {(["#FF5F57", "#FFBD2E", "#28C840"] as string[]).map((color) => (
+            <div key={color} style={{ width: "10px", height: "10px", borderRadius: "50%", background: color, opacity: 0.9 }} />
+          ))}
+        </div>
+        <span
+          style={{
+            flex: 1,
+            textAlign: "center",
+            fontFamily: "var(--font-inter)",
+            fontSize: "0.6875rem",
+            color: "rgba(255,255,255,0.28)",
+            letterSpacing: "0.02em",
+          }}
+        >
+          developer.ts
+        </span>
+        <div style={{ width: "42px" }} />
+      </div>
+
+      {/* Code area */}
+      <div style={{ padding: "14px 0 14px", minHeight: "256px" }}>
+        {CODE.map((line, i) => (
+          <div
+            key={line.n}
+            style={{
+              display: "flex",
+              padding: "1px 0",
+              opacity: i < visible ? 1 : 0,
+              transform: i < visible ? "none" : "translateY(3px)",
+              transition: "opacity 0.22s, transform 0.22s",
+            }}
+          >
+            {/* Line number */}
+            <span
+              style={{
+                width: "38px",
+                minWidth: "38px",
+                textAlign: "right",
+                paddingRight: "16px",
+                fontFamily: "Consolas, 'Courier New', monospace",
+                fontSize: "0.6875rem",
+                color: "rgba(255,255,255,0.14)",
+                userSelect: "none",
+                lineHeight: "1.7",
+                flexShrink: 0,
+              }}
+            >
+              {line.n}
+            </span>
+
+            {/* Tokens */}
+            <span style={{ fontFamily: "Consolas, 'Courier New', monospace", fontSize: "0.8rem", lineHeight: 1.7 }}>
+              {line.tokens.map((tk, j) => (
+                <span key={j} style={{ color: tk.c }}>{tk.t}</span>
+              ))}
+              {/* Cursor on last visible line */}
+              {i === visible - 1 && !done && (
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: "2px",
+                    height: "13px",
+                    background: "#14B8A6",
+                    marginLeft: "1px",
+                    verticalAlign: "text-bottom",
+                    opacity: blink ? 1 : 0,
+                    transition: "opacity 0.08s",
+                  }}
+                />
+              )}
+            </span>
+          </div>
+        ))}
+
+        {/* Terminal prompt after done */}
+        {done && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4 }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "6px 0 0 38px",
+              fontFamily: "Consolas, 'Courier New', monospace",
+              fontSize: "0.8rem",
+            }}
+          >
+            <span style={{ color: "#14B8A6" }}>❯</span>
+            <span style={{ color: "rgba(255,255,255,0.3)" }}>Pronto para colaborar</span>
+            <span
+              style={{
+                display: "inline-block",
+                width: "7px",
+                height: "14px",
+                background: "#14B8A6",
+                opacity: blink ? 0.9 : 0,
+                transition: "opacity 0.08s",
+              }}
+            />
+          </motion.div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Tech chips ───────────────────────────────────────────────────────────────
+function TechChips() {
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: "7px" }}>
+      {TECH_CHIPS.map((name, i) => (
+        <motion.span
+          key={name}
+          initial={{ opacity: 0, scale: 0.85 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 1.4 + i * 0.055, duration: 0.35, ease }}
+          whileHover={{ scale: 1.06, borderColor: "rgba(13,148,136,0.5)", color: "var(--color-teal-light)" }}
+          style={{
+            padding: "4px 11px",
+            borderRadius: "6px",
+            border: "1px solid rgba(255,255,255,0.08)",
+            fontFamily: "var(--font-inter)",
+            fontSize: "0.72rem",
+            fontWeight: 500,
+            color: "var(--color-muted)",
+            cursor: "default",
+            transition: "border-color 0.2s, color 0.2s",
+          }}
+        >
+          {name}
+        </motion.span>
+      ))}
+    </div>
+  );
+}
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
 const PulseDot = memo(function PulseDot() {
   return (
     <motion.span
@@ -584,6 +619,7 @@ const PrimaryButton = memo(function PrimaryButton({
         fontSize: "0.875rem",
         fontWeight: 500,
         cursor: "pointer",
+        textDecoration: "none",
       }}
     >
       {children}
@@ -620,6 +656,7 @@ const GhostButton = memo(function GhostButton({
         cursor: "pointer",
         backdropFilter: "blur(8px)",
         WebkitBackdropFilter: "blur(8px)",
+        textDecoration: "none",
       }}
     >
       {children}
