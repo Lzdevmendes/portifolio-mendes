@@ -123,23 +123,32 @@ a {
   }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 4px;
-}
-::-webkit-scrollbar-track {
-  background: var(--color-bg);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 2px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-teal);
-}
-
 /* Selection highlight */
 ::selection {
   background: var(--color-teal-dim);
   color: var(--color-teal-light);
+}
+
+/* Teal glow on interactive elements */
+@keyframes teal-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(13, 148, 136, 0); }
+  50% { box-shadow: 0 0 20px 4px rgba(13, 148, 136, 0.15); }
+}
+
+/* Section entrance fade utility */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Improved scrollbar — teal gradient thumb */
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--color-teal), var(--color-teal-light));
+  border-radius: 2px;
 }
