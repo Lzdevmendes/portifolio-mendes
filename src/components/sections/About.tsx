@@ -53,18 +53,9 @@ export default function About() {
     offset: ["start end", "end start"],
   });
 
-  // Background "SOBRE" text parallax
   const bgY = useTransform(scrollYProgress, [0, 1], ["-12%", "12%"]);
-
-  // Right column subtle upward drift — disabled on mobile (CSS can't override framer-motion inline styles)
-  const rightY = useTransform(
-    scrollYProgress,
-    [0.05, 0.85],
-    ["32px", "-32px"]
-  );
+  const rightY = useTransform(scrollYProgress, [0.05, 0.85], ["32px", "-32px"]);
   const rightOpacity = useTransform(scrollYProgress, [0.08, 0.28], [0, 1]);
-
-  // Left heading scale on entry
   const leftOpacity = useTransform(scrollYProgress, [0.05, 0.22], [0, 1]);
   const leftY = useTransform(scrollYProgress, [0.05, 0.22], ["24px", "0px"]);
 
@@ -73,11 +64,7 @@ export default function About() {
       ref={sectionRef}
       id="about"
       aria-label="Sobre mim"
-      style={{
-        position: "relative",
-        padding: "140px 24px",
-        overflow: "hidden",
-      }}
+      style={{ position: "relative", padding: "140px 24px", overflow: "hidden" }}
     >
       {/* Top separator */}
       <div
@@ -88,8 +75,7 @@ export default function About() {
           transform: "translateX(-50%)",
           width: "min(1280px, 100%)",
           height: "1px",
-          background:
-            "linear-gradient(90deg, transparent, var(--color-border), transparent)",
+          background: "linear-gradient(90deg, transparent, var(--color-border), transparent)",
         }}
       />
 
@@ -139,12 +125,7 @@ export default function About() {
         {/* ── LEFT: sticky panel ── */}
         <motion.div
           className="about-sticky"
-          style={{
-            position: "sticky",
-            top: "120px",
-            opacity: leftOpacity,
-            y: leftY,
-          }}
+          style={{ position: "sticky", top: "120px", opacity: leftOpacity, y: leftY }}
         >
           <span
             style={{
@@ -192,6 +173,69 @@ export default function About() {
             entregando produtos completos com qualidade e atenção aos detalhes.
           </p>
 
+          {/* Avatar / Code card */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+            style={{
+              marginTop: "28px",
+              padding: "20px",
+              background: "rgba(13,17,23,0.8)",
+              border: "1px solid rgba(255,255,255,0.07)",
+              borderRadius: "14px",
+              fontFamily: "Consolas, 'Courier New', monospace",
+              fontSize: "0.8rem",
+              lineHeight: 1.7,
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "12px" }}>
+              {(["#FF5F57", "#FFBD2E", "#28C840"] as string[]).map((c) => (
+                <div key={c} style={{ width: "8px", height: "8px", borderRadius: "50%", background: c, opacity: 0.85 }} />
+              ))}
+              <span style={{ color: "rgba(255,255,255,0.22)", fontSize: "0.65rem", marginLeft: "4px" }}>profile.ts</span>
+            </div>
+            <div>
+              <span style={{ color: "#5C6370" }}>// Luiz Mendes</span>
+            </div>
+            <div>
+              <span style={{ color: "#C678DD" }}>const </span>
+              <span style={{ color: "#E5C07B" }}>profile </span>
+              <span style={{ color: "#ABB2BF" }}>= {"{"}</span>
+            </div>
+            <div style={{ paddingLeft: "16px" }}>
+              <span style={{ color: "#E06C75" }}>age</span>
+              <span style={{ color: "#ABB2BF" }}>: </span>
+              <span style={{ color: "#D19A66" }}>22</span>
+              <span style={{ color: "#ABB2BF" }}>,</span>
+            </div>
+            <div style={{ paddingLeft: "16px" }}>
+              <span style={{ color: "#E06C75" }}>location</span>
+              <span style={{ color: "#ABB2BF" }}>: </span>
+              <span style={{ color: "#98C379" }}>&quot;São Paulo, BR&quot;</span>
+              <span style={{ color: "#ABB2BF" }}>,</span>
+            </div>
+            <div style={{ paddingLeft: "16px" }}>
+              <span style={{ color: "#E06C75" }}>passion</span>
+              <span style={{ color: "#ABB2BF" }}>: </span>
+              <span style={{ color: "#98C379" }}>&quot;clean code&quot;</span>
+              <span style={{ color: "#ABB2BF" }}>,</span>
+            </div>
+            <div style={{ paddingLeft: "16px" }}>
+              <span style={{ color: "#E06C75" }}>coffee</span>
+              <span style={{ color: "#ABB2BF" }}>: </span>
+              <span style={{ color: "#D19A66" }}>Infinity</span>
+              <span style={{ color: "#5C6370" }}> // ☕</span>
+            </div>
+            <div>
+              <span style={{ color: "#ABB2BF" }}>{"}"}</span>
+              <span style={{ color: "#ABB2BF" }}>;</span>
+            </div>
+          </motion.div>
+
           {/* Open to Work badge */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
@@ -202,7 +246,7 @@ export default function About() {
               display: "inline-flex",
               alignItems: "center",
               gap: "12px",
-              marginTop: "36px",
+              marginTop: "20px",
               padding: "12px 20px",
               borderRadius: "12px",
               background: "rgba(13,148,136,0.08)",
@@ -266,20 +310,12 @@ export default function About() {
           </motion.div>
 
           {/* Decorative divider */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              marginTop: "32px",
-            }}
-          >
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginTop: "32px" }}>
             <div
               style={{
                 flex: 1,
                 height: "1px",
-                background:
-                  "linear-gradient(90deg, var(--color-teal), var(--color-border))",
+                background: "linear-gradient(90deg, var(--color-teal), var(--color-border))",
               }}
             />
             <div
@@ -296,22 +332,14 @@ export default function About() {
           {/* Mini stats */}
           <div
             className="about-stats"
-            style={{
-              display: "flex",
-              gap: "32px",
-              marginTop: "32px",
-              flexWrap: "wrap",
-            }}
+            style={{ display: "flex", gap: "32px", marginTop: "32px", flexWrap: "wrap" }}
           >
             {[
               { n: "10+", l: "projetos entregues" },
               { n: "2", l: "orgs no GitHub" },
               { n: "7+", l: "stacks dominadas" },
             ].map((s) => (
-              <div
-                key={s.l}
-                style={{ display: "flex", flexDirection: "column", gap: "4px" }}
-              >
+              <div key={s.l} style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                 <span
                   style={{
                     fontFamily: "var(--font-syne)",
@@ -323,13 +351,7 @@ export default function About() {
                 >
                   {s.n}
                 </span>
-                <span
-                  style={{
-                    fontFamily: "var(--font-inter)",
-                    fontSize: "0.75rem",
-                    color: "var(--color-muted)",
-                  }}
-                >
+                <span style={{ fontFamily: "var(--font-inter)", fontSize: "0.75rem", color: "var(--color-muted)" }}>
                   {s.l}
                 </span>
               </div>
@@ -357,11 +379,7 @@ export default function About() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{
-              duration: 0.6,
-              delay: 0.35,
-              ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
-            }}
+            transition={{ duration: 0.6, delay: 0.35, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] }}
             style={{
               margin: "8px 0 0",
               padding: "24px 28px",
@@ -394,33 +412,78 @@ export default function About() {
               — Luiz Mendes
             </footer>
           </motion.blockquote>
+
+          {/* Contact CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            style={{
+              display: "flex",
+              gap: "10px",
+              flexWrap: "wrap",
+            }}
+          >
+            <motion.a
+              href="mailto:lzmendestechdev@gmail.com"
+              whileHover={{ scale: 1.03, y: -1 }}
+              whileTap={{ scale: 0.97 }}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "7px",
+                padding: "10px 20px",
+                borderRadius: "9999px",
+                background: "var(--color-teal)",
+                color: "#fff",
+                fontFamily: "var(--font-inter)",
+                fontSize: "0.8125rem",
+                fontWeight: 500,
+                textDecoration: "none",
+              }}
+            >
+              Enviar e-mail
+              <ArrowUpRight size={13} />
+            </motion.a>
+            <motion.a
+              href="https://linkedin.com/in/lzmendess"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.03, y: -1, borderColor: "var(--color-teal)", color: "var(--color-teal-light)" }}
+              whileTap={{ scale: 0.97 }}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "7px",
+                padding: "10px 20px",
+                borderRadius: "9999px",
+                border: "1px solid rgba(255,255,255,0.1)",
+                color: "var(--color-muted)",
+                fontFamily: "var(--font-inter)",
+                fontSize: "0.8125rem",
+                fontWeight: 500,
+                textDecoration: "none",
+                transition: "border-color 0.2s, color 0.2s",
+              }}
+            >
+              LinkedIn
+              <ArrowUpRight size={13} />
+            </motion.a>
+          </motion.div>
         </motion.div>
       </div>
 
       <style>{`
         @media (max-width: 768px) {
-          .about-grid {
-            grid-template-columns: 1fr !important;
-            gap: 40px !important;
-          }
-          #about-section {
-            padding: 80px 20px !important;
-          }
-          .about-sticky {
-            position: static !important;
-          }
-          .about-right {
-            transform: none !important;
-            opacity: 1 !important;
-          }
+          .about-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+          #about { padding: 80px 20px !important; }
+          .about-sticky { position: static !important; }
+          .about-right { transform: none !important; opacity: 1 !important; }
         }
         @media (max-width: 480px) {
-          #about-section {
-            padding: 64px 16px !important;
-          }
-          .about-stats {
-            gap: 20px !important;
-          }
+          #about { padding: 64px 16px !important; }
+          .about-stats { gap: 20px !important; }
         }
       `}</style>
     </section>
@@ -439,11 +502,7 @@ const FocusCard = memo(function FocusCard({
       initial={{ opacity: 0, x: 24 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{
-        duration: 0.55,
-        delay: index * 0.1,
-        ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
-      }}
+      transition={{ duration: 0.55, delay: index * 0.1, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] }}
       whileHover={{ x: 4 }}
       role="article"
       aria-label={`${area.title} — ${area.desc}`}
@@ -462,8 +521,7 @@ const FocusCard = memo(function FocusCard({
         (e.currentTarget as HTMLElement).style.borderColor = `${area.color}40`;
       }}
       onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.borderColor =
-          "var(--color-border)";
+        (e.currentTarget as HTMLElement).style.borderColor = "var(--color-border)";
       }}
     >
       {/* Icon */}
@@ -486,22 +544,8 @@ const FocusCard = memo(function FocusCard({
 
       {/* Text */}
       <div style={{ flex: 1 }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "baseline",
-            gap: "10px",
-            marginBottom: "6px",
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "var(--font-syne)",
-              fontWeight: 700,
-              fontSize: "0.9375rem",
-              color: "var(--color-text)",
-            }}
-          >
+        <div style={{ display: "flex", alignItems: "baseline", gap: "10px", marginBottom: "6px" }}>
+          <span style={{ fontFamily: "var(--font-syne)", fontWeight: 700, fontSize: "0.9375rem", color: "var(--color-text)" }}>
             {area.title}
           </span>
           <span
@@ -519,28 +563,13 @@ const FocusCard = memo(function FocusCard({
             {area.techs}
           </span>
         </div>
-        <p
-          style={{
-            fontFamily: "var(--font-inter)",
-            fontSize: "0.8125rem",
-            color: "var(--color-muted)",
-            lineHeight: 1.65,
-          }}
-        >
+        <p style={{ fontFamily: "var(--font-inter)", fontSize: "0.8125rem", color: "var(--color-muted)", lineHeight: 1.65 }}>
           {area.desc}
         </p>
       </div>
 
-      {/* Arrow indicator */}
-      <span
-        style={{
-          color: area.color,
-          flexShrink: 0,
-          opacity: 0.6,
-          marginTop: "2px",
-          display: "flex",
-        }}
-      >
+      {/* Arrow */}
+      <span style={{ color: area.color, flexShrink: 0, opacity: 0.6, marginTop: "2px", display: "flex" }}>
         <ArrowUpRight size={14} />
       </span>
     </motion.div>
