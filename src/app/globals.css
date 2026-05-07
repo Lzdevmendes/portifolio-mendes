@@ -55,16 +55,11 @@ a {
   text-decoration: none;
 }
 
-/* Touch targets mínimos de 44px para acessibilidade mobile */
+/* Touch targets mínimos de 44px para botões interativos */
 @media (pointer: coarse) {
-  button, a {
+  button, [role="button"] {
     min-height: 44px;
     touch-action: manipulation;
-  }
-
-  /* Seções com scroll próprio ganham momentum nativo no iOS */
-  [data-scroll], section {
-    -webkit-overflow-scrolling: touch;
   }
 }
 
@@ -139,6 +134,12 @@ a {
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Pulse dot — used by PulseDot and status badges */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
 }
 
 /* Improved scrollbar — teal gradient thumb */

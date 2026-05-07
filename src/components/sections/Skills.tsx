@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { memo, useCallback, useState } from "react";
+import { memo } from "react";
 import { ArrowUpRight } from "lucide-react";
 
 const SKILL_URLS: Record<string, string> = {
@@ -85,17 +85,8 @@ const categories: SkillCategory[] = [
     tag: "UI / UX",
     color: "#6366F1",
     skills: [
-      "React",
-      "Next.js",
-      "TypeScript",
-      "JavaScript",
-      "Flutter",
-      "Tailwind CSS",
-      "Framer Motion",
-      "HTML & CSS",
-      "Zustand",
-      "Context API",
-      "Zod",
+      "React", "Next.js", "TypeScript", "JavaScript", "Flutter",
+      "Tailwind CSS", "Framer Motion", "HTML & CSS", "Zustand", "Context API", "Zod",
     ],
   },
   {
@@ -103,96 +94,45 @@ const categories: SkillCategory[] = [
     tag: "Server / API",
     color: "#0D9488",
     skills: [
-      "Node.js",
-      "NestJS",
-      "Express",
-      ".NET / C#",
-      "Go",
-      "Java / Spring",
-      "Python",
-      "Flask / FastAPI",
-      "REST & GraphQL",
-      "JWT",
-      "OAuth2",
+      "Node.js", "NestJS", "Express", ".NET / C#", "Go",
+      "Java / Spring", "Python", "Flask / FastAPI", "REST & GraphQL", "JWT", "OAuth2",
     ],
   },
   {
     label: "Testes",
     tag: "QA",
     color: "#F97316",
-    skills: [
-      "Jest",
-      "Vitest",
-      "React Testing Library",
-      "Cypress",
-      "Supertest",
-    ],
+    skills: ["Jest", "Vitest", "React Testing Library", "Cypress", "Supertest"],
   },
   {
     label: "Banco de Dados",
     tag: "Data",
     color: "#F59E0B",
-    skills: [
-      "PostgreSQL",
-      "SQL Server",
-      "MongoDB",
-      "Redis",
-      "Prisma ORM",
-      "TypeORM",
-      "Migrations",
-    ],
+    skills: ["PostgreSQL", "SQL Server", "MongoDB", "Redis", "Prisma ORM", "TypeORM", "Migrations"],
   },
   {
     label: "DevOps & Cloud",
     tag: "Infra",
     color: "#EC4899",
-    skills: [
-      "Docker",
-      "AWS",
-      "Azure",
-      "CI/CD",
-      "GitHub Actions",
-      "Linux",
-      "Nginx",
-      "Git",
-      "Automation & Bots",
-    ],
+    skills: ["Docker", "AWS", "Azure", "CI/CD", "GitHub Actions", "Linux", "Nginx", "Git", "Automation & Bots"],
   },
   {
     label: "Arquitetura",
     tag: "Design",
     color: "#8B5CF6",
-    skills: [
-      "Microservices",
-      "Clean Architecture",
-      "DDD",
-      "Event-Driven",
-      "SOLID",
-      "Monorepos",
-      "API Gateway",
-    ],
+    skills: ["Microservices", "Clean Architecture", "DDD", "Event-Driven", "SOLID", "Monorepos", "API Gateway"],
   },
   {
     label: "Pagamentos",
     tag: "Fintech",
     color: "#10B981",
-    skills: [
-      "Stripe",
-      "PIX",
-      "PagSeguro",
-      "Payment Gateways",
-      "Webhooks",
-      "Reconciliation",
-      "+$1.0M processed",
-    ],
+    skills: ["Stripe", "PIX", "PagSeguro", "Payment Gateways", "Webhooks", "Reconciliation", "+$1.0M processed"],
   },
 ];
 
 const containerVariants = {
   hidden: {},
-  show: {
-    transition: { staggerChildren: 0.08 },
-  },
+  show: { transition: { staggerChildren: 0.08 } },
 };
 
 const cardVariants = {
@@ -201,10 +141,7 @@ const cardVariants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: {
-      duration: 0.55,
-      ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
-    },
+    transition: { duration: 0.55, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] },
   },
 };
 
@@ -233,15 +170,11 @@ export default function Skills() {
           #skills { padding: 64px 16px !important; }
           .skills-header-desc { text-align: left !important; }
         }
-        /* Touch devices: pills maiores para facilitar o tap */
-        @media (pointer: coarse) {
-          .skill-pill {
-            padding: 7px 14px !important;
-            font-size: 0.8125rem !important;
-            min-height: 36px !important;
-          }
+        .skill-pill {
+          transition: border-color 0.18s, color 0.18s, background-color 0.18s;
         }
       `}</style>
+
       {/* Separator */}
       <div
         style={{
@@ -251,8 +184,7 @@ export default function Skills() {
           transform: "translateX(-50%)",
           width: "min(1280px, 100%)",
           height: "1px",
-          background:
-            "linear-gradient(90deg, transparent, var(--color-border), transparent)",
+          background: "linear-gradient(90deg, transparent, var(--color-border), transparent)",
         }}
       />
 
@@ -279,15 +211,7 @@ export default function Skills() {
           >
             Competências
           </span>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "flex-end",
-              justifyContent: "space-between",
-              flexWrap: "wrap",
-              gap: "16px",
-            }}
-          >
+          <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "16px" }}>
             <h2
               style={{
                 fontFamily: "var(--font-syne)",
@@ -312,8 +236,7 @@ export default function Skills() {
                 textAlign: "right",
               }}
             >
-              {categories.reduce((acc, c) => acc + c.skills.length, 0)}+ tecnologias e ferramentas
-              organizadas por domínio
+              {categories.reduce((acc, c) => acc + c.skills.length, 0)}+ tecnologias e ferramentas organizadas por domínio
             </p>
           </div>
         </motion.div>
@@ -328,11 +251,7 @@ export default function Skills() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-60px" }}
-          style={{
-            display: "grid",
-            gap: "16px",
-            marginBottom: "16px",
-          }}
+          style={{ display: "grid", gap: "16px", marginBottom: "16px" }}
         >
           {categories.slice(0, 3).map((cat) => (
             <CategoryCard key={cat.label} cat={cat} featured />
@@ -346,10 +265,7 @@ export default function Skills() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-60px" }}
-          style={{
-            display: "grid",
-            gap: "16px",
-          }}
+          style={{ display: "grid", gap: "16px" }}
         >
           {categories.slice(3).map((cat) => (
             <CategoryCard key={cat.label} cat={cat} />
@@ -361,11 +277,6 @@ export default function Skills() {
 }
 
 const CategoryCard = memo(function CategoryCard({ cat, featured = false }: { cat: SkillCategory; featured?: boolean }) {
-  const [hovered, setHovered] = useState<string | null>(null);
-
-  const handleEnter = useCallback((skill: string) => setHovered(skill), []);
-  const handleLeave = useCallback(() => setHovered(null), []);
-
   return (
     <motion.div
       variants={cardVariants}
@@ -412,13 +323,7 @@ const CategoryCard = memo(function CategoryCard({ cat, featured = false }: { cat
       />
 
       {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <div
             style={{
@@ -442,7 +347,6 @@ const CategoryCard = memo(function CategoryCard({ cat, featured = false }: { cat
             {cat.label}
           </span>
         </div>
-
         <span
           style={{
             fontFamily: "var(--font-inter)",
@@ -463,39 +367,24 @@ const CategoryCard = memo(function CategoryCard({ cat, featured = false }: { cat
       {/* Skills */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
         {cat.skills.map((skill) => (
-          <SkillPill
-            key={skill}
-            skill={skill}
-            color={cat.color}
-            isHovered={hovered === skill}
-            onEnter={handleEnter}
-            onLeave={handleLeave}
-          />
+          <SkillPill key={skill} skill={skill} color={cat.color} />
         ))}
       </div>
     </motion.div>
   );
 });
 
-const SkillPill = memo(function SkillPill({
-  skill,
-  color,
-  isHovered,
-  onEnter,
-  onLeave,
-}: {
-  skill: string;
-  color: string;
-  isHovered: boolean;
-  onEnter: (skill: string) => void;
-  onLeave: () => void;
-}) {
+const SkillPill = memo(function SkillPill({ skill, color }: { skill: string; color: string }) {
   const url = SKILL_URLS[skill];
 
-  const sharedAnimate = {
-    borderColor: isHovered ? color : "var(--color-border)",
-    color: isHovered ? color : "var(--color-muted)",
-    backgroundColor: isHovered ? `${color}10` : "transparent",
+  const pillVariants = {
+    rest: { borderColor: "var(--color-border)", color: "var(--color-muted)", backgroundColor: "transparent" },
+    hover: { borderColor: color, color: color, backgroundColor: `${color}10` },
+  };
+
+  const arrowVariants = {
+    rest: { opacity: 0, x: -3 },
+    hover: { opacity: 1, x: 0 },
   };
 
   const sharedStyle = {
@@ -510,6 +399,7 @@ const SkillPill = memo(function SkillPill({
     display: "inline-flex",
     alignItems: "center",
     gap: "3px",
+    cursor: url ? "pointer" : "default",
   };
 
   if (url) {
@@ -519,16 +409,16 @@ const SkillPill = memo(function SkillPill({
         target="_blank"
         rel="noopener noreferrer"
         aria-label={`${skill} (abre documentação em nova aba)`}
-        onMouseEnter={() => onEnter(skill)}
-        onMouseLeave={onLeave}
-        animate={sharedAnimate}
+        initial="rest"
+        whileHover="hover"
+        variants={pillVariants}
         transition={{ duration: 0.18 }}
         className="skill-pill"
-        style={{ ...sharedStyle, cursor: "pointer" }}
+        style={sharedStyle}
       >
         {skill}
         <motion.span
-          animate={{ opacity: isHovered ? 1 : 0, x: isHovered ? 0 : -3 }}
+          variants={arrowVariants}
           transition={{ duration: 0.15 }}
           style={{ display: "flex", alignItems: "center" }}
         >
@@ -540,12 +430,12 @@ const SkillPill = memo(function SkillPill({
 
   return (
     <motion.span
-      onMouseEnter={() => onEnter(skill)}
-      onMouseLeave={onLeave}
-      animate={sharedAnimate}
+      initial="rest"
+      whileHover="hover"
+      variants={pillVariants}
       transition={{ duration: 0.18 }}
       className="skill-pill"
-      style={{ ...sharedStyle, cursor: "default" }}
+      style={sharedStyle}
     >
       {skill}
     </motion.span>
@@ -586,13 +476,7 @@ function FeaturedTech() {
       >
         Core Stack
       </p>
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "8px",
-        }}
-      >
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
         {FEATURED.map((tech, i) => (
           <motion.div
             key={tech.name}

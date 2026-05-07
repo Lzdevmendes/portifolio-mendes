@@ -34,7 +34,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -237,9 +237,8 @@ export default function Navbar() {
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
             style={{
-              background: "rgba(10,10,10,0.96)",
+              background: "rgba(10,10,10,0.98)",
               borderTop: "1px solid var(--color-border)",
-              backdropFilter: "blur(16px)",
               overflow: "hidden",
             }}
           >
