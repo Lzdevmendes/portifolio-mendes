@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { memo, useRef, useCallback } from "react";
+import { memo, useRef, useCallback, useEffect, useState } from "react";
 import { Code2, Server, Smartphone, GitPullRequest, ArrowUpRight, Briefcase } from "lucide-react";
 
 const focusAreas = [
@@ -40,21 +40,38 @@ const ease = [0.4, 0, 0.2, 1] as [number, number, number, number];
 export default function About() {
   const sectionRef = useRef<HTMLElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
-  /* Parallax apenas no texto decorativo "SOBRE" — leve, GPU-acelerado */
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768);
+    check();
+    window.addEventListener("resize", check, { passive: true });
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
   });
-  const bgY = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
 
-  /* Mouse glow — direto no DOM, sem setState */
+  /* Parallax no texto "SOBRE" decorativo */
+  const bgY = useTransform(scrollYProgress, [0, 1], ["-12%", "12%"]);
+
+  /* Entrada do painel esquerdo ligada ao scroll */
+  const leftOpacity = useTransform(scrollYProgress, [0.05, 0.22], [0, 1]);
+  const leftY = useTransform(scrollYProgress, [0.05, 0.22], ["24px", "0px"]);
+
+  /* Coluna direita: desliza suavemente com o scroll */
+  const rightY = useTransform(scrollYProgress, [0.05, 0.88], ["28px", "-28px"]);
+  const rightOpacity = useTransform(scrollYProgress, [0.07, 0.25], [0, 1]);
+
+  /* Mouse glow — DOM direto, zero setState */
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
     if (!glowRef.current) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
-    glowRef.current.style.background = `radial-gradient(700px circle at ${x}% ${y}%, rgba(13,148,136,0.07), transparent 70%)`;
+    glowRef.current.style.background = `radial-gradient(700px circle at ${x}% ${y}%, rgba(13,148,136,0.08), transparent 70%)`;
   }, []);
 
   const handleMouseLeave = useCallback(() => {
@@ -84,7 +101,7 @@ export default function About() {
         }}
       />
 
-      {/* Mouse-tracking glow — DOM direto, zero re-render */}
+      {/* Mouse-tracking glow */}
       <div
         ref={glowRef}
         aria-hidden="true"
@@ -97,7 +114,7 @@ export default function About() {
         }}
       />
 
-      {/* Parallax background text — só este elemento usa scroll transform */}
+      {/* Parallax background text */}
       <motion.div
         aria-hidden="true"
         style={{
@@ -117,7 +134,7 @@ export default function About() {
             fontFamily: "var(--font-syne)",
             fontSize: "clamp(7rem, 22vw, 18rem)",
             fontWeight: 800,
-            color: "rgba(255,255,255,0.022)",
+            color: "rgba(255,255,255,0.028)",
             letterSpacing: "-0.05em",
             lineHeight: 1,
             whiteSpace: "nowrap",
@@ -141,14 +158,16 @@ export default function About() {
         }}
         className="about-grid"
       >
-        {/* ── LEFT: sticky panel ── */}
+        {/* ── LEFT: sticky panel com fade de entrada ligado ao scroll ── */}
         <motion.div
           className="about-sticky"
-          initial={{ opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.6, ease }}
-          style={{ position: "sticky", top: "120px" }}
+          style={{
+            position: "sticky",
+            top: "120px",
+            opacity: isMobile ? 1 : leftOpacity,
+            y: isMobile ? 0 : leftY,
+            willChange: "transform, opacity",
+          }}
         >
           <span
             style={{
@@ -290,15 +309,7 @@ export default function About() {
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <span
-                  style={{
-                    fontFamily: "var(--font-syne)",
-                    fontWeight: 700,
-                    fontSize: "0.875rem",
-                    color: "var(--color-teal-light)",
-                    letterSpacing: "-0.01em",
-                  }}
-                >
+                <span style={{ fontFamily: "var(--font-syne)", fontWeight: 700, fontSize: "0.875rem", color: "var(--color-teal-light)", letterSpacing: "-0.01em" }}>
                   Disponível para Trabalho
                 </span>
                 <span
@@ -345,8 +356,18 @@ export default function About() {
           </div>
         </motion.div>
 
-        {/* ── RIGHT: focus cards ── */}
-        <div className="about-right" style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+        {/* ── RIGHT: desliza suavemente com o scroll ── */}
+        <motion.div
+          className="about-right"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+            y: isMobile ? 0 : rightY,
+            opacity: isMobile ? 1 : rightOpacity,
+            willChange: "transform, opacity",
+          }}
+        >
           {focusAreas.map((area, i) => (
             <FocusCard key={area.title} area={area} index={i} />
           ))}
@@ -427,7 +448,7 @@ export default function About() {
               <ArrowUpRight size={13} />
             </motion.a>
           </motion.div>
-        </div>
+        </motion.div>
       </div>
 
       <style>{`
@@ -435,6 +456,7 @@ export default function About() {
           .about-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
           #about { padding: 80px 20px !important; }
           .about-sticky { position: static !important; }
+          .about-right { transform: none !important; opacity: 1 !important; }
         }
         @media (max-width: 480px) {
           #about { padding: 64px 16px !important; }
