@@ -175,9 +175,8 @@ export default function Certifications() {
                 fontFamily: "var(--font-inter)",
                 fontSize: "0.875rem",
                 color: "var(--color-muted)",
-                maxWidth: "340px",
                 lineHeight: 1.6,
-                textAlign: "right",
+                whiteSpace: "nowrap",
               }}
             >
               {certifications.length} certificações em plataformas reconhecidas globalmente
