@@ -254,7 +254,7 @@ export default function Footer() {
               }}
             >
               <MapPin size={11} />
-              Brazil
+              Brasil
             </span>
           </div>
 
