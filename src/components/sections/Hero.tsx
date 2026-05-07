@@ -46,6 +46,15 @@ const fadeUp = {
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 export default function Hero() {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsDesktop(window.innerWidth >= 920);
+    check();
+    window.addEventListener("resize", check, { passive: true });
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   return (
     <section
       id="hero"
@@ -85,10 +94,8 @@ export default function Hero() {
                 gap: "7px",
                 padding: "5px 13px",
                 borderRadius: "9999px",
-                background: "rgba(13,148,136,0.12)",
+                background: "rgba(13,148,136,0.14)",
                 border: "1px solid rgba(13,148,136,0.35)",
-                backdropFilter: "blur(8px)",
-                WebkitBackdropFilter: "blur(8px)",
                 fontFamily: "var(--font-inter)",
                 fontSize: "0.72rem",
                 fontWeight: 600,
@@ -247,17 +254,19 @@ export default function Hero() {
           </motion.div>
         </motion.div>
 
-        {/* ── Right: terminal + tech chips ── */}
-        <motion.div
-          className="hero-right"
-          initial={{ opacity: 0, x: 36, scale: 0.98 }}
-          animate={{ opacity: 1, x: 0, scale: 1 }}
-          transition={{ duration: 0.85, delay: 0.5, ease }}
-          style={{ display: "flex", flexDirection: "column", gap: "18px", paddingTop: "96px", paddingBottom: "96px" }}
-        >
-          <CodeTerminal />
-          <TechChips />
-        </motion.div>
+        {/* ── Right: terminal + tech chips (desktop only — avoids JS timers on mobile) ── */}
+        {isDesktop && (
+          <motion.div
+            className="hero-right"
+            initial={{ opacity: 0, x: 36, scale: 0.98 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            transition={{ duration: 0.85, delay: 0.5, ease }}
+            style={{ display: "flex", flexDirection: "column", gap: "18px", paddingTop: "96px", paddingBottom: "96px" }}
+          >
+            <CodeTerminal />
+            <TechChips />
+          </motion.div>
+        )}
       </div>
 
       {/* Scroll indicator */}
@@ -580,9 +589,7 @@ function TechChips() {
 // ─── Sub-components ───────────────────────────────────────────────────────────
 const PulseDot = memo(function PulseDot() {
   return (
-    <motion.span
-      animate={{ opacity: [1, 0.3, 1] }}
-      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+    <span
       style={{
         display: "inline-block",
         width: "6px",
@@ -590,6 +597,7 @@ const PulseDot = memo(function PulseDot() {
         borderRadius: "50%",
         background: "var(--color-teal)",
         flexShrink: 0,
+        animation: "pulse-dot 1.5s ease-in-out infinite",
       }}
     />
   );
@@ -654,8 +662,6 @@ const GhostButton = memo(function GhostButton({
         fontSize: "0.875rem",
         fontWeight: 500,
         cursor: "pointer",
-        backdropFilter: "blur(8px)",
-        WebkitBackdropFilter: "blur(8px)",
         textDecoration: "none",
       }}
     >

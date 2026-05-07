@@ -1,7 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
 import { Briefcase, ArrowUpRight } from "lucide-react";
 
 interface Experience {
@@ -64,23 +63,11 @@ const experiences: Experience[] = [
 ];
 
 export default function Experience() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start 0.8", "end 0.3"],
-  });
-
-  const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-
   return (
     <section
-      ref={sectionRef}
       id="experience"
       aria-label="Experiência Profissional"
-      style={{
-        padding: "100px 24px",
-        position: "relative",
-      }}
+      style={{ padding: "100px 24px", position: "relative" }}
     >
       {/* Subtle separator */}
       <div
@@ -91,8 +78,7 @@ export default function Experience() {
           transform: "translateX(-50%)",
           width: "min(1280px, 100%)",
           height: "1px",
-          background:
-            "linear-gradient(90deg, transparent, var(--color-border), transparent)",
+          background: "linear-gradient(90deg, transparent, var(--color-border), transparent)",
         }}
       />
 
@@ -145,34 +131,25 @@ export default function Experience() {
               marginRight: "48px",
               marginLeft: "8px",
               background: "var(--color-border)",
-              display: "none", // hidden on mobile, shown via inline media
+              display: "none",
             }}
             className="timeline-line-track"
           >
-            {/* Animated fill */}
-            <motion.div
+            <div
               style={{
                 position: "absolute",
                 top: 0,
                 left: 0,
                 width: "100%",
-                height: lineHeight,
-                background:
-                  "linear-gradient(to bottom, var(--color-teal), var(--color-teal-light))",
+                height: "100%",
+                background: "linear-gradient(to bottom, var(--color-teal), var(--color-teal-light))",
                 boxShadow: "0 0 8px rgba(13,148,136,0.4)",
               }}
             />
           </div>
 
           {/* Entries */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "0",
-              flex: 1,
-            }}
-          >
+          <div style={{ display: "flex", flexDirection: "column", gap: "0", flex: 1 }}>
             {experiences.map((exp, i) => (
               <ExperienceItem key={exp.company} exp={exp} index={i} />
             ))}
@@ -189,13 +166,7 @@ export default function Experience() {
   );
 }
 
-function ExperienceItem({
-  exp,
-  index,
-}: {
-  exp: Experience;
-  index: number;
-}) {
+function ExperienceItem({ exp, index }: { exp: Experience; index: number }) {
   const isLast = index === experiences.length - 1;
 
   return (
@@ -296,8 +267,7 @@ function ExperienceItem({
               left: 0,
               right: 0,
               height: "2px",
-              background:
-                "linear-gradient(90deg, var(--color-teal), var(--color-teal-light), transparent)",
+              background: "linear-gradient(90deg, var(--color-teal), var(--color-teal-light), transparent)",
             }}
           />
         )}
@@ -313,14 +283,7 @@ function ExperienceItem({
           }}
         >
           <div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                marginBottom: "6px",
-              }}
-            >
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
               <div
                 style={{
                   width: "28px",
@@ -349,14 +312,7 @@ function ExperienceItem({
               </span>
               {exp.client && (
                 <>
-                  <span
-                    style={{
-                      color: "var(--color-border)",
-                      fontSize: "0.875rem",
-                    }}
-                  >
-                    ×
-                  </span>
+                  <span style={{ color: "var(--color-border)", fontSize: "0.875rem" }}>×</span>
                   <span
                     style={{
                       fontFamily: "var(--font-syne)",
@@ -383,7 +339,6 @@ function ExperienceItem({
               {exp.role}
             </p>
           </div>
-
         </div>
 
         {/* Description */}
@@ -489,10 +444,6 @@ function ExperienceItem({
           .exp-card { padding: 16px 14px !important; }
           #experience { padding: 64px 16px !important; }
           .exp-stack span { font-size: 0.625rem !important; padding: 2px 8px !important; }
-        }
-        /* Touch: aumenta área de toque do card */
-        @media (pointer: coarse) {
-          .exp-card { cursor: pointer !important; }
         }
       `}</style>
     </motion.div>

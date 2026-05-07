@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
-import { memo, useRef, useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { memo } from "react";
 import { Code2, Server, Smartphone, GitPullRequest, ArrowUpRight, Briefcase } from "lucide-react";
 
 const focusAreas = [
@@ -36,32 +36,8 @@ const focusAreas = [
 ];
 
 export default function About() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 768px)");
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsMobile(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const bgY = useTransform(scrollYProgress, [0, 1], ["-12%", "12%"]);
-  const rightY = useTransform(scrollYProgress, [0.05, 0.85], ["32px", "-32px"]);
-  const rightOpacity = useTransform(scrollYProgress, [0.08, 0.28], [0, 1]);
-  const leftOpacity = useTransform(scrollYProgress, [0.05, 0.22], [0, 1]);
-  const leftY = useTransform(scrollYProgress, [0.05, 0.22], ["24px", "0px"]);
-
   return (
     <section
-      ref={sectionRef}
       id="about"
       aria-label="Sobre mim"
       style={{ position: "relative", padding: "140px 24px", overflow: "hidden" }}
@@ -79,15 +55,14 @@ export default function About() {
         }}
       />
 
-      {/* Parallax background text */}
-      <motion.div
+      {/* Static background text */}
+      <div
         aria-hidden="true"
         style={{
           position: "absolute",
           top: "50%",
           left: "-1%",
-          translateY: "-50%",
-          y: bgY,
+          transform: "translateY(-50%)",
           pointerEvents: "none",
           userSelect: "none",
           zIndex: 0,
@@ -107,7 +82,7 @@ export default function About() {
         >
           SOBRE
         </span>
-      </motion.div>
+      </div>
 
       <div
         style={{
@@ -125,7 +100,11 @@ export default function About() {
         {/* ── LEFT: sticky panel ── */}
         <motion.div
           className="about-sticky"
-          style={{ position: "sticky", top: "120px", opacity: leftOpacity, y: leftY }}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
+          style={{ position: "sticky", top: "120px" }}
         >
           <span
             style={{
@@ -182,14 +161,12 @@ export default function About() {
             style={{
               marginTop: "28px",
               padding: "20px",
-              background: "rgba(13,17,23,0.8)",
+              background: "rgba(13,17,23,0.97)",
               border: "1px solid rgba(255,255,255,0.07)",
               borderRadius: "14px",
               fontFamily: "Consolas, 'Courier New', monospace",
               fontSize: "0.8rem",
               lineHeight: 1.7,
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "12px" }}>
@@ -282,9 +259,7 @@ export default function About() {
                 >
                   Disponível para Trabalho
                 </span>
-                <motion.span
-                  animate={{ opacity: [1, 0.3, 1] }}
-                  transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                <span
                   style={{
                     display: "inline-block",
                     width: "6px",
@@ -293,6 +268,7 @@ export default function About() {
                     background: "var(--color-teal)",
                     boxShadow: "0 0 8px rgba(13,148,136,0.9)",
                     flexShrink: 0,
+                    animation: "pulse-dot 1.8s ease-in-out infinite",
                   }}
                 />
               </div>
@@ -359,16 +335,10 @@ export default function About() {
           </div>
         </motion.div>
 
-        {/* ── RIGHT: scroll-linked content ── */}
-        <motion.div
+        {/* ── RIGHT: focus cards ── */}
+        <div
           className="about-right"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "20px",
-            y: isMobile ? 0 : rightY,
-            opacity: isMobile ? 1 : rightOpacity,
-          }}
+          style={{ display: "flex", flexDirection: "column", gap: "20px" }}
         >
           {focusAreas.map((area, i) => (
             <FocusCard key={area.title} area={area} index={i} />
@@ -419,11 +389,7 @@ export default function About() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            style={{
-              display: "flex",
-              gap: "10px",
-              flexWrap: "wrap",
-            }}
+            style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}
           >
             <motion.a
               href="mailto:lzmendestechdev@gmail.com"
@@ -471,7 +437,7 @@ export default function About() {
               <ArrowUpRight size={13} />
             </motion.a>
           </motion.div>
-        </motion.div>
+        </div>
       </div>
 
       <style>{`
@@ -479,7 +445,6 @@ export default function About() {
           .about-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
           #about { padding: 80px 20px !important; }
           .about-sticky { position: static !important; }
-          .about-right { transform: none !important; opacity: 1 !important; }
         }
         @media (max-width: 480px) {
           #about { padding: 64px 16px !important; }
