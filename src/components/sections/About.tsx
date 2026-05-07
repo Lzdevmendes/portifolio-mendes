@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { memo } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { memo, useRef, useCallback } from "react";
 import { Code2, Server, Smartphone, GitPullRequest, ArrowUpRight, Briefcase } from "lucide-react";
 
 const focusAreas = [
@@ -35,11 +35,40 @@ const focusAreas = [
   },
 ];
 
+const ease = [0.4, 0, 0.2, 1] as [number, number, number, number];
+
 export default function About() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
+
+  /* Parallax apenas no texto decorativo "SOBRE" — leve, GPU-acelerado */
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const bgY = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
+
+  /* Mouse glow — direto no DOM, sem setState */
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    if (!glowRef.current) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    glowRef.current.style.background = `radial-gradient(700px circle at ${x}% ${y}%, rgba(13,148,136,0.07), transparent 70%)`;
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    if (!glowRef.current) return;
+    glowRef.current.style.background = "transparent";
+  }, []);
+
   return (
     <section
+      ref={sectionRef}
       id="about"
       aria-label="Sobre mim"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       style={{ position: "relative", padding: "140px 24px", overflow: "hidden" }}
     >
       {/* Top separator */}
@@ -55,17 +84,32 @@ export default function About() {
         }}
       />
 
-      {/* Static background text */}
+      {/* Mouse-tracking glow — DOM direto, zero re-render */}
       <div
+        ref={glowRef}
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
+          zIndex: 0,
+          transition: "background 0.4s ease",
+        }}
+      />
+
+      {/* Parallax background text — só este elemento usa scroll transform */}
+      <motion.div
         aria-hidden="true"
         style={{
           position: "absolute",
           top: "50%",
           left: "-1%",
-          transform: "translateY(-50%)",
+          translateY: "-50%",
+          y: bgY,
           pointerEvents: "none",
           userSelect: "none",
           zIndex: 0,
+          willChange: "transform",
         }}
       >
         <span
@@ -82,7 +126,7 @@ export default function About() {
         >
           SOBRE
         </span>
-      </div>
+      </motion.div>
 
       <div
         style={{
@@ -100,10 +144,10 @@ export default function About() {
         {/* ── LEFT: sticky panel ── */}
         <motion.div
           className="about-sticky"
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
+          transition={{ duration: 0.6, ease }}
           style={{ position: "sticky", top: "120px" }}
         >
           <span
@@ -152,12 +196,12 @@ export default function About() {
             entregando produtos completos com qualidade e atenção aos detalhes.
           </p>
 
-          {/* Avatar / Code card */}
+          {/* Code card */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.15 }}
+            transition={{ duration: 0.5, delay: 0.15, ease }}
             style={{
               marginTop: "28px",
               padding: "20px",
@@ -175,9 +219,7 @@ export default function About() {
               ))}
               <span style={{ color: "rgba(255,255,255,0.22)", fontSize: "0.65rem", marginLeft: "4px" }}>profile.ts</span>
             </div>
-            <div>
-              <span style={{ color: "#5C6370" }}>// Luiz Mendes</span>
-            </div>
+            <div><span style={{ color: "#5C6370" }}>// Luiz Mendes</span></div>
             <div>
               <span style={{ color: "#C678DD" }}>const </span>
               <span style={{ color: "#E5C07B" }}>profile </span>
@@ -218,7 +260,7 @@ export default function About() {
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.22, ease }}
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -272,59 +314,27 @@ export default function About() {
                   }}
                 />
               </div>
-              <span
-                style={{
-                  fontFamily: "var(--font-inter)",
-                  fontSize: "0.75rem",
-                  color: "var(--color-muted)",
-                  lineHeight: 1.4,
-                }}
-              >
+              <span style={{ fontFamily: "var(--font-inter)", fontSize: "0.75rem", color: "var(--color-muted)", lineHeight: 1.4 }}>
                 Disponível imediatamente · CLT, PJ ou freelance
               </span>
             </div>
           </motion.div>
 
-          {/* Decorative divider */}
+          {/* Divider */}
           <div style={{ display: "flex", alignItems: "center", gap: "12px", marginTop: "32px" }}>
-            <div
-              style={{
-                flex: 1,
-                height: "1px",
-                background: "linear-gradient(90deg, var(--color-teal), var(--color-border))",
-              }}
-            />
-            <div
-              style={{
-                width: "6px",
-                height: "6px",
-                borderRadius: "50%",
-                background: "var(--color-teal)",
-                boxShadow: "0 0 8px rgba(13,148,136,0.6)",
-              }}
-            />
+            <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, var(--color-teal), var(--color-border))" }} />
+            <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--color-teal)", boxShadow: "0 0 8px rgba(13,148,136,0.6)" }} />
           </div>
 
           {/* Mini stats */}
-          <div
-            className="about-stats"
-            style={{ display: "flex", gap: "32px", marginTop: "32px", flexWrap: "wrap" }}
-          >
+          <div className="about-stats" style={{ display: "flex", gap: "32px", marginTop: "32px", flexWrap: "wrap" }}>
             {[
               { n: "10+", l: "projetos entregues" },
               { n: "2", l: "orgs no GitHub" },
               { n: "7+", l: "stacks dominadas" },
             ].map((s) => (
               <div key={s.l} style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <span
-                  style={{
-                    fontFamily: "var(--font-syne)",
-                    fontWeight: 800,
-                    fontSize: "1.5rem",
-                    color: "var(--color-text)",
-                    letterSpacing: "-0.02em",
-                  }}
-                >
+                <span style={{ fontFamily: "var(--font-syne)", fontWeight: 800, fontSize: "1.5rem", color: "var(--color-text)", letterSpacing: "-0.02em" }}>
                   {s.n}
                 </span>
                 <span style={{ fontFamily: "var(--font-inter)", fontSize: "0.75rem", color: "var(--color-muted)" }}>
@@ -336,20 +346,17 @@ export default function About() {
         </motion.div>
 
         {/* ── RIGHT: focus cards ── */}
-        <div
-          className="about-right"
-          style={{ display: "flex", flexDirection: "column", gap: "20px" }}
-        >
+        <div className="about-right" style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           {focusAreas.map((area, i) => (
             <FocusCard key={area.title} area={area} index={i} />
           ))}
 
-          {/* Quote block */}
+          {/* Quote */}
           <motion.blockquote
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.35, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] }}
+            transition={{ duration: 0.6, delay: 0.3, ease }}
             style={{
               margin: "8px 0 0",
               padding: "24px 28px",
@@ -358,27 +365,10 @@ export default function About() {
               borderRadius: "0 12px 12px 0",
             }}
           >
-            <p
-              style={{
-                fontFamily: "var(--font-syne)",
-                fontSize: "1rem",
-                fontWeight: 600,
-                color: "var(--color-text)",
-                lineHeight: 1.6,
-                letterSpacing: "-0.01em",
-              }}
-            >
-              &ldquo;Código bom não é o que funciona — é o que qualquer pessoa
-              consegue entender e manter.&rdquo;
+            <p style={{ fontFamily: "var(--font-syne)", fontSize: "1rem", fontWeight: 600, color: "var(--color-text)", lineHeight: 1.6, letterSpacing: "-0.01em" }}>
+              &ldquo;Código bom não é o que funciona — é o que qualquer pessoa consegue entender e manter.&rdquo;
             </p>
-            <footer
-              style={{
-                marginTop: "12px",
-                fontFamily: "var(--font-inter)",
-                fontSize: "0.75rem",
-                color: "var(--color-muted)",
-              }}
-            >
+            <footer style={{ marginTop: "12px", fontFamily: "var(--font-inter)", fontSize: "0.75rem", color: "var(--color-muted)" }}>
               — Luiz Mendes
             </footer>
           </motion.blockquote>
@@ -388,7 +378,7 @@ export default function About() {
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            transition={{ duration: 0.5, delay: 0.38, ease }}
             style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}
           >
             <motion.a
@@ -467,8 +457,8 @@ const FocusCard = memo(function FocusCard({
       initial={{ opacity: 0, x: 24 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.55, delay: index * 0.1, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] }}
-      whileHover={{ x: 4 }}
+      transition={{ duration: 0.55, delay: index * 0.09, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] }}
+      whileHover={{ x: 4, transition: { duration: 0.2 } }}
       role="article"
       aria-label={`${area.title} — ${area.desc}`}
       style={{
@@ -479,17 +469,12 @@ const FocusCard = memo(function FocusCard({
         border: "1px solid var(--color-border)",
         borderRadius: "16px",
         alignItems: "flex-start",
-        transition: "border-color 0.2s",
+        transition: "border-color 0.25s",
         cursor: "default",
       }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.borderColor = `${area.color}40`;
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.borderColor = "var(--color-border)";
-      }}
+      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = `${area.color}40`; }}
+      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "var(--color-border)"; }}
     >
-      {/* Icon */}
       <div
         style={{
           width: "40px",
@@ -506,8 +491,6 @@ const FocusCard = memo(function FocusCard({
       >
         {area.icon}
       </div>
-
-      {/* Text */}
       <div style={{ flex: 1 }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: "10px", marginBottom: "6px" }}>
           <span style={{ fontFamily: "var(--font-syne)", fontWeight: 700, fontSize: "0.9375rem", color: "var(--color-text)" }}>
@@ -532,8 +515,6 @@ const FocusCard = memo(function FocusCard({
           {area.desc}
         </p>
       </div>
-
-      {/* Arrow */}
       <span style={{ color: area.color, flexShrink: 0, opacity: 0.6, marginTop: "2px", display: "flex" }}>
         <ArrowUpRight size={14} />
       </span>
