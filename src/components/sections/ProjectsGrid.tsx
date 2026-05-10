@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ExternalLink, Star } from "lucide-react";
 import { useRef } from "react";
 import type { GithubRepo } from "@/lib/github";
@@ -78,8 +78,14 @@ export default function ProjectsGrid({ repos }: { repos: GithubRepo[] }) {
 }
 
 function MacBookCard({ repo, index }: { repo: GithubRepo; index: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Scroll-driven lid opening: card enters viewport (90%) → card top at 25%
+  const { scrollYProgress } = useScroll({
+    target: cardRef,
+    offset: ["start 0.9", "start 0.25"],
+  });
+  const rotateX = useTransform(scrollYProgress, [0, 1], [-8, -115]);
 
   const ogImage = `https://opengraph.githubassets.com/1/Lzdevmendes/${repo.name}`;
   const displayUrl = repo.homepage
@@ -97,18 +103,13 @@ function MacBookCard({ repo, index }: { repo: GithubRepo; index: number }) {
     >
       {/* ── MacBook 3D ── */}
       <div
-        ref={ref}
+        ref={cardRef}
         style={{ perspective: "1000px", perspectiveOrigin: "50% 60%" }}
       >
-        {/* Lid — animates on inView */}
+        {/* Lid — scroll-driven rotateX */}
         <motion.div
-          animate={{ rotateX: isInView ? -115 : -8 }}
-          transition={{
-            duration: 1.5,
-            delay: index * 0.14 + 0.35,
-            ease: [0.25, 0.46, 0.45, 0.94],
-          }}
           style={{
+            rotateX,
             transformOrigin: "50% 100%",
             background: "linear-gradient(160deg, #2e2e30 0%, #1e1e20 100%)",
             borderRadius: "10px 10px 3px 3px",
