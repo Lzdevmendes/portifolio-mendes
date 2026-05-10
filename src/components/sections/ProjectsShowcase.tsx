@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Github, ExternalLink } from "lucide-react";
 import { useLanguage } from "@/contexts/language";
@@ -233,101 +233,7 @@ function MacOSPlaceholder({ accent }: { accent: string }) {
   );
 }
 
-/* ─── MacBook 3D with scroll-driven lid ─── */
-function MacBookLid({
-  rotateX,
-  project,
-}: {
-  rotateX: MotionValue<number>;
-  project: Project;
-}) {
-  return (
-    <motion.div
-      style={{
-        transformOrigin: "center bottom",
-        rotateX,
-        willChange: "transform",
-      }}
-    >
-      {/* Outer lid shell — space gray, exactly like MacBook Pro 14" */}
-      <div
-        style={{
-          background: "linear-gradient(170deg, #323234 0%, #1e1e20 40%, #161618 100%)",
-          borderRadius: "14px 14px 2px 2px",
-          /* Razor-thin bezels: 4px top/sides, 5px bottom */
-          padding: "4px 4px 5px",
-          boxShadow:
-            "inset 0 0 0 0.5px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.05)",
-        }}
-      >
-        {/* Screen area (black) with notch overlay */}
-        <div
-          style={{
-            background: "#080808",
-            borderRadius: "11px 11px 2px 2px",
-            overflow: "hidden",
-            position: "relative",
-            boxShadow: "inset 0 0 0 0.5px rgba(255,255,255,0.04)",
-          }}
-        >
-          {/* Screen content */}
-          <div style={{ aspectRatio: "16/10", overflow: "hidden", display: "flex" }}>
-            {project.video ? (
-              <video
-                src={project.video}
-                autoPlay
-                muted
-                loop
-                playsInline
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
-            ) : project.image ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={project.image}
-                alt={project.title}
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
-            ) : (
-              <MacOSPlaceholder accent={project.accent} />
-            )}
-          </div>
-
-          {/* Notch — overlaid on top of screen content (MacBook Pro 14" style) */}
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: "88px",
-              height: "20px",
-              background: "#080808",
-              borderRadius: "0 0 10px 10px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 2,
-            }}
-          >
-            {/* Camera dot */}
-            <div
-              style={{
-                width: "6px",
-                height: "6px",
-                borderRadius: "50%",
-                background: "#1c1c1e",
-                boxShadow: "0 0 0 1px #2a2a2c",
-              }}
-            />
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-/* ─── Full MacBook assembly ─── */
+/* ─── Full MacBook assembly — exact match to MacBook Pro 14" reference ─── */
 function ScrollMacBook({ project }: { project: Project }) {
   const macbookRef = useRef<HTMLDivElement>(null);
 
@@ -336,101 +242,186 @@ function ScrollMacBook({ project }: { project: Project }) {
     offset: ["start end", "start 15%"],
   });
 
-  // Lid: from nearly closed → comfortably open
   const lidRotateX = useTransform(scrollYProgress, [0, 0.85], [-102, -17]);
-
-  // MacBook slides up from below as it enters viewport
-  const translateY = useTransform(scrollYProgress, [0, 0.6], [110, 0]);
-  const opacity = useTransform(scrollYProgress, [0, 0.28], [0, 1]);
-
-  // Glow intensifies as lid opens
-  const glowOpacity = useTransform(scrollYProgress, [0.2, 0.85], [0, 0.85]);
+  const translateY  = useTransform(scrollYProgress, [0, 0.6],  [110, 0]);
+  const opacity     = useTransform(scrollYProgress, [0, 0.28], [0, 1]);
+  const glowOpacity = useTransform(scrollYProgress, [0.2, 0.85], [0, 0.8]);
 
   return (
     <div ref={macbookRef} style={{ position: "relative" }}>
-      {/* Screen glow effect */}
+      {/* Accent glow behind screen */}
       <motion.div
         style={{
           position: "absolute",
-          top: "-15%",
-          left: "5%",
-          right: "5%",
-          height: "50%",
-          background: `radial-gradient(ellipse at 50% 85%, ${project.accent}40 0%, transparent 65%)`,
+          top: "-12%",
+          left: "8%",
+          right: "8%",
+          height: "48%",
+          background: `radial-gradient(ellipse at 50% 90%, ${project.accent}45 0%, transparent 65%)`,
           opacity: glowOpacity,
-          filter: "blur(28px)",
+          filter: "blur(30px)",
           pointerEvents: "none",
           zIndex: 0,
         }}
       />
 
-      <motion.div
-        style={{ y: translateY, opacity, position: "relative", zIndex: 1 }}
-      >
-        {/* 3D perspective wrapper */}
-        <div
-          style={{
-            perspective: "1400px",
-            perspectiveOrigin: "50% 58%",
-          }}
-        >
-          {/* Lid */}
-          <MacBookLid rotateX={lidRotateX} project={project} />
+      <motion.div style={{ y: translateY, opacity, position: "relative", zIndex: 1 }}>
+        {/* ── 3D Perspective container ── */}
+        <div style={{ perspective: "1400px", perspectiveOrigin: "50% 56%" }}>
 
-          {/* Hinge — ultra thin, like MacBook Pro 14" */}
+          {/* ════ LID ════ */}
+          <motion.div
+            style={{
+              transformOrigin: "center bottom",
+              rotateX: lidRotateX,
+              willChange: "transform",
+            }}
+          >
+            {/*
+              Outer silver aluminum shell — matches the reference image exactly:
+              - Silver gradient top-to-bottom
+              - Thin rounded corners (14px top)
+              - Minimal padding = thin aluminum frame visible around black bezel
+            */}
+            <div
+              style={{
+                background: "linear-gradient(175deg, #D8D8DA 0%, #C8C8CA 40%, #BEBEC0 100%)",
+                borderRadius: "14px 14px 3px 3px",
+                padding: "5px 5px 6px",
+                boxShadow:
+                  "inset 0 0 0 0.5px rgba(255,255,255,0.7), " +
+                  "inset 0 2px 0 rgba(255,255,255,0.5), " +
+                  "0 0 0 0.5px rgba(0,0,0,0.25)",
+              }}
+            >
+              {/*
+                Inner black bezel + screen
+                overflow: hidden clips the content, position: relative for notch overlay
+              */}
+              <div
+                style={{
+                  background: "#0a0a0a",
+                  borderRadius: "10px 10px 1px 1px",
+                  overflow: "hidden",
+                  position: "relative",
+                }}
+              >
+                {/* Screen content */}
+                <div style={{ aspectRatio: "16/10", overflow: "hidden", display: "flex" }}>
+                  {project.video ? (
+                    <video
+                      src={project.video}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    />
+                  ) : project.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    />
+                  ) : (
+                    <MacOSPlaceholder accent={project.accent} />
+                  )}
+                </div>
+
+                {/*
+                  Notch — MacBook Pro 14" style:
+                  Pill-shaped cutout at top-center, overlaid on screen content
+                */}
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    width: "92px",
+                    height: "22px",
+                    background: "#0a0a0a",
+                    borderRadius: "0 0 12px 12px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    zIndex: 2,
+                  }}
+                >
+                  {/* Camera lens */}
+                  <div
+                    style={{
+                      width: "7px",
+                      height: "7px",
+                      borderRadius: "50%",
+                      background: "#1e1e20",
+                      boxShadow:
+                        "0 0 0 1.5px #2c2c2e, inset 0 0 3px rgba(0,0,0,0.8)",
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+          {/* ════ END LID ════ */}
+
+          {/* ── Hinge line ── */}
           <div
             style={{
-              height: "3px",
+              height: "4px",
               background:
-                "linear-gradient(90deg, #0d0d0e, #282828 15%, #3c3c3e 50%, #282828 85%, #0d0d0e)",
+                "linear-gradient(90deg, #888 0%, #aaa 20%, #ccc 50%, #aaa 80%, #888 100%)",
             }}
           />
 
-          {/* Base / keyboard deck */}
+          {/* ════ BASE ════ */}
           <div
             style={{
               background:
-                "linear-gradient(180deg, #2a2a2c 0%, #222224 55%, #1e1e20 100%)",
+                "linear-gradient(180deg, #CACACA 0%, #BEBEBE 50%, #B0B0B0 100%)",
               borderRadius: "0 0 10px 10px",
               padding: "10px 18px 14px",
               boxShadow:
-                "0 36px 100px rgba(0,0,0,0.8), 0 14px 34px rgba(0,0,0,0.5)",
+                "0 34px 90px rgba(0,0,0,0.75), " +
+                "0 12px 28px rgba(0,0,0,0.45), " +
+                "inset 0 1px 0 rgba(255,255,255,0.4)",
             }}
           >
-            {/* Keyboard — 4 visible rows like MacBook Pro */}
+            {/* Keyboard rows — visible dark keys on silver base */}
             <div
               style={{
                 display: "flex",
                 flexDirection: "column",
                 gap: "3px",
-                marginBottom: "9px",
-                opacity: 0.14,
+                marginBottom: "10px",
+                opacity: 0.5,
               }}
             >
-              {/* Function row (shorter keys) */}
-              <div style={{ display: "flex", gap: "2.5px" }}>
+              {/* Function row */}
+              <div style={{ display: "flex", gap: "2px" }}>
                 {Array.from({ length: 16 }).map((_, k) => (
                   <div
                     key={k}
                     style={{
                       flex: 1,
-                      height: "3.5px",
-                      background: "#fff",
+                      height: "3px",
+                      background: "#999",
                       borderRadius: "1px",
                     }}
                   />
                 ))}
               </div>
-              {/* Regular key rows */}
+              {/* Main key rows */}
               {[13, 13, 12].map((count, row) => (
                 <div key={row} style={{ display: "flex", gap: "3px" }}>
                   {Array.from({ length: count }).map((_, k) => (
                     <div
                       key={k}
                       style={{
-                        flex: k === 0 && row === 2 ? 2 : 1,
+                        flex: k === 0 && row === 2 ? 1.8 : 1,
                         height: "5px",
-                        background: "#fff",
+                        background: "#888",
                         borderRadius: "1.5px",
                       }}
                     />
@@ -438,39 +429,40 @@ function ScrollMacBook({ project }: { project: Project }) {
                 </div>
               ))}
             </div>
-            {/* Trackpad — centered, proportional */}
+
+            {/* Trackpad */}
             <div style={{ display: "flex", justifyContent: "center" }}>
               <div
                 style={{
                   width: "30%",
                   height: "15px",
-                  background: "rgba(255,255,255,0.06)",
+                  background: "linear-gradient(180deg, #B8B8B8, #ACACAC)",
                   borderRadius: "5px",
                   boxShadow:
-                    "inset 0 0 0 0.5px rgba(255,255,255,0.08), 0 0 0 0.5px rgba(0,0,0,0.3)",
+                    "0 0 0 0.5px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.3)",
                 }}
               />
             </div>
           </div>
+          {/* ════ END BASE ════ */}
 
-          {/* Bottom tapered edge — characteristic MacBook Pro 14" detail */}
+          {/* Bottom tapered edge */}
           <div
             style={{
-              height: "4px",
-              background:
-                "linear-gradient(180deg, #181818 0%, #111112 100%)",
-              borderRadius: "0 0 6px 6px",
+              height: "5px",
+              background: "linear-gradient(180deg, #9E9E9E 0%, #888 100%)",
+              borderRadius: "0 0 8px 8px",
             }}
           />
 
-          {/* Cast shadow on surface */}
+          {/* Surface shadow */}
           <div
             style={{
-              marginTop: "8px",
-              height: "24px",
+              marginTop: "10px",
+              height: "28px",
               background:
-                "radial-gradient(ellipse at 50% 10%, rgba(0,0,0,0.6) 0%, transparent 68%)",
-              filter: "blur(6px)",
+                "radial-gradient(ellipse at 50% 0%, rgba(0,0,0,0.55) 0%, transparent 68%)",
+              filter: "blur(8px)",
             }}
           />
         </div>
