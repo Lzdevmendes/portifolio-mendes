@@ -2,42 +2,70 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { memo, useRef, useCallback, useEffect, useState } from "react";
-import { Code2, Server, Smartphone, GitPullRequest, ArrowUpRight, Briefcase } from "lucide-react";
+import { Code2, Server, Smartphone, GitPullRequest, ArrowUpRight, Briefcase, Palette } from "lucide-react";
+import { useLanguage } from "@/contexts/language";
+import type { Lang } from "@/contexts/language";
 
-const focusAreas = [
-  {
-    icon: <Code2 size={16} />,
-    title: "Frontend",
-    color: "#6366F1",
-    techs: "React · Next.js · Flutter",
-    desc: "Interfaces rápidas e acessíveis com foco na experiência do usuário.",
+const FOCUS_AREAS: Record<Lang, Array<{ icon: React.ReactNode; title: string; color: string; techs: string; desc: string }>> = {
+  pt: [
+    { icon: <Code2 size={16} />, title: "Frontend", color: "#6366F1", techs: "React · Next.js · Flutter", desc: "Interfaces rápidas e acessíveis com foco na experiência do usuário." },
+    { icon: <Server size={16} />, title: "Backend", color: "#0D9488", techs: "Node.js · .NET · Go", desc: "APIs escaláveis, arquitetura limpa e integrações robustas." },
+    { icon: <Smartphone size={16} />, title: "Mobile", color: "#00B4AB", techs: "Flutter · Dart", desc: "Apps multiplataforma com experiência nativa e fluida." },
+    { icon: <GitPullRequest size={16} />, title: "Colaboração", color: "#F59E0B", techs: "Git · PR Review · Orgs", desc: "Membro de 2 Organizações no GitHub. Experiência com revisão de PR, code review e versionamento colaborativo em equipes." },
+    { icon: <Palette size={16} />, title: "UI/UX Design", color: "#EC4899", techs: "Figma · Design Systems", desc: "Experiência em criação de interfaces e design systems com foco em usabilidade, hierarquia visual e experiência do usuário." },
+  ],
+  en: [
+    { icon: <Code2 size={16} />, title: "Frontend", color: "#6366F1", techs: "React · Next.js · Flutter", desc: "Fast, accessible interfaces focused on user experience." },
+    { icon: <Server size={16} />, title: "Backend", color: "#0D9488", techs: "Node.js · .NET · Go", desc: "Scalable APIs, clean architecture and robust integrations." },
+    { icon: <Smartphone size={16} />, title: "Mobile", color: "#00B4AB", techs: "Flutter · Dart", desc: "Cross-platform apps with native, fluid experience." },
+    { icon: <GitPullRequest size={16} />, title: "Collaboration", color: "#F59E0B", techs: "Git · PR Review · Orgs", desc: "Member of 2 GitHub organizations. Experience with PR review, code review and collaborative versioning in teams." },
+    { icon: <Palette size={16} />, title: "UI/UX Design", color: "#EC4899", techs: "Figma · Design Systems", desc: "Experience creating interfaces and design systems focused on usability, visual hierarchy and user experience." },
+  ],
+};
+
+const T = {
+  pt: {
+    label: "Sobre mim",
+    heading1: "Construindo o",
+    headingHighlight: "futuro",
+    heading2: "com código.",
+    bio: "Desenvolvedor Full Stack apaixonado por código limpo, boas práticas e experiências memoráveis. Atuo do frontend ao backend, entregando produtos completos com qualidade e atenção aos detalhes.",
+    available: "Disponível para Trabalho",
+    availableSub: "Disponível imediatamente · CLT, PJ ou freelance",
+    stats: [
+      { n: "10+", l: "projetos entregues" },
+      { n: "2",   l: "orgs no GitHub" },
+      { n: "7+",  l: "stacks dominadas" },
+    ],
+    quote: "Código bom não é o que funciona — é o que qualquer pessoa consegue entender e manter.",
+    sendEmail: "Enviar e-mail",
+    bgText: "SOBRE",
   },
-  {
-    icon: <Server size={16} />,
-    title: "Backend",
-    color: "#0D9488",
-    techs: "Node.js · .NET · Go",
-    desc: "APIs escaláveis, arquitetura limpa e integrações robustas.",
+  en: {
+    label: "About me",
+    heading1: "Building the",
+    headingHighlight: "future",
+    heading2: "with code.",
+    bio: "Full Stack Developer passionate about clean code, best practices and memorable experiences. I work from frontend to backend, delivering complete products with quality and attention to detail.",
+    available: "Open to Work",
+    availableSub: "Available immediately · Full-time, contract or freelance",
+    stats: [
+      { n: "10+", l: "projects delivered" },
+      { n: "2",   l: "GitHub orgs" },
+      { n: "7+",  l: "stacks mastered" },
+    ],
+    quote: "Good code is not what works — it's what anyone can understand and maintain.",
+    sendEmail: "Send email",
+    bgText: "ABOUT",
   },
-  {
-    icon: <Smartphone size={16} />,
-    title: "Mobile",
-    color: "#00B4AB",
-    techs: "Flutter · Dart",
-    desc: "Apps multiplataforma com experiência nativa e fluida.",
-  },
-  {
-    icon: <GitPullRequest size={16} />,
-    title: "Colaboração",
-    color: "#F59E0B",
-    techs: "Git · PR Review · Orgs",
-    desc: "Membro de 2 Organizações no GitHub. Experiência com revisão de PR, code review e versionamento colaborativo em equipes.",
-  },
-];
+};
 
 const ease = [0.4, 0, 0.2, 1] as [number, number, number, number];
 
 export default function About() {
+  const { lang } = useLanguage();
+  const t = T[lang];
+  const focusAreas = FOCUS_AREAS[lang];
   const sectionRef = useRef<HTMLElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -83,7 +111,7 @@ export default function About() {
     <section
       ref={sectionRef}
       id="about"
-      aria-label="Sobre mim"
+      aria-label={t.label}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ position: "relative", padding: "100px 24px", overflow: "hidden" }}
@@ -141,7 +169,7 @@ export default function About() {
             display: "block",
           }}
         >
-          SOBRE
+          {t.bgText}
         </span>
       </motion.div>
 
@@ -181,7 +209,7 @@ export default function About() {
               marginBottom: "20px",
             }}
           >
-            Sobre mim
+            {t.label}
           </span>
 
           <h2
@@ -195,10 +223,10 @@ export default function About() {
               marginBottom: "28px",
             }}
           >
-            Construindo o{" "}
-            <span style={{ color: "var(--color-teal)" }}>futuro</span>
+            {t.heading1}{" "}
+            <span style={{ color: "var(--color-teal)" }}>{t.headingHighlight}</span>
             <br />
-            com código.
+            {t.heading2}
           </h2>
 
           <p
@@ -210,9 +238,7 @@ export default function About() {
               maxWidth: "400px",
             }}
           >
-            Desenvolvedor Full Stack apaixonado por código limpo, boas práticas
-            e experiências memoráveis. Atuo do frontend ao backend,
-            entregando produtos completos com qualidade e atenção aos detalhes.
+            {t.bio}
           </p>
 
           {/* Code card */}
@@ -310,7 +336,7 @@ export default function About() {
             <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <span style={{ fontFamily: "var(--font-syne)", fontWeight: 700, fontSize: "0.875rem", color: "var(--color-teal-light)", letterSpacing: "-0.01em" }}>
-                  Disponível para Trabalho
+                  {t.available}
                 </span>
                 <span
                   style={{
@@ -326,7 +352,7 @@ export default function About() {
                 />
               </div>
               <span style={{ fontFamily: "var(--font-inter)", fontSize: "0.75rem", color: "var(--color-muted)", lineHeight: 1.4 }}>
-                Disponível imediatamente · CLT, PJ ou freelance
+                {t.availableSub}
               </span>
             </div>
           </motion.div>
@@ -339,13 +365,9 @@ export default function About() {
 
           {/* Mini stats */}
           <div className="about-stats" style={{ display: "flex", gap: "32px", marginTop: "32px", flexWrap: "wrap" }}>
-            {[
-              { n: "10+", l: "projetos entregues" },
-              { n: "2", l: "orgs no GitHub" },
-              { n: "7+", l: "stacks dominadas" },
-            ].map((s) => (
+            {t.stats.map((s) => (
               <div key={s.l} style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <span style={{ fontFamily: "var(--font-syne)", fontWeight: 800, fontSize: "1.5rem", color: "var(--color-text)", letterSpacing: "-0.02em" }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: "1.5rem", color: "var(--color-teal-light)", letterSpacing: "-0.02em" }}>
                   {s.n}
                 </span>
                 <span style={{ fontFamily: "var(--font-inter)", fontSize: "0.75rem", color: "var(--color-muted)" }}>
@@ -387,7 +409,7 @@ export default function About() {
             }}
           >
             <p style={{ fontFamily: "var(--font-syne)", fontSize: "1rem", fontWeight: 600, color: "var(--color-text)", lineHeight: 1.6, letterSpacing: "-0.01em" }}>
-              &ldquo;Código bom não é o que funciona — é o que qualquer pessoa consegue entender e manter.&rdquo;
+              &ldquo;{t.quote}&rdquo;
             </p>
             <footer style={{ marginTop: "12px", fontFamily: "var(--font-inter)", fontSize: "0.75rem", color: "var(--color-muted)" }}>
               — Luiz Mendes
@@ -420,7 +442,7 @@ export default function About() {
                 textDecoration: "none",
               }}
             >
-              Enviar e-mail
+              {t.sendEmail}
               <ArrowUpRight size={13} />
             </motion.a>
             <motion.a
@@ -471,7 +493,7 @@ const FocusCard = memo(function FocusCard({
   area,
   index,
 }: {
-  area: (typeof focusAreas)[number];
+  area: (typeof FOCUS_AREAS)["pt"][number];
   index: number;
 }) {
   return (

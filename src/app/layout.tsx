@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Syne, Space_Mono } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -13,6 +13,13 @@ const syne = Syne({
   variable: "--font-syne",
   display: "swap",
   weight: ["400", "500", "600", "700", "800"],
+});
+
+const spaceMono = Space_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
@@ -60,7 +67,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={`${inter.variable} ${syne.variable}`}>
+    <html lang="pt-BR" className={`${inter.variable} ${syne.variable} ${spaceMono.variable}`}>
       <body>{children}</body>
     </html>
   );

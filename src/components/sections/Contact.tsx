@@ -3,6 +3,13 @@
 import { motion } from "framer-motion";
 import { Mail, FileText } from "lucide-react";
 import { memo } from "react";
+import { useLanguage } from "@/contexts/language";
+import type { Lang } from "@/contexts/language";
+
+const CONTACT_T: Record<Lang, { label: string; heading: string; download: string }> = {
+  pt: { label: "Contato",  heading: "Vamos conversar?",  download: "Baixar Currículo (PDF)" },
+  en: { label: "Contact",  heading: "Let's talk?",        download: "Download Resume (PDF)" },
+};
 
 const ease = [0.4, 0, 0.2, 1] as [number, number, number, number];
 
@@ -53,10 +60,13 @@ const CHANNELS = [
 ] as const;
 
 export default function Contact() {
+  const { lang } = useLanguage();
+  const t = CONTACT_T[lang];
+
   return (
     <section
       id="contact"
-      aria-label="Contato"
+      aria-label={t.label}
       style={{ padding: "80px 24px", position: "relative" }}
     >
       <style>{`
@@ -105,7 +115,7 @@ export default function Contact() {
               marginBottom: "12px",
             }}
           >
-            Contato
+            {t.label}
           </span>
           <h2
             style={{
@@ -117,7 +127,7 @@ export default function Contact() {
               color: "var(--color-text)",
             }}
           >
-            Vamos conversar?
+            {t.heading}
           </h2>
         </motion.div>
 
@@ -165,7 +175,7 @@ export default function Contact() {
             }}
           >
             <FileText size={14} strokeWidth={2} />
-            Baixar Currículo (PDF)
+            {t.download}
           </motion.a>
         </motion.div>
       </div>
