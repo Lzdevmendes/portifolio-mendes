@@ -239,13 +239,14 @@ function ScrollMacBook({ project }: { project: Project }) {
 
   const { scrollYProgress } = useScroll({
     target: macbookRef,
-    offset: ["start end", "start 15%"],
+    offset: ["start end", "start -30%"],
   });
 
-  const lidRotateX = useTransform(scrollYProgress, [0, 0.85], [-102, -17]);
-  const translateY  = useTransform(scrollYProgress, [0, 0.6],  [110, 0]);
-  const opacity     = useTransform(scrollYProgress, [0, 0.28], [0, 1]);
-  const glowOpacity = useTransform(scrollYProgress, [0.2, 0.85], [0, 0.8]);
+  // Slower: animation spans ~130% of viewport height instead of 85%
+  const lidRotateX = useTransform(scrollYProgress, [0, 0.90], [-102, -17]);
+  const translateY  = useTransform(scrollYProgress, [0, 0.55], [110, 0]);
+  const opacity     = useTransform(scrollYProgress, [0, 0.22], [0, 1]);
+  const glowOpacity = useTransform(scrollYProgress, [0.18, 0.90], [0, 0.8]);
 
   return (
     <div ref={macbookRef} style={{ position: "relative" }}>
@@ -379,67 +380,158 @@ function ScrollMacBook({ project }: { project: Project }) {
           <div
             style={{
               background:
-                "linear-gradient(180deg, #CACACA 0%, #BEBEBE 50%, #B0B0B0 100%)",
+                "linear-gradient(180deg, #CDCDCF 0%, #BEBEC0 55%, #B2B2B4 100%)",
               borderRadius: "0 0 10px 10px",
-              padding: "10px 18px 14px",
+              padding: "12px 20px 16px",
               boxShadow:
                 "0 34px 90px rgba(0,0,0,0.75), " +
                 "0 12px 28px rgba(0,0,0,0.45), " +
-                "inset 0 1px 0 rgba(255,255,255,0.4)",
+                "inset 0 1px 0 rgba(255,255,255,0.5)",
             }}
           >
-            {/* Keyboard rows — visible dark keys on silver base */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "3px",
-                marginBottom: "10px",
-                opacity: 0.5,
-              }}
-            >
-              {/* Function row */}
-              <div style={{ display: "flex", gap: "2px" }}>
+            {/* ── Keyboard ── */}
+            <div style={{ marginBottom: "12px" }}>
+              {/* Function row — shorter, 16 keys */}
+              <div style={{ display: "flex", gap: "2.5px", marginBottom: "4px" }}>
                 {Array.from({ length: 16 }).map((_, k) => (
                   <div
                     key={k}
                     style={{
                       flex: 1,
-                      height: "3px",
-                      background: "#999",
-                      borderRadius: "1px",
+                      height: "6px",
+                      background: "rgba(0,0,0,0.18)",
+                      borderRadius: "2px",
+                      boxShadow: "inset 0 -1px 0 rgba(0,0,0,0.12)",
                     }}
                   />
                 ))}
               </div>
-              {/* Main key rows */}
-              {[13, 13, 12].map((count, row) => (
-                <div key={row} style={{ display: "flex", gap: "3px" }}>
-                  {Array.from({ length: count }).map((_, k) => (
-                    <div
-                      key={k}
-                      style={{
-                        flex: k === 0 && row === 2 ? 1.8 : 1,
-                        height: "5px",
-                        background: "#888",
-                        borderRadius: "1.5px",
-                      }}
-                    />
-                  ))}
-                </div>
-              ))}
+
+              {/* Number row — 13 keys */}
+              <div style={{ display: "flex", gap: "3px", marginBottom: "3px" }}>
+                {Array.from({ length: 13 }).map((_, k) => (
+                  <div
+                    key={k}
+                    style={{
+                      flex: 1,
+                      height: "9px",
+                      background: "rgba(0,0,0,0.2)",
+                      borderRadius: "2.5px",
+                      boxShadow:
+                        "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.15)",
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* QWERTY row — 13 keys */}
+              <div style={{ display: "flex", gap: "3px", marginBottom: "3px" }}>
+                {Array.from({ length: 13 }).map((_, k) => (
+                  <div
+                    key={k}
+                    style={{
+                      flex: 1,
+                      height: "9px",
+                      background: "rgba(0,0,0,0.2)",
+                      borderRadius: "2.5px",
+                      boxShadow:
+                        "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.15)",
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* ASDF row — 12 keys + caps */}
+              <div style={{ display: "flex", gap: "3px", marginBottom: "3px" }}>
+                {/* Caps Lock — wider */}
+                <div
+                  style={{
+                    flex: 1.6,
+                    height: "9px",
+                    background: "rgba(0,0,0,0.2)",
+                    borderRadius: "2.5px",
+                    boxShadow:
+                      "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.15)",
+                  }}
+                />
+                {Array.from({ length: 11 }).map((_, k) => (
+                  <div
+                    key={k}
+                    style={{
+                      flex: 1,
+                      height: "9px",
+                      background: "rgba(0,0,0,0.2)",
+                      borderRadius: "2.5px",
+                      boxShadow:
+                        "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.15)",
+                    }}
+                  />
+                ))}
+                {/* Enter — wider */}
+                <div
+                  style={{
+                    flex: 1.8,
+                    height: "9px",
+                    background: "rgba(0,0,0,0.2)",
+                    borderRadius: "2.5px",
+                    boxShadow:
+                      "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.15)",
+                  }}
+                />
+              </div>
+
+              {/* ZXCV row — 10 keys + shift */}
+              <div style={{ display: "flex", gap: "3px" }}>
+                {/* Shift — wider */}
+                <div
+                  style={{
+                    flex: 2.2,
+                    height: "9px",
+                    background: "rgba(0,0,0,0.2)",
+                    borderRadius: "2.5px",
+                    boxShadow:
+                      "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.15)",
+                  }}
+                />
+                {Array.from({ length: 10 }).map((_, k) => (
+                  <div
+                    key={k}
+                    style={{
+                      flex: 1,
+                      height: "9px",
+                      background: "rgba(0,0,0,0.2)",
+                      borderRadius: "2.5px",
+                      boxShadow:
+                        "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.15)",
+                    }}
+                  />
+                ))}
+                {/* Right Shift — wider */}
+                <div
+                  style={{
+                    flex: 2.2,
+                    height: "9px",
+                    background: "rgba(0,0,0,0.2)",
+                    borderRadius: "2.5px",
+                    boxShadow:
+                      "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.15)",
+                  }}
+                />
+              </div>
             </div>
 
-            {/* Trackpad */}
+            {/* ── Trackpad ── */}
             <div style={{ display: "flex", justifyContent: "center" }}>
               <div
                 style={{
-                  width: "30%",
-                  height: "15px",
-                  background: "linear-gradient(180deg, #B8B8B8, #ACACAC)",
-                  borderRadius: "5px",
+                  width: "34%",
+                  height: "18px",
+                  background: "linear-gradient(180deg, #B4B4B6 0%, #A8A8AA 100%)",
+                  borderRadius: "6px",
                   boxShadow:
-                    "0 0 0 0.5px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.3)",
+                    "0 0 0 0.75px rgba(0,0,0,0.3), " +
+                    "inset 0 1px 0 rgba(255,255,255,0.35), " +
+                    "inset 0 -1px 0 rgba(0,0,0,0.1)",
                 }}
               />
             </div>
@@ -450,7 +542,7 @@ function ScrollMacBook({ project }: { project: Project }) {
           <div
             style={{
               height: "5px",
-              background: "linear-gradient(180deg, #9E9E9E 0%, #888 100%)",
+              background: "linear-gradient(180deg, #A0A0A2 0%, #8C8C8E 100%)",
               borderRadius: "0 0 8px 8px",
             }}
           />
