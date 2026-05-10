@@ -49,18 +49,20 @@
 │   ├── components/
 │   │   ├── layout/
 │   │   │   ├── Navbar.tsx      ← fixed top, barra de progresso scroll, IntersectionObserver por seção
-│   │   │   ├── Footer.tsx      ← id="contact", CTA de contato, sociais, back-to-top
+│   │   │   ├── Footer.tsx      ← rodapé simples: brand LM, back-to-top (desktop), copyright
+│   │   │   ├── BackToTop.tsx   ← botão flutuante fixed bottom-right, aparece após 400px scroll
 │   │   │   ├── MobileBottomNav.tsx ← bottom nav (pointer: coarse / max-width 768px), IntersectionObserver
 │   │   │   └── Providers.tsx   ← MotionConfig reducedMotion="user"
 │   │   └── sections/
-│   │       ├── Hero.tsx        ← layout split: texto esquerda | terminal de código direita (só desktop ≥920px)
+│   │       ├── Hero.tsx        ← layout split: texto esquerda | terminal de código direita (só desktop ≥920px); stats com AnimatedStat (counter animado no viewport)
 │   │       ├── About.tsx       ← sticky esquerda | cards direita; parallax "SOBRE" + mouse glow interativo
 │   │       ├── Projects.tsx    ← server component async, busca repos GitHub de "Lzdevmendes"
 │   │       ├── ProjectsHeader.tsx ← cabeçalho da seção Projetos (client)
 │   │       ├── ProjectsGrid.tsx   ← grade de repo cards, tilt 3D no hover (desktop only, isTouch guard)
 │   │       ├── Experience.tsx  ← timeline de 3 experiências, cards com whileHover
 │   │       ├── Skills.tsx      ← grid de 7 categorias de skills, pills clicáveis com whileHover próprio
-│   │       └── Certifications.tsx ← grade 3-colunas de 6 certificações, hover interativo
+│   │       ├── Certifications.tsx ← grade 3-colunas de 6 certificações, hover interativo
+│   │       └── Contact.tsx     ← id="contact", card premium: Email/LinkedIn/GitHub + download CV
 │   └── lib/
 │       └── github.ts           ← fetch repos GitHub (revalidate 3600s, filtra forks)
 ├── next.config.ts              ← output:"export", images unoptimized
@@ -98,8 +100,9 @@ Easing tokens: `--ease-smooth: cubic-bezier(0.4,0,0.2,1)` | `--ease-spring: cubi
 - Título: "Luiz Mendes — Desenvolvedor Fullstack JR / Pleno"
 
 ### `globals.css`
-- Reset completo, `box-sizing: border-box`, `scroll-behavior: smooth`
-- `scroll-padding-top: 80px` (offset do navbar fixo)
+- Reset completo, `box-sizing: border-box`
+- `html`: apenas `scroll-behavior: smooth` + `scroll-padding-top: 80px` — **sem overflow-x** (causava bloqueio de scroll no deploy estático)
+- `body`: `overflow-x: hidden` (apenas no body, não no html — regra crítica)
 - `overscroll-behavior-y: contain` (evita pull-to-refresh)
 - `padding-bottom` do body: `72px + safe-area` no mobile (espaço para MobileBottomNav)
 - Keyframes: `teal-pulse`, `fade-up`, `pulse-dot` (usado em badges pulsantes)
@@ -114,11 +117,26 @@ Easing tokens: `--ease-smooth: cubic-bezier(0.4,0,0.2,1)` | `--ease-spring: cubi
 - Mobile menu (`< 768px`): sem backdrop-filter (removido por performance)
 - Dot indicator por link: escala e opacidade via spring animation
 
-### `Footer.tsx` (id="contact")
-- CTA de contato com email e LinkedIn
-- Localização: "Brasil" (não "Brazil")
-- Back-to-top via `window.scrollTo({ top: 0, behavior: "smooth" })`
-- Ícones sociais: GitHub, LinkedIn, Email
+### `Footer.tsx`
+- Rodapé simples — sem CTA de contato (movida para Contact.tsx)
+- Brand: "LM" teal + MapPin "Brasil"
+- Back-to-top inline (desktop only, hidden em mobile ≤480px)
+- Copyright: "© {year} Luiz Mendes. Todos os direitos reservados."
+
+### `BackToTop.tsx`
+- Botão flutuante `position: fixed`, `right: 20px`
+- Desktop: `bottom: 28px` | Mobile (pointer:coarse / ≤768px): `bottom: 88px` (acima MobileBottomNav)
+- Aparece após 400px de scroll via `window.scrollY`
+- AnimatePresence com scale+opacity+y de entrada/saída
+- `ArrowUp` icon, glassmorphism com blur
+
+### `Contact.tsx` (id="contact")
+- Seção dedicada antes do Footer, substituiu a CTA band que estava no Footer
+- Card premium com ambient glows (teal direita, indigo esquerda)
+- Badge "Disponível para novas oportunidades" com pulse-dot
+- Grid 3 colunas de ChannelCards: Email, LinkedIn, GitHub — cada um com cor e border próprios
+- CTA de download de CV: `/cv-luiz-mendes.pdf` (arquivo precisa existir em `/public`)
+- Responsive: 3 cols desktop / 1 col ≤700px
 
 ### `MobileBottomNav.tsx`
 - Renderiza apenas em `pointer: coarse` ou `max-width: 768px`
@@ -129,6 +147,8 @@ Easing tokens: `--ease-smooth: cubic-bezier(0.4,0,0.2,1)` | `--ease-spring: cubi
 ### `Hero.tsx`
 - Layout: `grid-template-columns: 1.1fr 0.9fr` (desktop ≥ 920px)
 - **Esquerda**: nome, badges, bio, CTAs, stats com stagger animation
+- **Stats**: `AnimatedStat` — usa `animate(0, end)` do Framer Motion + `useInView` once; `fontVariantNumeric: tabular-nums`
+  - `{ end: 1.5, decimals: 1, prefix: "", suffix: "+" }` | `{ end: 1, prefix: "$", suffix: "M+" }` | `{ end: 3 }`
 - **Direita** (só desktop): `CodeTerminal` (typed animation com 2 setIntervals) + `TechChips`
   - `isDesktop` state via `useEffect` + `window.innerWidth >= 920`
   - Terminal **NÃO monta no mobile** — evita setIntervals correndo em background
@@ -215,7 +235,7 @@ Easing tokens: `--ease-smooth: cubic-bezier(0.4,0,0.2,1)` | `--ease-spring: cubi
 | `experience` | Experience.tsx | Experiência |
 | `skills` | Skills.tsx | Skills |
 | `certifications` | Certifications.tsx | Certs |
-| `contact` | Footer.tsx | Contato |
+| `contact` | Contact.tsx | Contato |
 
 ---
 
