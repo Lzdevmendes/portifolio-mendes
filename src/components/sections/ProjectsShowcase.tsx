@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
+import { useRef } from "react";
 import { Github, ExternalLink } from "lucide-react";
 import { useLanguage } from "@/contexts/language";
 import type { Lang } from "@/contexts/language";
@@ -152,6 +152,7 @@ const PROJECTS: Record<Lang, Project[]> = {
   ],
 };
 
+/* ─── Screen content placeholder ─── */
 function MacOSPlaceholder({ accent }: { accent: string }) {
   return (
     <div
@@ -165,804 +166,541 @@ function MacOSPlaceholder({ accent }: { accent: string }) {
         flexDirection: "column",
       }}
     >
+      {/* macOS menu bar */}
       <div
         style={{
-          height: "22px",
+          height: "24px",
           background: "#1c1c1e",
           borderBottom: "1px solid rgba(255,255,255,0.06)",
           display: "flex",
           alignItems: "center",
-          padding: "0 12px",
-          gap: "6px",
+          padding: "0 14px",
+          gap: "7px",
           flexShrink: 0,
         }}
       >
         {(["#FF5F57", "#FFBD2E", "#28C840"] as string[]).map((c) => (
-          <div key={c} style={{ width: 8, height: 8, borderRadius: "50%", background: c, opacity: 0.85 }} />
+          <div
+            key={c}
+            style={{ width: 9, height: 9, borderRadius: "50%", background: c, opacity: 0.9 }}
+          />
         ))}
       </div>
+      {/* Content */}
       <div
         style={{
           flex: 1,
-          background: `linear-gradient(135deg, #0d1117 0%, ${accent}18 60%, #0d1117 100%)`,
-          padding: "16px",
+          background: `linear-gradient(135deg, #0d1117 0%, ${accent}18 55%, #0d1117 100%)`,
+          padding: "20px",
           display: "flex",
           flexDirection: "column",
-          gap: "8px",
+          gap: "10px",
           position: "relative",
           overflow: "hidden",
         }}
       >
+        {/* Dot grid */}
         <div
           style={{
             position: "absolute",
             inset: 0,
-            backgroundImage: "radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px)",
-            backgroundSize: "20px 20px",
+            backgroundImage: "radial-gradient(rgba(255,255,255,0.035) 1px, transparent 1px)",
+            backgroundSize: "22px 22px",
             pointerEvents: "none",
           }}
         />
-        <div style={{ width: "60%", height: "7px", background: `${accent}55`, borderRadius: "4px" }} />
-        <div style={{ width: "40%", height: "5px", background: "rgba(255,255,255,0.08)", borderRadius: "4px" }} />
-        <div style={{ display: "flex", gap: "6px", marginTop: "6px" }}>
+        <div style={{ width: "55%", height: "8px", background: `${accent}55`, borderRadius: "4px" }} />
+        <div style={{ width: "38%", height: "6px", background: "rgba(255,255,255,0.07)", borderRadius: "4px" }} />
+        <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
           {([1, 2, 3] as number[]).map((i) => (
             <div
               key={i}
               style={{
                 flex: 1,
-                height: "52px",
+                height: "62px",
                 background: "rgba(255,255,255,0.04)",
-                borderRadius: "6px",
-                border: `1px solid ${accent}20`,
+                borderRadius: "8px",
+                border: `1px solid ${accent}1a`,
               }}
             />
           ))}
         </div>
-        <div style={{ width: "80%", height: "5px", background: "rgba(255,255,255,0.05)", borderRadius: "4px" }} />
-        <div style={{ width: "55%", height: "5px", background: "rgba(255,255,255,0.05)", borderRadius: "4px" }} />
-        <div style={{ width: "70%", height: "5px", background: "rgba(255,255,255,0.03)", borderRadius: "4px" }} />
+        <div style={{ width: "75%", height: "6px", background: "rgba(255,255,255,0.04)", borderRadius: "4px" }} />
+        <div style={{ width: "52%", height: "6px", background: "rgba(255,255,255,0.04)", borderRadius: "4px" }} />
+        <div style={{ width: "65%", height: "6px", background: "rgba(255,255,255,0.03)", borderRadius: "4px" }} />
       </div>
     </div>
   );
 }
 
-/* ─── MacBook base shell (shared between scroll & static versions) ─── */
-function MacBookShell({
-  accent,
-  screenshot,
-  video,
-  projectName,
-  lidStyle,
+/* ─── MacBook 3D with scroll-driven lid ─── */
+function MacBookLid({
+  rotateX,
+  project,
 }: {
-  accent: string;
-  screenshot?: string | null;
-  video?: string | null;
-  projectName: string;
-  lidStyle?: React.CSSProperties;
+  rotateX: MotionValue<number>;
+  project: Project;
 }) {
   return (
-    <div style={{ position: "relative" }}>
-      {/* LID */}
+    <motion.div
+      style={{
+        transformOrigin: "center bottom",
+        rotateX,
+        willChange: "transform",
+      }}
+    >
+      {/* Outer lid shell */}
       <div
         style={{
-          transformOrigin: "center bottom",
-          background: "linear-gradient(160deg, #2e2e30 0%, #1c1c1e 55%, #161618 100%)",
-          borderRadius: "14px 14px 3px 3px",
-          padding: "0 6px 6px",
-          boxShadow:
-            "inset 0 0 0 0.5px rgba(255,255,255,0.065), 0 -1px 0 rgba(0,0,0,0.6)",
-          ...lidStyle,
+          background: "linear-gradient(165deg, #2e2e30 0%, #1e1e20 50%, #161618 100%)",
+          borderRadius: "16px 16px 3px 3px",
+          padding: "0 8px 8px",
+          boxShadow: "inset 0 0 0 0.5px rgba(255,255,255,0.07)",
         }}
       >
-        {/* Notch M4/M5 */}
+        {/* Notch area — M4/M5 style */}
         <div
           style={{
             display: "flex",
             justifyContent: "center",
-            height: "14px",
             alignItems: "flex-end",
+            height: "16px",
           }}
         >
           <div
             style={{
-              width: "80px",
-              height: "22px",
+              width: "92px",
+              height: "24px",
               background: "#0a0a0a",
-              borderRadius: "0 0 10px 10px",
+              borderRadius: "0 0 12px 12px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
-          />
+          >
+            {/* Camera dot inside notch */}
+            <div
+              style={{
+                width: "6px",
+                height: "6px",
+                borderRadius: "50%",
+                background: "#1a1a1c",
+                border: "1px solid #2a2a2c",
+              }}
+            />
+          </div>
         </div>
-        {/* Screen */}
+
+        {/* Screen bezel */}
         <div
           style={{
-            background: "#080808",
-            borderRadius: "6px 6px 3px 3px",
+            background: "#090909",
+            borderRadius: "8px 8px 3px 3px",
             overflow: "hidden",
             boxShadow: "inset 0 0 0 0.5px rgba(255,255,255,0.04)",
           }}
         >
-          <div
-            style={{ aspectRatio: "16/10", overflow: "hidden", display: "flex" }}
-          >
-            {video ? (
+          <div style={{ aspectRatio: "16/10", overflow: "hidden", display: "flex" }}>
+            {project.video ? (
               <video
-                src={video}
+                src={project.video}
                 autoPlay
                 muted
                 loop
                 playsInline
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
-            ) : screenshot ? (
+            ) : project.image ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={screenshot}
-                alt={projectName}
+                src={project.image}
+                alt={project.title}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
             ) : (
-              <MacOSPlaceholder accent={accent} />
+              <MacOSPlaceholder accent={project.accent} />
             )}
           </div>
         </div>
       </div>
-
-      {/* HINGE */}
-      <div
-        style={{
-          height: "3px",
-          background:
-            "linear-gradient(90deg, #111112, #2c2c2e 25%, #3e3e40 50%, #2c2c2e 75%, #111112)",
-        }}
-      />
-
-      {/* BASE */}
-      <div
-        style={{
-          background: "linear-gradient(180deg, #252527 0%, #1e1e20 65%, #1c1c1e 100%)",
-          borderRadius: "0 0 10px 10px",
-          padding: "10px 16px 14px",
-          boxShadow:
-            "0 28px 80px rgba(0,0,0,0.7), 0 8px 24px rgba(0,0,0,0.4)",
-        }}
-      >
-        {/* Keyboard rows */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "3px",
-            marginBottom: "8px",
-            opacity: 0.13,
-          }}
-        >
-          {[11, 12, 11].map((count, row) => (
-            <div key={row} style={{ display: "flex", gap: "2px" }}>
-              {Array.from({ length: count }).map((_, k) => (
-                <div
-                  key={k}
-                  style={{
-                    flex: 1,
-                    height: "4px",
-                    background: "#ffffff",
-                    borderRadius: "1px",
-                  }}
-                />
-              ))}
-            </div>
-          ))}
-        </div>
-        {/* Trackpad */}
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <div
-            style={{
-              width: "34%",
-              height: "14px",
-              background: "rgba(255,255,255,0.06)",
-              borderRadius: "4px",
-              boxShadow: "inset 0 0 0 0.5px rgba(255,255,255,0.07)",
-            }}
-          />
-        </div>
-      </div>
-
-      {/* BOTTOM EDGE */}
-      <div
-        style={{
-          height: "4px",
-          background: "#131315",
-          borderRadius: "0 0 8px 8px",
-        }}
-      />
-    </div>
+    </motion.div>
   );
 }
 
-/* ─── Scroll-driven MacBook (desktop) ─── */
-function ScrollMacBook({
-  scrollYProgress,
-  project,
-}: {
-  scrollYProgress: MotionValue<number>;
-  project: Project;
-}) {
-  // Lid goes from nearly-closed (-88°) to comfortably open (-16°)
-  const lidRotateX = useTransform(scrollYProgress, [0.04, 0.52], [-88, -16]);
+/* ─── Full MacBook assembly ─── */
+function ScrollMacBook({ project }: { project: Project }) {
+  const macbookRef = useRef<HTMLDivElement>(null);
 
-  // Glow that grows as the screen is revealed — opacity only (static blur)
-  const glowOpacity = useTransform(scrollYProgress, [0.12, 0.52], [0, 1]);
+  const { scrollYProgress } = useScroll({
+    target: macbookRef,
+    offset: ["start end", "start 15%"],
+  });
+
+  // Lid: from nearly closed → comfortably open
+  const lidRotateX = useTransform(scrollYProgress, [0, 0.85], [-102, -17]);
+
+  // MacBook slides up from below as it enters viewport
+  const translateY = useTransform(scrollYProgress, [0, 0.6], [110, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.28], [0, 1]);
+
+  // Glow intensifies as lid opens
+  const glowOpacity = useTransform(scrollYProgress, [0.2, 0.85], [0, 0.85]);
 
   return (
-    <div
-      style={{
-        perspective: "1200px",
-        perspectiveOrigin: "50% 62%",
-        position: "relative",
-      }}
-    >
-      {/* Screen glow leaking out */}
+    <div ref={macbookRef} style={{ position: "relative" }}>
+      {/* Screen glow effect */}
       <motion.div
         style={{
           position: "absolute",
-          top: "-8%",
-          left: "-12%",
-          right: "-12%",
-          height: "55%",
-          background: `radial-gradient(ellipse at 50% 80%, ${project.accent}35 0%, transparent 68%)`,
+          top: "-15%",
+          left: "5%",
+          right: "5%",
+          height: "50%",
+          background: `radial-gradient(ellipse at 50% 85%, ${project.accent}40 0%, transparent 65%)`,
           opacity: glowOpacity,
-          filter: "blur(20px)",
+          filter: "blur(28px)",
           pointerEvents: "none",
           zIndex: 0,
         }}
       />
 
-      {/* Lid — rotates directly under perspective context (no intermediate wrapper) */}
-      <div style={{ position: "relative", zIndex: 1 }}>
-        {/* The lid part only rotates */}
-        <motion.div
+      <motion.div
+        style={{ y: translateY, opacity, position: "relative", zIndex: 1 }}
+      >
+        {/* 3D perspective wrapper */}
+        <div
           style={{
-            transformOrigin: "center bottom",
-            rotateX: lidRotateX,
-            willChange: "transform",
+            perspective: "1400px",
+            perspectiveOrigin: "50% 58%",
           }}
         >
+          {/* Lid */}
+          <MacBookLid rotateX={lidRotateX} project={project} />
+
+          {/* Hinge */}
+          <div
+            style={{
+              height: "4px",
+              background:
+                "linear-gradient(90deg, #0f0f10, #2a2a2c 20%, #404042 50%, #2a2a2c 80%, #0f0f10)",
+            }}
+          />
+
+          {/* Base / keyboard */}
           <div
             style={{
               background:
-                "linear-gradient(160deg, #2e2e30 0%, #1c1c1e 55%, #161618 100%)",
-              borderRadius: "14px 14px 3px 3px",
-              padding: "0 6px 6px",
+                "linear-gradient(180deg, #252527 0%, #1f1f21 60%, #1c1c1e 100%)",
+              borderRadius: "0 0 12px 12px",
+              padding: "12px 20px 16px",
               boxShadow:
-                "inset 0 0 0 0.5px rgba(255,255,255,0.065), 0 -1px 0 rgba(0,0,0,0.6)",
+                "0 32px 90px rgba(0,0,0,0.75), 0 12px 30px rgba(0,0,0,0.45)",
             }}
           >
-            {/* Notch M4/M5 */}
+            {/* Keyboard rows */}
             <div
               style={{
                 display: "flex",
-                justifyContent: "center",
-                height: "14px",
-                alignItems: "flex-end",
+                flexDirection: "column",
+                gap: "4px",
+                marginBottom: "10px",
+                opacity: 0.11,
               }}
             >
+              {[13, 14, 13].map((count, row) => (
+                <div key={row} style={{ display: "flex", gap: "3px" }}>
+                  {Array.from({ length: count }).map((_, k) => (
+                    <div
+                      key={k}
+                      style={{
+                        flex: 1,
+                        height: "5px",
+                        background: "#fff",
+                        borderRadius: "1.5px",
+                      }}
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
+            {/* Trackpad */}
+            <div style={{ display: "flex", justifyContent: "center" }}>
               <div
                 style={{
-                  width: "80px",
-                  height: "22px",
-                  background: "#0a0a0a",
-                  borderRadius: "0 0 10px 10px",
+                  width: "32%",
+                  height: "16px",
+                  background: "rgba(255,255,255,0.055)",
+                  borderRadius: "5px",
+                  boxShadow: "inset 0 0 0 0.5px rgba(255,255,255,0.07)",
                 }}
               />
             </div>
-            {/* Screen */}
-            <div
-              style={{
-                background: "#080808",
-                borderRadius: "6px 6px 3px 3px",
-                overflow: "hidden",
-                boxShadow: "inset 0 0 0 0.5px rgba(255,255,255,0.04)",
-              }}
-            >
-              <div
-                style={{ aspectRatio: "16/10", overflow: "hidden", display: "flex" }}
-              >
-                {project.video ? (
-                  <video
-                    src={project.video}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  />
-                ) : project.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  />
-                ) : (
-                  <MacOSPlaceholder accent={project.accent} />
-                )}
-              </div>
-            </div>
           </div>
-        </motion.div>
 
-        {/* HINGE — stays fixed below the rotating lid */}
-        <div
-          style={{
-            height: "3px",
-            background:
-              "linear-gradient(90deg, #111112, #2c2c2e 25%, #3e3e40 50%, #2c2c2e 75%, #111112)",
-          }}
-        />
-
-        {/* BASE — fixed */}
-        <div
-          style={{
-            background:
-              "linear-gradient(180deg, #252527 0%, #1e1e20 65%, #1c1c1e 100%)",
-            borderRadius: "0 0 10px 10px",
-            padding: "10px 16px 14px",
-            boxShadow:
-              "0 28px 80px rgba(0,0,0,0.7), 0 8px 24px rgba(0,0,0,0.4)",
-          }}
-        >
+          {/* Bottom edge */}
           <div
             style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "3px",
-              marginBottom: "8px",
-              opacity: 0.13,
+              height: "5px",
+              background: "#111113",
+              borderRadius: "0 0 8px 8px",
             }}
-          >
-            {[11, 12, 11].map((count, row) => (
-              <div key={row} style={{ display: "flex", gap: "2px" }}>
-                {Array.from({ length: count }).map((_, k) => (
-                  <div
-                    key={k}
-                    style={{
-                      flex: 1,
-                      height: "4px",
-                      background: "#ffffff",
-                      borderRadius: "1px",
-                    }}
-                  />
-                ))}
-              </div>
-            ))}
-          </div>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <div
-              style={{
-                width: "34%",
-                height: "14px",
-                background: "rgba(255,255,255,0.06)",
-                borderRadius: "4px",
-                boxShadow: "inset 0 0 0 0.5px rgba(255,255,255,0.07)",
-              }}
-            />
-          </div>
-        </div>
+          />
 
-        {/* BOTTOM EDGE */}
-        <div
-          style={{
-            height: "4px",
-            background: "#131315",
-            borderRadius: "0 0 8px 8px",
-          }}
-        />
-      </div>
+          {/* Table shadow */}
+          <div
+            style={{
+              marginTop: "6px",
+              height: "20px",
+              background:
+                "radial-gradient(ellipse at 50% 0%, rgba(0,0,0,0.55) 0%, transparent 70%)",
+              borderRadius: "50%",
+              filter: "blur(4px)",
+            }}
+          />
+        </div>
+      </motion.div>
     </div>
   );
 }
 
-/* ─── Info panel ─── */
-function ProjectInfo({
-  project,
-  lang,
-  badgeOpacity,
-  badgeY,
-  infoOpacity,
-  infoY,
-  accentScaleY,
-  isStatic,
-}: {
-  project: Project;
-  lang: Lang;
-  badgeOpacity: MotionValue<number> | number;
-  badgeY: MotionValue<number> | number;
-  infoOpacity: MotionValue<number> | number;
-  infoY: MotionValue<number> | number;
-  accentScaleY: MotionValue<number> | number;
-  isStatic?: boolean;
-}) {
+/* ─── Project info panel ─── */
+function ProjectInfoPanel({ project, lang }: { project: Project; lang: Lang }) {
   return (
-    <div style={{ display: "flex", gap: "16px", alignItems: "flex-start" }}>
-      {/* Accent vertical line */}
+    <motion.div
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.65, ease: [0.4, 0, 0.2, 1] }}
+    >
+      {/* Badge */}
       <div
         style={{
-          position: "relative",
-          width: "2px",
-          flexShrink: 0,
-          alignSelf: "stretch",
-          minHeight: isStatic ? "120px" : undefined,
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "8px",
+          padding: "6px 14px",
+          borderRadius: "9999px",
+          background: `linear-gradient(180deg, ${project.accent}22, ${project.accent}0c)`,
+          border: `1px solid ${project.accent}32`,
+          color: project.accent,
+          fontFamily: "var(--font-inter)",
+          fontSize: "0.7rem",
+          fontWeight: 700,
+          letterSpacing: "0.18em",
+          textTransform: "uppercase" as const,
+          marginBottom: "24px",
         }}
       >
-        <div
+        <span
           style={{
-            position: "absolute",
-            inset: 0,
-            background: "var(--color-border)",
-            borderRadius: "2px",
+            width: 7,
+            height: 7,
+            borderRadius: "50%",
+            background: project.accent,
+            boxShadow: `0 0 10px ${project.accent}`,
+            display: "inline-block",
+            flexShrink: 0,
           }}
         />
-        <motion.div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: `linear-gradient(180deg, ${project.accent} 0%, ${project.accent}30 100%)`,
-            borderRadius: "2px",
-            scaleY: accentScaleY,
-            transformOrigin: "top",
-          }}
-        />
+        {lang === "pt" ? `Projeto ${project.num}` : `Project ${project.num}`}
       </div>
 
-      <div style={{ flex: 1 }}>
-        {/* Badge + Title + Client */}
-        <motion.div style={{ opacity: badgeOpacity, y: badgeY }}>
-          <div
+      {/* Title */}
+      <h3
+        style={{
+          fontFamily: "var(--font-syne)",
+          fontWeight: 800,
+          fontSize: "clamp(1.8rem, 3.5vw, 3.2rem)",
+          letterSpacing: "-0.04em",
+          lineHeight: 1.06,
+          color: "var(--color-text)",
+          marginBottom: "10px",
+          maxWidth: "680px",
+        }}
+      >
+        {project.title}
+      </h3>
+
+      {/* Client */}
+      <p
+        style={{
+          fontFamily: "var(--font-inter)",
+          fontSize: "0.75rem",
+          color: project.accent,
+          fontWeight: 600,
+          letterSpacing: "0.1em",
+          textTransform: "uppercase" as const,
+          opacity: 0.8,
+          marginBottom: "20px",
+        }}
+      >
+        {project.client}
+      </p>
+
+      {/* Description */}
+      <p
+        style={{
+          fontFamily: "var(--font-inter)",
+          fontSize: "0.9375rem",
+          color: "var(--color-muted)",
+          lineHeight: 1.85,
+          maxWidth: "560px",
+          marginBottom: "24px",
+        }}
+      >
+        {project.description}
+      </p>
+
+      {/* CTAs */}
+      <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginBottom: "32px" }}>
+        <motion.a
+          href={project.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          whileHover={{ scale: 1.03, y: -1, borderColor: project.accent }}
+          whileTap={{ scale: 0.97 }}
+          transition={{ duration: 0.18 }}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "7px",
+            padding: "10px 20px",
+            borderRadius: "9999px",
+            border: "1px solid rgba(255,255,255,0.12)",
+            color: "var(--color-muted)",
+            fontFamily: "var(--font-inter)",
+            fontSize: "0.8125rem",
+            fontWeight: 500,
+            textDecoration: "none",
+            transition: "border-color 0.2s",
+          }}
+        >
+          <Github size={14} />
+          GitHub
+        </motion.a>
+        {project.live && (
+          <motion.a
+            href={project.live}
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.03, y: -1 }}
+            whileTap={{ scale: 0.97 }}
             style={{
               display: "inline-flex",
               alignItems: "center",
-              gap: "8px",
-              padding: "6px 14px",
+              gap: "7px",
+              padding: "10px 20px",
               borderRadius: "9999px",
-              background: `linear-gradient(180deg, ${project.accent}20, ${project.accent}0a)`,
-              border: `1px solid ${project.accent}30`,
-              color: project.accent,
+              background: "var(--color-teal)",
+              color: "#fff",
               fontFamily: "var(--font-inter)",
-              fontSize: "0.72rem",
-              fontWeight: 700,
-              letterSpacing: "0.16em",
-              textTransform: "uppercase" as const,
-              marginBottom: "20px",
+              fontSize: "0.8125rem",
+              fontWeight: 500,
+              textDecoration: "none",
             }}
           >
-            <span
-              style={{
-                width: 7,
-                height: 7,
-                borderRadius: "50%",
-                background: project.accent,
-                boxShadow: `0 0 8px ${project.accent}`,
-                display: "inline-block",
-                flexShrink: 0,
-              }}
-            />
-            {lang === "pt" ? `Projeto ${project.num}` : `Project ${project.num}`}
-          </div>
-
-          <h3
-            style={{
-              fontFamily: "var(--font-syne)",
-              fontWeight: 800,
-              fontSize: "clamp(1.55rem, 2.6vw, 2.8rem)",
-              letterSpacing: "-0.04em",
-              lineHeight: 1.05,
-              color: "var(--color-text)",
-              marginBottom: "8px",
-            }}
-          >
-            {project.title}
-          </h3>
-
-          <p
-            style={{
-              fontFamily: "var(--font-inter)",
-              fontSize: "0.75rem",
-              color: project.accent,
-              fontWeight: 600,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase" as const,
-              opacity: 0.85,
-            }}
-          >
-            {project.client}
-          </p>
-        </motion.div>
-
-        {/* Description + stack + CTAs */}
-        <motion.div style={{ opacity: infoOpacity, y: infoY }}>
-          <p
-            style={{
-              fontFamily: "var(--font-inter)",
-              fontSize: "0.9375rem",
-              color: "var(--color-muted)",
-              lineHeight: 1.85,
-              maxWidth: "480px",
-              margin: "20px 0",
-            }}
-          >
-            {project.description}
-          </p>
-
-          {project.stack.length > 0 && (
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "6px",
-                marginBottom: "28px",
-              }}
-            >
-              {project.stack.map((tech) => (
-                <span
-                  key={tech}
-                  style={{
-                    padding: "3px 10px",
-                    borderRadius: "6px",
-                    border: `1px solid ${project.accent}25`,
-                    background: `${project.accent}0a`,
-                    fontFamily: "var(--font-inter)",
-                    fontSize: "0.72rem",
-                    fontWeight: 500,
-                    color: "var(--color-muted)",
-                  }}
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-          )}
-
-          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-            <motion.a
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.03, y: -1, borderColor: project.accent }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ duration: 0.18 }}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "7px",
-                padding: "9px 18px",
-                borderRadius: "9999px",
-                border: "1px solid rgba(255,255,255,0.12)",
-                color: "var(--color-muted)",
-                fontFamily: "var(--font-inter)",
-                fontSize: "0.8125rem",
-                fontWeight: 500,
-                textDecoration: "none",
-                transition: "border-color 0.2s",
-              }}
-            >
-              <Github size={14} />
-              GitHub
-            </motion.a>
-            {project.live && (
-              <motion.a
-                href={project.live}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.03, y: -1 }}
-                whileTap={{ scale: 0.97 }}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "7px",
-                  padding: "9px 18px",
-                  borderRadius: "9999px",
-                  background: "var(--color-teal)",
-                  color: "#fff",
-                  fontFamily: "var(--font-inter)",
-                  fontSize: "0.8125rem",
-                  fontWeight: 500,
-                  textDecoration: "none",
-                }}
-              >
-                <ExternalLink size={14} />
-                {lang === "pt" ? "Ver Projeto" : "Live Demo"}
-              </motion.a>
-            )}
-          </div>
-        </motion.div>
+            <ExternalLink size={14} />
+            {lang === "pt" ? "Ver Projeto" : "Live Demo"}
+          </motion.a>
+        )}
       </div>
-    </div>
+
+      {/* Tech stack */}
+      {project.stack.length > 0 && (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "7px" }}>
+          {project.stack.map((tech) => (
+            <span
+              key={tech}
+              style={{
+                padding: "4px 11px",
+                borderRadius: "6px",
+                border: `1px solid ${project.accent}28`,
+                background: `${project.accent}0c`,
+                fontFamily: "var(--font-inter)",
+                fontSize: "0.72rem",
+                fontWeight: 500,
+                color: "var(--color-muted)",
+              }}
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+      )}
+    </motion.div>
   );
 }
 
-/* ─── Single project section (desktop: sticky scroll-driven) ─── */
-function ProjectScrollSection({
+/* ─── Single project section ─── */
+function ProjectSection({
   project,
   index,
   lang,
-  isMobile,
 }: {
   project: Project;
   index: number;
   lang: Lang;
-  isMobile: boolean;
 }) {
-  const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"],
-  });
-
-  const isReversed = index % 2 !== 0;
-
-  // Desktop scroll-driven values
-  const accentScaleY = useTransform(scrollYProgress, [0.06, 0.50], [0, 1]);
-  const badgeOpacity = useTransform(scrollYProgress, [0.26, 0.44], [0, 1]);
-  const badgeY = useTransform(scrollYProgress, [0.26, 0.44], [20, 0]);
-  const infoOpacity = useTransform(scrollYProgress, [0.40, 0.56], [0, 1]);
-  const infoY = useTransform(scrollYProgress, [0.40, 0.56], [26, 0]);
-  const bgOpacity = useTransform(scrollYProgress, [0, 0.12, 0.88, 1], [0, 1, 1, 0]);
-
-  /* ── MOBILE layout: flat cards with whileInView ── */
-  if (isMobile) {
-    return (
-      <div style={{ padding: "0 20px 64px" }}>
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.65, ease: [0.4, 0, 0.2, 1] }}
-          style={{ display: "flex", flexDirection: "column", gap: "28px" }}
-        >
-          {/* Static MacBook, open position */}
-          <div
-            style={{
-              perspective: "900px",
-              perspectiveOrigin: "50% 60%",
-            }}
-          >
-            <MacBookShell
-              accent={project.accent}
-              screenshot={project.image}
-              video={project.video}
-              projectName={project.title}
-              lidStyle={{ transform: "rotateX(-22deg)", transformOrigin: "center bottom" }}
-            />
-          </div>
-
-          {/* Info always visible on mobile */}
-          <ProjectInfo
-            project={project}
-            lang={lang}
-            badgeOpacity={1}
-            badgeY={0}
-            infoOpacity={1}
-            infoY={0}
-            accentScaleY={1}
-            isStatic
-          />
-        </motion.div>
-        {index < 4 && (
-          <div
-            style={{
-              height: "1px",
-              background:
-                "linear-gradient(90deg, transparent, var(--color-border), transparent)",
-              margin: "64px 0 0",
-            }}
-          />
-        )}
-      </div>
-    );
-  }
-
-  /* ── DESKTOP layout: sticky + scroll-driven ── */
   return (
     <section
-      ref={sectionRef}
-      style={{ height: "300vh", position: "relative" }}
+      style={{ position: "relative", paddingBottom: "120px" }}
       aria-label={project.title}
     >
-      {/* Ambient background that fades in/out */}
-      <motion.div
+      {/* Ambient background */}
+      <div
         style={{
           position: "absolute",
           inset: 0,
-          background: `radial-gradient(ellipse at ${isReversed ? "72%" : "28%"} 40%, ${project.accent}08 0%, transparent 55%)`,
-          opacity: bgOpacity,
+          background: `radial-gradient(ellipse at 30% 30%, ${project.accent}07 0%, transparent 50%)`,
           pointerEvents: "none",
         }}
       />
 
       <div
         style={{
-          position: "sticky",
-          top: 0,
-          height: "100vh",
-          display: "flex",
-          alignItems: "center",
-          overflow: "hidden",
+          maxWidth: "1280px",
+          margin: "0 auto",
+          padding: "0 40px",
+          position: "relative",
         }}
       >
+        {/* ── Info block (top) ── */}
+        <div style={{ paddingTop: "100px", paddingBottom: "56px" }}>
+          <ProjectInfoPanel project={project} lang={lang} />
+        </div>
+
+        {/* ── MacBook block (below, centered, wide) ── */}
         <div
           style={{
-            width: "100%",
-            maxWidth: "1280px",
-            margin: "0 auto",
-            padding: "0 40px",
-            display: "grid",
-            gridTemplateColumns: isReversed ? "42% 58%" : "58% 42%",
-            gap: "64px",
-            alignItems: "center",
+            display: "flex",
+            justifyContent: "center",
           }}
         >
-          {/* MacBook column */}
-          <div style={{ order: isReversed ? 2 : 1 }}>
-            <ScrollMacBook scrollYProgress={scrollYProgress} project={project} />
-          </div>
-
-          {/* Info column */}
-          <div style={{ order: isReversed ? 1 : 2 }}>
-            <ProjectInfo
-              project={project}
-              lang={lang}
-              badgeOpacity={badgeOpacity}
-              badgeY={badgeY}
-              infoOpacity={infoOpacity}
-              infoY={infoY}
-              accentScaleY={accentScaleY}
-            />
+          <div style={{ width: "min(960px, 100%)" }}>
+            <ScrollMacBook project={project} />
           </div>
         </div>
       </div>
-    </section>
-  );
-}
 
-/* ─── Dot navigation ─── */
-function ProjectDots({
-  projects,
-  activeIndex,
-}: {
-  projects: Project[];
-  activeIndex: number;
-}) {
-  return (
-    <div
-      style={{
-        position: "fixed",
-        right: "24px",
-        top: "50%",
-        transform: "translateY(-50%)",
-        display: "flex",
-        flexDirection: "column",
-        gap: "10px",
-        zIndex: 10,
-        pointerEvents: "none",
-      }}
-      className="project-dots"
-    >
-      {projects.map((p, i) => (
+      {/* Separator */}
+      {index < 4 && (
         <div
-          key={p.num}
           style={{
-            width: i === activeIndex ? "6px" : "4px",
-            height: i === activeIndex ? "6px" : "4px",
-            borderRadius: "50%",
-            background: i === activeIndex ? p.accent : "rgba(255,255,255,0.2)",
-            boxShadow: i === activeIndex ? `0 0 8px ${p.accent}` : "none",
-            transition: "all 0.3s ease",
+            maxWidth: "1280px",
+            margin: "120px auto 0",
+            padding: "0 40px",
           }}
-        />
-      ))}
-    </div>
+        >
+          <div
+            style={{
+              height: "1px",
+              background:
+                "linear-gradient(90deg, transparent, var(--color-border), transparent)",
+            }}
+          />
+        </div>
+      )}
+    </section>
   );
 }
 
@@ -970,36 +708,6 @@ function ProjectDots({
 export default function ProjectsShowcase() {
   const { lang } = useLanguage();
   const projects = PROJECTS[lang];
-  const [isMobile, setIsMobile] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(-1);
-  const sectionRefs = useRef<(HTMLElement | null)[]>([]);
-
-  // Mobile detection (defaults false = desktop, matches SSR)
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 768px)");
-    setIsMobile(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
-
-  // Track which project is in the sticky viewport for the dots
-  useEffect(() => {
-    if (isMobile) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const idx = sectionRefs.current.findIndex((r) => r === entry.target);
-            if (idx !== -1) setActiveIndex(idx);
-          }
-        });
-      },
-      { threshold: 0.3 }
-    );
-    sectionRefs.current.forEach((ref) => { if (ref) observer.observe(ref); });
-    return () => observer.disconnect();
-  }, [isMobile, projects.length]);
 
   return (
     <div>
@@ -1010,9 +718,9 @@ export default function ProjectsShowcase() {
         viewport={{ once: true }}
         transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
         style={{
-          padding: isMobile ? "60px 20px 48px" : "80px 40px 64px",
           maxWidth: "1280px",
           margin: "0 auto",
+          padding: "80px 40px 0",
         }}
       >
         <span
@@ -1047,8 +755,7 @@ export default function ProjectsShowcase() {
             </>
           ) : (
             <>
-              Recent{" "}
-              <span style={{ color: "var(--color-teal)" }}>Work</span>
+              Recent <span style={{ color: "var(--color-teal)" }}>Work</span>
             </>
           )}
         </h2>
@@ -1069,27 +776,13 @@ export default function ProjectsShowcase() {
 
       {/* Projects */}
       {projects.map((project, i) => (
-        <div
-          key={project.num}
-          ref={(el) => { sectionRefs.current[i] = el as HTMLElement | null; }}
-        >
-          <ProjectScrollSection
-            project={project}
-            index={i}
-            lang={lang}
-            isMobile={isMobile}
-          />
-        </div>
+        <ProjectSection key={project.num} project={project} index={i} lang={lang} />
       ))}
 
-      {/* Dot nav — desktop only */}
-      {!isMobile && activeIndex >= 0 && (
-        <ProjectDots projects={projects} activeIndex={activeIndex} />
-      )}
-
+      {/* Mobile responsive */}
       <style>{`
-        @media (max-width: 768px) {
-          .project-dots { display: none !important; }
+        @media (max-width: 680px) {
+          .showcase-info { padding: 60px 0 36px !important; }
         }
       `}</style>
     </div>
