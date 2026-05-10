@@ -542,15 +542,6 @@ function ScrollMacBook({ project }: { project: Project }) {
           </div>
           {/* ════ END BASE ════ */}
 
-          {/* Bottom tapered edge */}
-          <div
-            style={{
-              height: "5px",
-              background: "linear-gradient(180deg, #A0A0A2 0%, #8C8C8E 100%)",
-              borderRadius: "0 0 8px 8px",
-            }}
-          />
-
           {/* Surface shadow */}
           <div
             style={{
@@ -764,9 +755,11 @@ function ProjectSection({
   index: number;
   lang: Lang;
 }) {
+  const isLast = index === 4;
+
   return (
     <section
-      style={{ position: "relative", paddingBottom: "120px" }}
+      style={{ position: "relative", paddingBottom: isLast ? "80px" : "0" }}
       aria-label={project.title}
     >
       {/* Ambient background */}
@@ -787,30 +780,25 @@ function ProjectSection({
           position: "relative",
         }}
       >
-        {/* ── Info block (top) ── */}
-        <div style={{ paddingTop: "100px", paddingBottom: "56px" }}>
+        {/* ── Info block ── 64px topo, 48px até o MacBook */}
+        <div style={{ paddingTop: "64px", paddingBottom: "48px" }}>
           <ProjectInfoPanel project={project} lang={lang} />
         </div>
 
-        {/* ── MacBook block (below, centered, wide) ── */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
+        {/* ── MacBook block ── */}
+        <div style={{ display: "flex", justifyContent: "center" }}>
           <div style={{ width: "min(960px, 100%)" }}>
             <ScrollMacBook project={project} />
           </div>
         </div>
       </div>
 
-      {/* Separator */}
-      {index < 4 && (
+      {/* Separator — 64px acima da linha, 64px abaixo (próx. projeto paddingTop) */}
+      {!isLast && (
         <div
           style={{
             maxWidth: "1280px",
-            margin: "120px auto 0",
+            margin: "64px auto 0",
             padding: "0 40px",
           }}
         >
@@ -843,7 +831,7 @@ export default function ProjectsShowcase() {
         style={{
           maxWidth: "1280px",
           margin: "0 auto",
-          padding: "80px 40px 0",
+          padding: "80px 40px 0px",
         }}
       >
         <span
