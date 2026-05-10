@@ -1,8 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, animate, useInView } from "framer-motion";
 import { ArrowRight, MapPin } from "lucide-react";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 
 // ─── Syntax-highlighted code lines ───────────────────────────────────────────
 type Token = { t: string; c: string };
@@ -26,9 +26,9 @@ const CODE: CodeLine[] = [
 const TECH_CHIPS = ["React", "Next.js", "TypeScript", "Flutter", "Node.js", ".NET", "Go", "AWS", "Docker", "PostgreSQL"];
 
 const STATS = [
-  { value: "1.5+", label: "Anos de experiência" },
-  { value: "$1M+", label: "Em pagamentos" },
-  { value: "3", label: "Grandes clientes" },
+  { end: 1.5, decimals: 1, prefix: "", suffix: "+", label: "Anos de experiência" },
+  { end: 1, decimals: 0, prefix: "$", suffix: "M+", label: "Em pagamentos" },
+  { end: 3, decimals: 0, prefix: "", suffix: "", label: "Grandes clientes" },
 ];
 
 // ─── Animation presets ────────────────────────────────────────────────────────
@@ -227,29 +227,7 @@ export default function Hero() {
             }}
           >
             {STATS.map((s) => (
-              <div key={s.label} style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
-                <span
-                  style={{
-                    fontFamily: "var(--font-syne)",
-                    fontWeight: 700,
-                    fontSize: "clamp(1.1rem, 1.8vw, 1.4rem)",
-                    color: "var(--color-text)",
-                    letterSpacing: "-0.025em",
-                  }}
-                >
-                  {s.value}
-                </span>
-                <span
-                  style={{
-                    fontFamily: "var(--font-inter)",
-                    fontSize: "0.7rem",
-                    color: "var(--color-muted)",
-                    opacity: 0.65,
-                  }}
-                >
-                  {s.label}
-                </span>
-              </div>
+              <AnimatedStat key={s.label} {...s} />
             ))}
           </motion.div>
         </motion.div>
@@ -669,6 +647,64 @@ const GhostButton = memo(function GhostButton({
     </motion.a>
   );
 });
+
+function AnimatedStat({
+  end,
+  decimals,
+  prefix,
+  suffix,
+  label,
+}: {
+  end: number;
+  decimals: number;
+  prefix: string;
+  suffix: string;
+  label: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-40px" });
+  const [display, setDisplay] = useState(`${prefix}0${suffix}`);
+
+  useEffect(() => {
+    if (!isInView) return;
+    const controls = animate(0, end, {
+      duration: 1.6,
+      ease: [0.25, 0, 0, 1],
+      delay: 0.2,
+      onUpdate(v) {
+        setDisplay(`${prefix}${v.toFixed(decimals)}${suffix}`);
+      },
+    });
+    return controls.stop;
+  }, [isInView, end, decimals, prefix, suffix]);
+
+  return (
+    <div ref={ref} style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+      <span
+        style={{
+          fontFamily: "var(--font-syne)",
+          fontWeight: 700,
+          fontSize: "clamp(1.1rem, 1.8vw, 1.4rem)",
+          color: "var(--color-text)",
+          letterSpacing: "-0.025em",
+          fontVariantNumeric: "tabular-nums",
+        }}
+      >
+        {display}
+      </span>
+      <span
+        style={{
+          fontFamily: "var(--font-inter)",
+          fontSize: "0.7rem",
+          color: "var(--color-muted)",
+          opacity: 0.65,
+        }}
+      >
+        {label}
+      </span>
+    </div>
+  );
+}
 
 function GitHubIcon() {
   return (
