@@ -249,57 +249,28 @@ function MacBookLid({
         willChange: "transform",
       }}
     >
-      {/* Outer lid shell */}
+      {/* Outer lid shell — space gray, exactly like MacBook Pro 14" */}
       <div
         style={{
-          background: "linear-gradient(165deg, #2e2e30 0%, #1e1e20 50%, #161618 100%)",
-          borderRadius: "16px 16px 3px 3px",
-          padding: "0 8px 8px",
-          boxShadow: "inset 0 0 0 0.5px rgba(255,255,255,0.07)",
+          background: "linear-gradient(170deg, #323234 0%, #1e1e20 40%, #161618 100%)",
+          borderRadius: "14px 14px 2px 2px",
+          /* Razor-thin bezels: 4px top/sides, 5px bottom */
+          padding: "4px 4px 5px",
+          boxShadow:
+            "inset 0 0 0 0.5px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.05)",
         }}
       >
-        {/* Notch area — M4/M5 style */}
+        {/* Screen area (black) with notch overlay */}
         <div
           style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "flex-end",
-            height: "16px",
-          }}
-        >
-          <div
-            style={{
-              width: "92px",
-              height: "24px",
-              background: "#0a0a0a",
-              borderRadius: "0 0 12px 12px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {/* Camera dot inside notch */}
-            <div
-              style={{
-                width: "6px",
-                height: "6px",
-                borderRadius: "50%",
-                background: "#1a1a1c",
-                border: "1px solid #2a2a2c",
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Screen bezel */}
-        <div
-          style={{
-            background: "#090909",
-            borderRadius: "8px 8px 3px 3px",
+            background: "#080808",
+            borderRadius: "11px 11px 2px 2px",
             overflow: "hidden",
+            position: "relative",
             boxShadow: "inset 0 0 0 0.5px rgba(255,255,255,0.04)",
           }}
         >
+          {/* Screen content */}
           <div style={{ aspectRatio: "16/10", overflow: "hidden", display: "flex" }}>
             {project.video ? (
               <video
@@ -320,6 +291,35 @@ function MacBookLid({
             ) : (
               <MacOSPlaceholder accent={project.accent} />
             )}
+          </div>
+
+          {/* Notch — overlaid on top of screen content (MacBook Pro 14" style) */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: "88px",
+              height: "20px",
+              background: "#080808",
+              borderRadius: "0 0 10px 10px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 2,
+            }}
+          >
+            {/* Camera dot */}
+            <div
+              style={{
+                width: "6px",
+                height: "6px",
+                borderRadius: "50%",
+                background: "#1c1c1e",
+                boxShadow: "0 0 0 1px #2a2a2c",
+              }}
+            />
           </div>
         </div>
       </div>
@@ -377,43 +377,58 @@ function ScrollMacBook({ project }: { project: Project }) {
           {/* Lid */}
           <MacBookLid rotateX={lidRotateX} project={project} />
 
-          {/* Hinge */}
+          {/* Hinge — ultra thin, like MacBook Pro 14" */}
           <div
             style={{
-              height: "4px",
+              height: "3px",
               background:
-                "linear-gradient(90deg, #0f0f10, #2a2a2c 20%, #404042 50%, #2a2a2c 80%, #0f0f10)",
+                "linear-gradient(90deg, #0d0d0e, #282828 15%, #3c3c3e 50%, #282828 85%, #0d0d0e)",
             }}
           />
 
-          {/* Base / keyboard */}
+          {/* Base / keyboard deck */}
           <div
             style={{
               background:
-                "linear-gradient(180deg, #252527 0%, #1f1f21 60%, #1c1c1e 100%)",
-              borderRadius: "0 0 12px 12px",
-              padding: "12px 20px 16px",
+                "linear-gradient(180deg, #2a2a2c 0%, #222224 55%, #1e1e20 100%)",
+              borderRadius: "0 0 10px 10px",
+              padding: "10px 18px 14px",
               boxShadow:
-                "0 32px 90px rgba(0,0,0,0.75), 0 12px 30px rgba(0,0,0,0.45)",
+                "0 36px 100px rgba(0,0,0,0.8), 0 14px 34px rgba(0,0,0,0.5)",
             }}
           >
-            {/* Keyboard rows */}
+            {/* Keyboard — 4 visible rows like MacBook Pro */}
             <div
               style={{
                 display: "flex",
                 flexDirection: "column",
-                gap: "4px",
-                marginBottom: "10px",
-                opacity: 0.11,
+                gap: "3px",
+                marginBottom: "9px",
+                opacity: 0.14,
               }}
             >
-              {[13, 14, 13].map((count, row) => (
+              {/* Function row (shorter keys) */}
+              <div style={{ display: "flex", gap: "2.5px" }}>
+                {Array.from({ length: 16 }).map((_, k) => (
+                  <div
+                    key={k}
+                    style={{
+                      flex: 1,
+                      height: "3.5px",
+                      background: "#fff",
+                      borderRadius: "1px",
+                    }}
+                  />
+                ))}
+              </div>
+              {/* Regular key rows */}
+              {[13, 13, 12].map((count, row) => (
                 <div key={row} style={{ display: "flex", gap: "3px" }}>
                   {Array.from({ length: count }).map((_, k) => (
                     <div
                       key={k}
                       style={{
-                        flex: 1,
+                        flex: k === 0 && row === 2 ? 2 : 1,
                         height: "5px",
                         background: "#fff",
                         borderRadius: "1.5px",
@@ -423,38 +438,39 @@ function ScrollMacBook({ project }: { project: Project }) {
                 </div>
               ))}
             </div>
-            {/* Trackpad */}
+            {/* Trackpad — centered, proportional */}
             <div style={{ display: "flex", justifyContent: "center" }}>
               <div
                 style={{
-                  width: "32%",
-                  height: "16px",
-                  background: "rgba(255,255,255,0.055)",
+                  width: "30%",
+                  height: "15px",
+                  background: "rgba(255,255,255,0.06)",
                   borderRadius: "5px",
-                  boxShadow: "inset 0 0 0 0.5px rgba(255,255,255,0.07)",
+                  boxShadow:
+                    "inset 0 0 0 0.5px rgba(255,255,255,0.08), 0 0 0 0.5px rgba(0,0,0,0.3)",
                 }}
               />
             </div>
           </div>
 
-          {/* Bottom edge */}
+          {/* Bottom tapered edge — characteristic MacBook Pro 14" detail */}
           <div
             style={{
-              height: "5px",
-              background: "#111113",
-              borderRadius: "0 0 8px 8px",
+              height: "4px",
+              background:
+                "linear-gradient(180deg, #181818 0%, #111112 100%)",
+              borderRadius: "0 0 6px 6px",
             }}
           />
 
-          {/* Table shadow */}
+          {/* Cast shadow on surface */}
           <div
             style={{
-              marginTop: "6px",
-              height: "20px",
+              marginTop: "8px",
+              height: "24px",
               background:
-                "radial-gradient(ellipse at 50% 0%, rgba(0,0,0,0.55) 0%, transparent 70%)",
-              borderRadius: "50%",
-              filter: "blur(4px)",
+                "radial-gradient(ellipse at 50% 10%, rgba(0,0,0,0.6) 0%, transparent 68%)",
+              filter: "blur(6px)",
             }}
           />
         </div>
@@ -463,7 +479,7 @@ function ScrollMacBook({ project }: { project: Project }) {
   );
 }
 
-/* ─── Project info panel ─── */
+/* ─── Project info panel — same 960px width as MacBook ─── */
 function ProjectInfoPanel({ project, lang }: { project: Project; lang: Lang }) {
   return (
     <motion.div
@@ -471,6 +487,7 @@ function ProjectInfoPanel({ project, lang }: { project: Project; lang: Lang }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.65, ease: [0.4, 0, 0.2, 1] }}
+      style={{ width: "100%" }}
     >
       {/* Badge */}
       <div
@@ -488,7 +505,7 @@ function ProjectInfoPanel({ project, lang }: { project: Project; lang: Lang }) {
           fontWeight: 700,
           letterSpacing: "0.18em",
           textTransform: "uppercase" as const,
-          marginBottom: "24px",
+          marginBottom: "22px",
         }}
       >
         <span
@@ -505,17 +522,16 @@ function ProjectInfoPanel({ project, lang }: { project: Project; lang: Lang }) {
         {lang === "pt" ? `Projeto ${project.num}` : `Project ${project.num}`}
       </div>
 
-      {/* Title */}
+      {/* Title — full width of the 960px block */}
       <h3
         style={{
           fontFamily: "var(--font-syne)",
           fontWeight: 800,
-          fontSize: "clamp(1.8rem, 3.5vw, 3.2rem)",
-          letterSpacing: "-0.04em",
-          lineHeight: 1.06,
+          fontSize: "clamp(2rem, 3.8vw, 3.6rem)",
+          letterSpacing: "-0.045em",
+          lineHeight: 1.04,
           color: "var(--color-text)",
           marginBottom: "10px",
-          maxWidth: "680px",
         }}
       >
         {project.title}
@@ -525,108 +541,127 @@ function ProjectInfoPanel({ project, lang }: { project: Project; lang: Lang }) {
       <p
         style={{
           fontFamily: "var(--font-inter)",
-          fontSize: "0.75rem",
+          fontSize: "0.78rem",
           color: project.accent,
           fontWeight: 600,
           letterSpacing: "0.1em",
           textTransform: "uppercase" as const,
-          opacity: 0.8,
-          marginBottom: "20px",
+          opacity: 0.85,
+          marginBottom: "28px",
         }}
       >
         {project.client}
       </p>
 
-      {/* Description */}
-      <p
+      {/* 2-column lower block — description left, stack+CTAs right */}
+      <div
         style={{
-          fontFamily: "var(--font-inter)",
-          fontSize: "0.9375rem",
-          color: "var(--color-muted)",
-          lineHeight: 1.85,
-          maxWidth: "560px",
-          marginBottom: "24px",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "48px",
+          alignItems: "start",
         }}
+        className="project-info-grid"
       >
-        {project.description}
-      </p>
-
-      {/* CTAs */}
-      <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginBottom: "32px" }}>
-        <motion.a
-          href={project.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          whileHover={{ scale: 1.03, y: -1, borderColor: project.accent }}
-          whileTap={{ scale: 0.97 }}
-          transition={{ duration: 0.18 }}
+        {/* Left: description */}
+        <p
           style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "7px",
-            padding: "10px 20px",
-            borderRadius: "9999px",
-            border: "1px solid rgba(255,255,255,0.12)",
-            color: "var(--color-muted)",
             fontFamily: "var(--font-inter)",
-            fontSize: "0.8125rem",
-            fontWeight: 500,
-            textDecoration: "none",
-            transition: "border-color 0.2s",
+            fontSize: "0.9375rem",
+            color: "var(--color-muted)",
+            lineHeight: 1.9,
+            margin: 0,
           }}
         >
-          <Github size={14} />
-          GitHub
-        </motion.a>
-        {project.live && (
-          <motion.a
-            href={project.live}
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.03, y: -1 }}
-            whileTap={{ scale: 0.97 }}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "7px",
-              padding: "10px 20px",
-              borderRadius: "9999px",
-              background: "var(--color-teal)",
-              color: "#fff",
-              fontFamily: "var(--font-inter)",
-              fontSize: "0.8125rem",
-              fontWeight: 500,
-              textDecoration: "none",
-            }}
-          >
-            <ExternalLink size={14} />
-            {lang === "pt" ? "Ver Projeto" : "Live Demo"}
-          </motion.a>
-        )}
-      </div>
+          {project.description}
+        </p>
 
-      {/* Tech stack */}
-      {project.stack.length > 0 && (
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "7px" }}>
-          {project.stack.map((tech) => (
-            <span
-              key={tech}
+        {/* Right: stack + CTAs */}
+        <div>
+          {project.stack.length > 0 && (
+            <div
               style={{
-                padding: "4px 11px",
-                borderRadius: "6px",
-                border: `1px solid ${project.accent}28`,
-                background: `${project.accent}0c`,
-                fontFamily: "var(--font-inter)",
-                fontSize: "0.72rem",
-                fontWeight: 500,
-                color: "var(--color-muted)",
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "7px",
+                marginBottom: "28px",
               }}
             >
-              {tech}
-            </span>
-          ))}
+              {project.stack.map((tech) => (
+                <span
+                  key={tech}
+                  style={{
+                    padding: "5px 12px",
+                    borderRadius: "6px",
+                    border: `1px solid ${project.accent}28`,
+                    background: `${project.accent}0c`,
+                    fontFamily: "var(--font-inter)",
+                    fontSize: "0.72rem",
+                    fontWeight: 500,
+                    color: "var(--color-muted)",
+                  }}
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* CTAs */}
+          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+            <motion.a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.03, y: -1, borderColor: project.accent }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ duration: 0.18 }}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "7px",
+                padding: "10px 20px",
+                borderRadius: "9999px",
+                border: "1px solid rgba(255,255,255,0.12)",
+                color: "var(--color-muted)",
+                fontFamily: "var(--font-inter)",
+                fontSize: "0.8125rem",
+                fontWeight: 500,
+                textDecoration: "none",
+                transition: "border-color 0.2s",
+              }}
+            >
+              <Github size={14} />
+              GitHub
+            </motion.a>
+            {project.live && (
+              <motion.a
+                href={project.live}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.03, y: -1 }}
+                whileTap={{ scale: 0.97 }}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "7px",
+                  padding: "10px 20px",
+                  borderRadius: "9999px",
+                  background: "var(--color-teal)",
+                  color: "#fff",
+                  fontFamily: "var(--font-inter)",
+                  fontSize: "0.8125rem",
+                  fontWeight: 500,
+                  textDecoration: "none",
+                }}
+              >
+                <ExternalLink size={14} />
+                {lang === "pt" ? "Ver Projeto" : "Live Demo"}
+              </motion.a>
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </motion.div>
   );
 }
@@ -779,10 +814,13 @@ export default function ProjectsShowcase() {
         <ProjectSection key={project.num} project={project} index={i} lang={lang} />
       ))}
 
-      {/* Mobile responsive */}
+      {/* Responsive */}
       <style>{`
-        @media (max-width: 680px) {
-          .showcase-info { padding: 60px 0 36px !important; }
+        @media (max-width: 700px) {
+          .project-info-grid {
+            grid-template-columns: 1fr !important;
+            gap: 24px !important;
+          }
         }
       `}</style>
     </div>
