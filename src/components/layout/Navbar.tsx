@@ -4,19 +4,25 @@ import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import { useLanguage } from "@/contexts/language";
 
 type DotStrength = "none" | "dim" | "bright";
 
-const navLinks = [
-  { label: "Sobre", href: "#about" },
-  { label: "Projetos", href: "#projects" },
-  { label: "Experiência", href: "#experience" },
-  { label: "Skills", href: "#skills" },
-  { label: "Certs", href: "#certifications" },
-  { label: "Contato", href: "#contact" },
-];
+const NAV_LABELS = {
+  pt: { about: "Sobre", projects: "Projetos", experience: "Experiência", skills: "Skills", certs: "Certs", contact: "Contato" },
+  en: { about: "About", projects: "Projects", experience: "Experience", skills: "Skills", certs: "Certs", contact: "Contact" },
+};
+
+const NAV_HREFS = ["#about", "#projects", "#experience", "#skills", "#certifications", "#contact"] as const;
+const NAV_KEYS = ["about", "projects", "experience", "skills", "certs", "contact"] as const;
 
 export default function Navbar() {
+  const { lang, toggle } = useLanguage();
+  const navLinks = NAV_KEYS.map((key, i) => ({
+    label: NAV_LABELS[lang][key],
+    href: NAV_HREFS[i],
+  }));
+
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -196,6 +202,13 @@ export default function Navbar() {
           >
             <HireButton />
           </motion.li>
+          <motion.li
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            <LangToggle lang={lang} toggle={toggle} />
+          </motion.li>
         </ul>
 
         {/* Mobile Toggle */}
@@ -283,6 +296,9 @@ export default function Navbar() {
               <li style={{ paddingTop: "16px" }}>
                 <HireButton />
               </li>
+              <li style={{ paddingTop: "10px" }}>
+                <LangToggle lang={lang} toggle={toggle} />
+              </li>
             </ul>
           </motion.div>
         )}
@@ -358,6 +374,68 @@ function NavLink({
         }}
       />
     </a>
+  );
+}
+
+function LangToggle({ lang, toggle }: { lang: "pt" | "en"; toggle: () => void }) {
+  return (
+    <motion.button
+      onClick={toggle}
+      whileTap={{ scale: 0.96 }}
+      aria-label={lang === "pt" ? "Switch to English" : "Mudar para Português"}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        background: "rgba(255,255,255,0.055)",
+        border: "1px solid rgba(255,255,255,0.1)",
+        borderRadius: "9999px",
+        padding: "3px",
+        cursor: "pointer",
+        outline: "none",
+        gap: "0",
+      }}
+    >
+      {(["pt", "en"] as const).map((l) => (
+        <span
+          key={l}
+          style={{
+            position: "relative",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minWidth: "32px",
+            padding: "4px 10px",
+            borderRadius: "9999px",
+            fontFamily: "var(--font-inter)",
+            fontSize: "0.68rem",
+            fontWeight: 700,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase" as const,
+            color: lang === l ? "#0a0a0a" : "rgba(255,255,255,0.38)",
+            transition: "color 0.22s ease",
+            zIndex: 1,
+            userSelect: "none",
+          }}
+        >
+          {/* Sliding teal pill — layoutId animates between PT and EN positions */}
+          {lang === l && (
+            <motion.span
+              layoutId="lang-pill"
+              style={{
+                position: "absolute",
+                inset: 0,
+                borderRadius: "9999px",
+                background:
+                  "linear-gradient(135deg, var(--color-teal) 0%, var(--color-teal-light) 100%)",
+                zIndex: -1,
+              }}
+              transition={{ type: "spring", stiffness: 420, damping: 34 }}
+            />
+          )}
+          {l.toUpperCase()}
+        </span>
+      ))}
+    </motion.button>
   );
 }
 
