@@ -150,7 +150,7 @@ export default function Skills() {
     <section
       id="skills"
       aria-label="Stack e Habilidades"
-      style={{ padding: "100px 24px", position: "relative" }}
+      style={{ padding: "80px 24px", position: "relative" }}
     >
       <style>{`
         .skills-row-1 { grid-template-columns: 1fr; }
