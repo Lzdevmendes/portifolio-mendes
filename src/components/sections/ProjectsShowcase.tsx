@@ -239,14 +239,18 @@ function ScrollMacBook({ project }: { project: Project }) {
 
   const { scrollYProgress } = useScroll({
     target: macbookRef,
-    offset: ["start end", "start -30%"],
+    // 0 = MacBook top hits viewport bottom (starts entering)
+    // 1 = MacBook bottom hits viewport bottom (100% visible)
+    offset: ["start end", "end end"],
   });
 
-  // Slower: animation spans ~130% of viewport height instead of 85%
-  const lidRotateX = useTransform(scrollYProgress, [0, 0.90], [-102, -17]);
-  const translateY  = useTransform(scrollYProgress, [0, 0.55], [110, 0]);
-  const opacity     = useTransform(scrollYProgress, [0, 0.22], [0, 1]);
-  const glowOpacity = useTransform(scrollYProgress, [0.18, 0.90], [0, 0.8]);
+  // MacBook slides up and fades in as it enters (first 40% of scroll)
+  const translateY  = useTransform(scrollYProgress, [0, 0.40], [110, 0]);
+  const opacity     = useTransform(scrollYProgress, [0, 0.18], [0, 1]);
+  // Lid opens from when MacBook starts appearing → fully open at 100% visible
+  const lidRotateX  = useTransform(scrollYProgress, [0.05, 1.0], [-102, -17]);
+  // Glow grows alongside the lid
+  const glowOpacity = useTransform(scrollYProgress, [0.12, 1.0], [0, 0.8]);
 
   return (
     <div ref={macbookRef} style={{ position: "relative" }}>
