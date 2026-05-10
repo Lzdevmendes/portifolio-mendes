@@ -47,6 +47,7 @@ const fadeUp = {
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 export default function Hero() {
   const [isDesktop, setIsDesktop] = useState(false);
+  const glowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 920);
@@ -55,12 +56,40 @@ export default function Hero() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
+  function onMouseMove(e: React.MouseEvent<HTMLElement>) {
+    if (!glowRef.current) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    glowRef.current.style.background = `radial-gradient(600px circle at ${x}% ${y}%, rgba(13,148,136,0.10), transparent 70%)`;
+  }
+
+  function onMouseLeave() {
+    if (!glowRef.current) return;
+    glowRef.current.style.background = "transparent";
+  }
+
   return (
     <section
       id="hero"
       aria-label="Apresentação — Luiz Mendes, Desenvolvedor Full Stack"
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
       style={{ position: "relative", minHeight: "100vh", background: "#080a0e", overflow: "hidden" }}
     >
+      {/* Mouse-tracking glow overlay */}
+      <div
+        ref={glowRef}
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
+          zIndex: 2,
+          transition: "background 0.35s ease",
+        }}
+      />
+
       <HeroBackground />
 
       <div
