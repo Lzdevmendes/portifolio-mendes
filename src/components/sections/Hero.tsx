@@ -1,8 +1,9 @@
 "use client";
 
-import { motion, animate, useInView } from "framer-motion";
+import { motion, animate, useInView, AnimatePresence } from "framer-motion";
 import { ArrowRight, MapPin } from "lucide-react";
 import { memo, useEffect, useRef, useState } from "react";
+import { useLanguage } from "@/contexts/language";
 
 // ─── Syntax-highlighted code lines ───────────────────────────────────────────
 type Token = { t: string; c: string };
@@ -25,11 +26,18 @@ const CODE: CodeLine[] = [
 
 const TECH_CHIPS = ["React", "Next.js", "TypeScript", "Flutter", "Node.js", ".NET", "Go", "AWS", "Docker", "PostgreSQL"];
 
-const STATS = [
-  { end: 1.5, decimals: 1, prefix: "", suffix: "+", label: "Anos de experiência" },
-  { end: 1, decimals: 0, prefix: "$", suffix: "M+", label: "Em pagamentos" },
-  { end: 3, decimals: 0, prefix: "", suffix: "", label: "Grandes clientes" },
-];
+const STATS: Record<string, Array<{ end: number; decimals: number; prefix: string; suffix: string; label: string }>> = {
+  pt: [
+    { end: 1.5, decimals: 1, prefix: "", suffix: "+", label: "Anos de experiência" },
+    { end: 1,   decimals: 0, prefix: "$", suffix: "M+", label: "Em pagamentos" },
+    { end: 3,   decimals: 0, prefix: "", suffix: "", label: "Grandes clientes" },
+  ],
+  en: [
+    { end: 1.5, decimals: 1, prefix: "", suffix: "+", label: "Years of experience" },
+    { end: 1,   decimals: 0, prefix: "$", suffix: "M+", label: "In payments" },
+    { end: 3,   decimals: 0, prefix: "", suffix: "", label: "Major clients" },
+  ],
+};
 
 // ─── Animation presets ────────────────────────────────────────────────────────
 const ease = [0.4, 0, 0.2, 1] as [number, number, number, number];
@@ -46,6 +54,7 @@ const fadeUp = {
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 export default function Hero() {
+  const { lang } = useLanguage();
   const [isDesktop, setIsDesktop] = useState(false);
   const glowRef = useRef<HTMLDivElement>(null);
 
@@ -133,7 +142,7 @@ export default function Hero() {
               }}
             >
               <PulseDot />
-              Disponível para Trabalho
+              {lang === "pt" ? "Disponível para Trabalho" : "Open to Work"}
             </span>
             <span
               style={{
@@ -177,17 +186,7 @@ export default function Hero() {
             variants={fadeUp}
             style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "10px", marginBottom: "18px" }}
           >
-            <span
-              style={{
-                fontFamily: "var(--font-syne)",
-                fontWeight: 600,
-                fontSize: "clamp(0.95rem, 1.6vw, 1.15rem)",
-                color: "var(--color-muted)",
-                letterSpacing: "-0.01em",
-              }}
-            >
-              Desenvolvedor Full Stack
-            </span>
+            <TitleBracket />
             <span
               style={{
                 display: "inline-flex",
@@ -224,7 +223,8 @@ export default function Hero() {
           >
             React, Next.js, Flutter · Node.js, .NET, Go ·{" "}
             <span style={{ color: "var(--color-teal-light)", fontWeight: 600 }}>$1.0M+</span>{" "}
-            em soluções de pagamento.
+            {lang === "pt" ? "em soluções de pagamento." : "in payment solutions."}{" "}
+            UI/UX · Design Systems.
             <br />
             Obracon (Sabesp) · Multiclínica · GCB (Petrobras).
           </motion.p>
@@ -236,7 +236,7 @@ export default function Hero() {
             style={{ display: "flex", flexWrap: "wrap", gap: "12px", marginBottom: "40px" }}
           >
             <PrimaryButton href="#projects">
-              Ver Projetos <ArrowRight size={13} />
+              {lang === "pt" ? "Ver Projetos" : "View Projects"} <ArrowRight size={13} />
             </PrimaryButton>
             <GhostButton href="https://github.com/Lzdevmendes">
               <GitHubIcon /> GitHub
@@ -255,7 +255,7 @@ export default function Hero() {
               borderTop: "1px solid rgba(255,255,255,0.06)",
             }}
           >
-            {STATS.map((s) => (
+            {STATS[lang].map((s) => (
               <AnimatedStat key={s.label} {...s} />
             ))}
           </motion.div>
@@ -305,7 +305,7 @@ export default function Hero() {
             opacity: 0.4,
           }}
         >
-          rolar
+          {lang === "pt" ? "rolar" : "scroll"}
         </span>
         <motion.div
           animate={{ y: [0, 9, 0] }}
@@ -336,6 +336,69 @@ export default function Hero() {
         }
       `}</style>
     </section>
+  );
+}
+
+// ─── Title bracket animation ─────────────────────────────────────────────────
+function TitleBracket() {
+  const { lang } = useLanguage();
+  const words = lang === "pt" ? ["Desenvolvedor", "Full Stack"] : ["Developer", "Full Stack"];
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setActive((i) => (i + 1) % words.length), 2400);
+    return () => clearInterval(id);
+  }, [words.length]);
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: "4px", flexWrap: "wrap" }}>
+      {words.map((word, i) => {
+        const isActive = active === i;
+        return (
+          <div
+            key={word}
+            onClick={() => setActive(i)}
+            style={{ position: "relative", padding: "6px 14px", cursor: "pointer" }}
+          >
+            <AnimatePresence>
+              {isActive && (
+                <motion.div
+                  layoutId="title-bracket"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.75, ease: [0.77, 0, 0.175, 1] }}
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    border: "1.5px solid var(--color-teal)",
+                    borderRadius: "6px",
+                    boxShadow: "0 0 18px rgba(13,148,136,0.22)",
+                    pointerEvents: "none",
+                  }}
+                />
+              )}
+            </AnimatePresence>
+            <span
+              style={{
+                fontFamily: "var(--font-syne)",
+                fontWeight: 700,
+                fontSize: "clamp(1rem, 1.8vw, 1.35rem)",
+                color: isActive ? "var(--color-teal-light)" : "var(--color-muted)",
+                filter: isActive ? "blur(0px)" : "blur(4px)",
+                transition: "filter 1.5s ease, color 0.5s ease",
+                display: "block",
+                position: "relative",
+                zIndex: 1,
+                userSelect: "none",
+              }}
+            >
+              {word}
+            </span>
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
@@ -711,11 +774,11 @@ function AnimatedStat({
     <div ref={ref} style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
       <span
         style={{
-          fontFamily: "var(--font-syne)",
+          fontFamily: "var(--font-mono)",
           fontWeight: 700,
           fontSize: "clamp(1.1rem, 1.8vw, 1.4rem)",
-          color: "var(--color-text)",
-          letterSpacing: "-0.025em",
+          color: "var(--color-teal-light)",
+          letterSpacing: "-0.02em",
           fontVariantNumeric: "tabular-nums",
         }}
       >

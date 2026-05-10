@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import { memo } from "react";
 import { ArrowUpRight } from "lucide-react";
+import { useLanguage } from "@/contexts/language";
+import type { Lang } from "@/contexts/language";
 
 const SKILL_URLS: Record<string, string> = {
   // Frontend
@@ -70,65 +72,52 @@ const SKILL_URLS: Record<string, string> = {
   Webhooks: "https://stripe.com/docs/webhooks",
   Reconciliation: "https://stripe.com/docs/reports",
   "+$1.0M processed": "https://github.com/Lzdevmendes",
+  // Design
+  Figma: "https://www.figma.com",
+  "Design Systems": "https://www.figma.com/design-systems/",
+  Wireframing: "https://www.figma.com/wireframing/",
+  Prototyping: "https://www.figma.com/prototyping/",
+  "User Research": "https://www.nngroup.com",
+  "Responsive Design": "https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Responsive_Design",
 };
 
 interface SkillCategory {
   label: string;
   tag: string;
   color: string;
-  skills: string[];
+  skills: readonly string[];
 }
 
-const categories: SkillCategory[] = [
-  {
-    label: "Frontend",
-    tag: "UI / UX",
-    color: "#6366F1",
-    skills: [
-      "React", "Next.js", "TypeScript", "JavaScript", "Flutter",
-      "Tailwind CSS", "Framer Motion", "HTML & CSS", "Zustand", "Context API", "Zod",
-    ],
-  },
-  {
-    label: "Backend",
-    tag: "Server / API",
-    color: "#0D9488",
-    skills: [
-      "Node.js", "NestJS", "Express", ".NET / C#", "Go",
-      "Java / Spring", "Python", "Flask / FastAPI", "REST & GraphQL", "JWT", "OAuth2",
-    ],
-  },
-  {
-    label: "Testes",
-    tag: "QA",
-    color: "#F97316",
-    skills: ["Jest", "Vitest", "React Testing Library", "Cypress", "Supertest"],
-  },
-  {
-    label: "Banco de Dados",
-    tag: "Data",
-    color: "#F59E0B",
-    skills: ["PostgreSQL", "SQL Server", "MongoDB", "Redis", "Prisma ORM", "TypeORM", "Migrations"],
-  },
-  {
-    label: "DevOps & Cloud",
-    tag: "Infra",
-    color: "#EC4899",
-    skills: ["Docker", "AWS", "Azure", "CI/CD", "GitHub Actions", "Linux", "Nginx", "Git", "Automation & Bots"],
-  },
-  {
-    label: "Arquitetura",
-    tag: "Design",
-    color: "#8B5CF6",
-    skills: ["Microservices", "Clean Architecture", "DDD", "Event-Driven", "SOLID", "Monorepos", "API Gateway"],
-  },
-  {
-    label: "Pagamentos",
-    tag: "Fintech",
-    color: "#10B981",
-    skills: ["Stripe", "PIX", "PagSeguro", "Payment Gateways", "Webhooks", "Reconciliation", "+$1.0M processed"],
-  },
-];
+const CATEGORIES_BASE = [
+  { key: "frontend",  tag: "UI / UX",     color: "#6366F1", skills: ["React","Next.js","TypeScript","JavaScript","Flutter","Tailwind CSS","Framer Motion","HTML & CSS","Zustand","Context API","Zod"] },
+  { key: "backend",   tag: "Server / API", color: "#0D9488", skills: ["Node.js","NestJS","Express",".NET / C#","Go","Java / Spring","Python","Flask / FastAPI","REST & GraphQL","JWT","OAuth2"] },
+  { key: "testing",   tag: "QA",           color: "#F97316", skills: ["Jest","Vitest","React Testing Library","Cypress","Supertest"] },
+  { key: "design",    tag: "Design",       color: "#EC4899", skills: ["Figma","Design Systems","Wireframing","Prototyping","User Research","Visual Hierarchy","Responsive Design"] },
+  { key: "database",  tag: "Data",         color: "#F59E0B", skills: ["PostgreSQL","SQL Server","MongoDB","Redis","Prisma ORM","TypeORM","Migrations"] },
+  { key: "devops",    tag: "Infra",        color: "#EC4899", skills: ["Docker","AWS","Azure","CI/CD","GitHub Actions","Linux","Nginx","Git","Automation & Bots"] },
+  { key: "arch",      tag: "Design",       color: "#8B5CF6", skills: ["Microservices","Clean Architecture","DDD","Event-Driven","SOLID","Monorepos","API Gateway"] },
+  { key: "payments",  tag: "Fintech",      color: "#10B981", skills: ["Stripe","PIX","PagSeguro","Payment Gateways","Webhooks","Reconciliation","+$1.0M processed"] },
+] as const;
+
+const CATEGORY_LABELS: Record<string, Record<Lang, string>> = {
+  frontend: { pt: "Frontend",      en: "Frontend" },
+  backend:  { pt: "Backend",       en: "Backend" },
+  testing:  { pt: "Testes",        en: "Testing" },
+  design:   { pt: "UI/UX Design",  en: "UI/UX Design" },
+  database: { pt: "Banco de Dados",en: "Database" },
+  devops:   { pt: "DevOps & Cloud",en: "DevOps & Cloud" },
+  arch:     { pt: "Arquitetura",   en: "Architecture" },
+  payments: { pt: "Pagamentos",    en: "Payments" },
+};
+
+const SKILLS_HEADER: Record<Lang, { label: string; desc: (n: number) => string }> = {
+  pt: { label: "Competências", desc: (n) => `${n}+ tecnologias e ferramentas organizadas por domínio` },
+  en: { label: "Competencies", desc: (n) => `${n}+ technologies and tools organized by domain` },
+};
+
+function getCategories(lang: Lang): SkillCategory[] {
+  return CATEGORIES_BASE.map((c) => ({ ...c, label: CATEGORY_LABELS[c.key][lang] }));
+}
 
 const containerVariants = {
   hidden: {},
@@ -146,10 +135,15 @@ const cardVariants = {
 };
 
 export default function Skills() {
+  const { lang } = useLanguage();
+  const categories = getCategories(lang);
+  const sh = SKILLS_HEADER[lang];
+  const totalSkills = categories.reduce((acc, c) => acc + c.skills.length, 0);
+
   return (
     <section
       id="skills"
-      aria-label="Stack e Habilidades"
+      aria-label={sh.label}
       style={{ padding: "80px 24px", position: "relative" }}
     >
       <style>{`
@@ -164,6 +158,7 @@ export default function Skills() {
           .skills-row-2 { grid-template-columns: repeat(2, 1fr); }
         }
         @media (min-width: 1100px) {
+          .skills-row-1 { grid-template-columns: repeat(4, 1fr); }
           .skills-row-2 { grid-template-columns: repeat(4, 1fr); }
         }
         @media (max-width: 480px) {
@@ -209,7 +204,7 @@ export default function Skills() {
               marginBottom: "16px",
             }}
           >
-            Competências
+            {sh.label}
           </span>
           <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "16px" }}>
             <h2
@@ -236,7 +231,7 @@ export default function Skills() {
                 textAlign: "right",
               }}
             >
-              {categories.reduce((acc, c) => acc + c.skills.length, 0)}+ tecnologias e ferramentas organizadas por domínio
+              {sh.desc(totalSkills)}
             </p>
           </div>
         </motion.div>
@@ -244,7 +239,7 @@ export default function Skills() {
         {/* Featured tech strip */}
         <FeaturedTech />
 
-        {/* Linha 1 — Frontend, Backend, Testes */}
+        {/* Linha 1 — Frontend, Backend, Testes, UI/UX Design */}
         <motion.div
           className="skills-row-1"
           variants={containerVariants}
@@ -253,7 +248,7 @@ export default function Skills() {
           viewport={{ once: true, margin: "-60px" }}
           style={{ display: "grid", gap: "16px", marginBottom: "16px" }}
         >
-          {categories.slice(0, 3).map((cat) => (
+          {categories.slice(0, 4).map((cat) => (
             <CategoryCard key={cat.label} cat={cat} featured />
           ))}
         </motion.div>
@@ -267,7 +262,7 @@ export default function Skills() {
           viewport={{ once: true, margin: "-60px" }}
           style={{ display: "grid", gap: "16px" }}
         >
-          {categories.slice(3).map((cat) => (
+          {categories.slice(4).map((cat) => (
             <CategoryCard key={cat.label} cat={cat} />
           ))}
         </motion.div>
