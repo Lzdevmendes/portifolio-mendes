@@ -9,7 +9,7 @@ export default async function Projects() {
     <section
       id="projects"
       style={{
-        padding: "100px 24px",
+        padding: "80px 24px",
         maxWidth: "1280px",
         margin: "0 auto",
       }}

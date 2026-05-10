@@ -86,7 +86,7 @@ export default function About() {
       aria-label="Sobre mim"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{ position: "relative", padding: "140px 24px", overflow: "hidden" }}
+      style={{ position: "relative", padding: "100px 24px", overflow: "hidden" }}
     >
       {/* Top separator */}
       <div

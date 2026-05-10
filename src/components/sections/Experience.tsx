@@ -67,7 +67,7 @@ export default function Experience() {
     <section
       id="experience"
       aria-label="Experiência Profissional"
-      style={{ padding: "100px 24px", position: "relative" }}
+      style={{ padding: "80px 24px", position: "relative" }}
     >
       {/* Subtle separator */}
       <div

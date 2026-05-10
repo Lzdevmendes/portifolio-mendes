@@ -96,7 +96,7 @@ export default function Certifications() {
     <section
       id="certifications"
       aria-label="Certificações e Cursos"
-      style={{ padding: "100px 24px", position: "relative" }}
+      style={{ padding: "80px 24px", position: "relative" }}
     >
       <style>{`
         .certs-grid { grid-template-columns: 1fr; }
