@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Github, ExternalLink } from "lucide-react";
 import { useLanguage } from "@/contexts/language";
 import type { Lang } from "@/contexts/language";
@@ -233,38 +233,68 @@ function MacOSPlaceholder({ accent }: { accent: string }) {
   );
 }
 
-/* ─── Montagem completa do MacBook — fiel ao MacBook Pro 14" de referência ─── */
-function ScrollMacBook({ project }: { project: Project }) {
+/* ─── Montagem completa do MacBook — fiel ao MacBook Pro 14" ─── */
+function ScrollMacBook({ project, isMobile }: { project: Project; isMobile: boolean }) {
   const macbookRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: macbookRef,
-    // 0 = MacBook top hits viewport bottom (starts entering)
-    // 1 = MacBook bottom hits viewport bottom (100% visible)
+    // 0 = topo do MacBook atinge a base do viewport (começa a entrar)
+    // 1 = base do MacBook atinge a base do viewport (100% visível)
     offset: ["start end", "end end"],
   });
 
-  // MacBook slides up and fades in as it enters (first 40% of scroll)
-  const translateY  = useTransform(scrollYProgress, [0, 0.40], [110, 0]);
-  const opacity     = useTransform(scrollYProgress, [0, 0.18], [0, 1]);
-  // Lid opens from when MacBook starts appearing → fully open at 100% visible
+  // MacBook sobe e aparece conforme entra na tela
+  const translateY  = useTransform(scrollYProgress, [0, 0.40], [90, 0]);
+  const opacity     = useTransform(scrollYProgress, [0, 0.20], [0, 1]);
+  // Tampa abre progressivamente — totalmente aberta com 100% visível
   const lidRotateX  = useTransform(scrollYProgress, [0.05, 1.0], [-102, -17]);
-  // Glow grows alongside the lid
-  const glowOpacity = useTransform(scrollYProgress, [0.12, 1.0], [0, 0.8]);
+  // Brilho cresce junto com a abertura da tampa (desativado no mobile)
+  const glowOpacity = useTransform(scrollYProgress, [0.12, 1.0], [0, isMobile ? 0 : 0.7]);
+
+  /* Versão mobile: apenas a tela sem 3D, sem teclado, sem animações pesadas */
+  if (isMobile) {
+    return (
+      <motion.div
+        ref={macbookRef}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
+        style={{
+          borderRadius: "14px",
+          overflow: "hidden",
+          border: `1px solid ${project.accent}30`,
+          boxShadow: `0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04)`,
+          aspectRatio: "16/10",
+          position: "relative",
+        }}
+      >
+        {project.video ? (
+          <video src={project.video} autoPlay muted loop playsInline style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        ) : project.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={project.image} alt={project.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        ) : (
+          <MacOSPlaceholder accent={project.accent} />
+        )}
+      </motion.div>
+    );
+  }
 
   return (
     <div ref={macbookRef} style={{ position: "relative" }}>
-      {/* Accent glow behind screen */}
+      {/* Brilho accent atrás da tela — blur leve para melhor performance */}
       <motion.div
         style={{
           position: "absolute",
-          top: "-12%",
-          left: "8%",
-          right: "8%",
-          height: "48%",
-          background: `radial-gradient(ellipse at 50% 90%, ${project.accent}45 0%, transparent 65%)`,
+          top: "-10%",
+          left: "10%",
+          right: "10%",
+          height: "45%",
+          background: `radial-gradient(ellipse at 50% 90%, ${project.accent}40 0%, transparent 65%)`,
           opacity: glowOpacity,
-          filter: "blur(30px)",
+          filter: "blur(20px)",
           pointerEvents: "none",
           zIndex: 0,
         }}
@@ -393,135 +423,14 @@ function ScrollMacBook({ project }: { project: Project }) {
                 "inset 0 1px 0 rgba(255,255,255,0.5)",
             }}
           >
-            {/* ── Keyboard ── */}
-            <div style={{ marginBottom: "12px" }}>
-              {/* Function row — shorter, 16 keys */}
-              <div style={{ display: "flex", gap: "2.5px", marginBottom: "4px" }}>
-                {Array.from({ length: 16 }).map((_, k) => (
-                  <div
-                    key={k}
-                    style={{
-                      flex: 1,
-                      height: "6px",
-                      background: "rgba(0,0,0,0.18)",
-                      borderRadius: "2px",
-                      boxShadow: "inset 0 -1px 0 rgba(0,0,0,0.12)",
-                    }}
-                  />
-                ))}
-              </div>
-
-              {/* Number row — 13 keys */}
-              <div style={{ display: "flex", gap: "3px", marginBottom: "3px" }}>
-                {Array.from({ length: 13 }).map((_, k) => (
-                  <div
-                    key={k}
-                    style={{
-                      flex: 1,
-                      height: "9px",
-                      background: "rgba(0,0,0,0.2)",
-                      borderRadius: "2.5px",
-                      boxShadow:
-                        "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.15)",
-                    }}
-                  />
-                ))}
-              </div>
-
-              {/* QWERTY row — 13 keys */}
-              <div style={{ display: "flex", gap: "3px", marginBottom: "3px" }}>
-                {Array.from({ length: 13 }).map((_, k) => (
-                  <div
-                    key={k}
-                    style={{
-                      flex: 1,
-                      height: "9px",
-                      background: "rgba(0,0,0,0.2)",
-                      borderRadius: "2.5px",
-                      boxShadow:
-                        "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.15)",
-                    }}
-                  />
-                ))}
-              </div>
-
-              {/* ASDF row — 12 keys + caps */}
-              <div style={{ display: "flex", gap: "3px", marginBottom: "3px" }}>
-                {/* Caps Lock — wider */}
-                <div
-                  style={{
-                    flex: 1.6,
-                    height: "9px",
-                    background: "rgba(0,0,0,0.2)",
-                    borderRadius: "2.5px",
-                    boxShadow:
-                      "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.15)",
-                  }}
-                />
-                {Array.from({ length: 11 }).map((_, k) => (
-                  <div
-                    key={k}
-                    style={{
-                      flex: 1,
-                      height: "9px",
-                      background: "rgba(0,0,0,0.2)",
-                      borderRadius: "2.5px",
-                      boxShadow:
-                        "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.15)",
-                    }}
-                  />
-                ))}
-                {/* Enter — wider */}
-                <div
-                  style={{
-                    flex: 1.8,
-                    height: "9px",
-                    background: "rgba(0,0,0,0.2)",
-                    borderRadius: "2.5px",
-                    boxShadow:
-                      "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.15)",
-                  }}
-                />
-              </div>
-
-              {/* ZXCV row — 10 keys + shift */}
-              <div style={{ display: "flex", gap: "3px" }}>
-                {/* Shift — wider */}
-                <div
-                  style={{
-                    flex: 2.2,
-                    height: "9px",
-                    background: "rgba(0,0,0,0.2)",
-                    borderRadius: "2.5px",
-                    boxShadow:
-                      "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.15)",
-                  }}
-                />
-                {Array.from({ length: 10 }).map((_, k) => (
-                  <div
-                    key={k}
-                    style={{
-                      flex: 1,
-                      height: "9px",
-                      background: "rgba(0,0,0,0.2)",
-                      borderRadius: "2.5px",
-                      boxShadow:
-                        "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.15)",
-                    }}
-                  />
-                ))}
-                {/* Right Shift — wider */}
-                <div
-                  style={{
-                    flex: 2.2,
-                    height: "9px",
-                    background: "rgba(0,0,0,0.2)",
-                    borderRadius: "2.5px",
-                    boxShadow:
-                      "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.15)",
-                  }}
-                />
-              </div>
+            {/* Teclado — CSS puro, sem divs por tecla (performance 10x melhor) */}
+            <div style={{ marginBottom: "12px", display: "flex", flexDirection: "column", gap: "3px" }}>
+              {/* Linha de funções */}
+              <div style={{ height: "5px", borderRadius: "2px", backgroundImage: "repeating-linear-gradient(90deg,rgba(0,0,0,0.22) 0px,rgba(0,0,0,0.22) calc(5.8% - 2px),transparent calc(5.8% - 2px),transparent 5.8%)" }} />
+              {/* 4 linhas principais — gradiente simula divisão entre teclas */}
+              {[0,1,2,3].map((r) => (
+                <div key={r} style={{ height: "8px", borderRadius: "2px", backgroundImage: "repeating-linear-gradient(90deg,rgba(0,0,0,0.22) 0px,rgba(0,0,0,0.22) calc(7% - 2.5px),transparent calc(7% - 2.5px),transparent 7%)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1)" }} />
+              ))}
             </div>
 
             {/* ── Trackpad ── */}
@@ -745,15 +654,17 @@ function ProjectInfoPanel({ project, lang }: { project: Project; lang: Lang }) {
   );
 }
 
-/* ─── Single project section ─── */
+/* ─── Seção de um único projeto ─── */
 function ProjectSection({
   project,
   index,
   lang,
+  isMobile,
 }: {
   project: Project;
   index: number;
   lang: Lang;
+  isMobile: boolean;
 }) {
   const isLast = index === 4;
 
@@ -789,7 +700,7 @@ function ProjectSection({
         {/* ── MacBook block ── */}
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div style={{ width: "min(960px, 100%)" }}>
-            <ScrollMacBook project={project} />
+            <ScrollMacBook project={project} isMobile={isMobile} />
           </div>
         </div>
       </div>
@@ -820,6 +731,15 @@ function ProjectSection({
 export default function ProjectsShowcase() {
   const { lang } = useLanguage();
   const projects = PROJECTS[lang];
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   return (
     <div>
@@ -889,7 +809,7 @@ export default function ProjectsShowcase() {
 
       {/* Projects */}
       {projects.map((project, i) => (
-        <ProjectSection key={project.num} project={project} index={i} lang={lang} />
+        <ProjectSection key={project.num} project={project} index={i} lang={lang} isMobile={isMobile} />
       ))}
 
       {/* Responsive */}

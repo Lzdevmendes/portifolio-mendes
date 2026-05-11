@@ -146,6 +146,30 @@ a {
   will-change: transform;
 }
 
+/* Containment CSS — limita reflow a cada seção, melhora performance de scroll */
+#about, #experience, #skills, #contact {
+  contain: layout style;
+}
+
+/* Scroll suave e acelerado por hardware em mobile */
+@media (pointer: coarse) {
+  html {
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Desativa animações de hover em mobile (não há cursor) */
+  .skill-pill:hover,
+  .exp-card:hover {
+    transform: none !important;
+  }
+}
+
+/* Reduz motion em dispositivos com preferência, já gerenciado pelo MotionConfig */
+@media (prefers-reduced-motion: reduce) {
+  [data-framer-motion-will-change] {
+    will-change: auto !important;
+  }
+}
+
 /* Improved scrollbar — teal gradient thumb */
 ::-webkit-scrollbar {
   width: 3px;
