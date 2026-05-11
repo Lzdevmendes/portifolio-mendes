@@ -152,7 +152,7 @@ const PROJECTS: Record<Lang, Project[]> = {
   ],
 };
 
-/* ─── Screen content placeholder ─── */
+/* ─── Placeholder do conteúdo da tela ─── */
 function MacOSPlaceholder({ accent }: { accent: string }) {
   return (
     <div
@@ -166,7 +166,7 @@ function MacOSPlaceholder({ accent }: { accent: string }) {
         flexDirection: "column",
       }}
     >
-      {/* macOS menu bar */}
+      {/* Barra de menu macOS */}
       <div
         style={{
           height: "24px",
@@ -186,7 +186,7 @@ function MacOSPlaceholder({ accent }: { accent: string }) {
           />
         ))}
       </div>
-      {/* Content */}
+      {/* Conteúdo */}
       <div
         style={{
           flex: 1,
@@ -199,7 +199,7 @@ function MacOSPlaceholder({ accent }: { accent: string }) {
           overflow: "hidden",
         }}
       >
-        {/* Dot grid */}
+        {/* Grade de pontos decorativa */}
         <div
           style={{
             position: "absolute",
@@ -233,7 +233,7 @@ function MacOSPlaceholder({ accent }: { accent: string }) {
   );
 }
 
-/* ─── Full MacBook assembly — exact match to MacBook Pro 14" reference ─── */
+/* ─── Montagem completa do MacBook — fiel ao MacBook Pro 14" de referência ─── */
 function ScrollMacBook({ project }: { project: Project }) {
   const macbookRef = useRef<HTMLDivElement>(null);
 
