@@ -446,55 +446,127 @@ function ScrollMacBook({ project }: { project: Project }) {
           </motion.div>
           {/* ════ END LID ════ */}
 
-          {/* ── Hinge line ── */}
-          <div
-            style={{
-              height: "4px",
-              background:
-                "linear-gradient(90deg, #888 0%, #aaa 20%, #ccc 50%, #aaa 80%, #888 100%)",
-            }}
-          />
+          {/* ── Dobradiça — estrutura em 3 camadas para profundidade real ── */}
+          <div>
+            {/* Borda inferior da tampa — pega luz vindo de cima */}
+            <div style={{ height: "1px", background: "rgba(255,255,255,0.28)" }} />
+            {/* Corpo da dobradiça — cilindros de alumínio escuro */}
+            <div
+              style={{
+                height: "5px",
+                background:
+                  "linear-gradient(90deg, #686869 0%, #909092 12%, #B8B8BA 50%, #909092 88%, #686869 100%)",
+                boxShadow:
+                  "inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -1px 0 rgba(0,0,0,0.28)",
+              }}
+            />
+            {/* Sombra de transição para a base */}
+            <div style={{ height: "2px", background: "linear-gradient(180deg, rgba(0,0,0,0.18) 0%, transparent 100%)" }} />
+          </div>
 
           {/* ════ BASE ════ */}
           <div
             style={{
               background:
-                "linear-gradient(180deg, #CDCDCF 0%, #BEBEC0 55%, #B2B2B4 100%)",
+                "linear-gradient(180deg, #CDCDCF 0%, #C4C4C6 35%, #BCBCBE 70%, #B4B4B6 100%)",
               borderRadius: "0 0 10px 10px",
-              padding: "12px 20px 16px",
+              padding: "10px 18px 14px",
               boxShadow:
-                "0 34px 90px rgba(0,0,0,0.75), " +
-                "0 12px 28px rgba(0,0,0,0.45), " +
-                "inset 0 1px 0 rgba(255,255,255,0.5)",
+                "0 32px 80px rgba(0,0,0,0.72), " +
+                "0 10px 24px rgba(0,0,0,0.4), " +
+                "inset 0 1px 0 rgba(255,255,255,0.55), " +
+                "inset 0 -1px 0 rgba(0,0,0,0.08)",
             }}
           >
-            {/* Teclado — CSS puro, sem divs por tecla (performance 10x melhor) */}
-            <div style={{ marginBottom: "12px", display: "flex", flexDirection: "column", gap: "3px" }}>
-              {/* Linha de funções */}
-              <div style={{ height: "5px", borderRadius: "2px", backgroundImage: "repeating-linear-gradient(90deg,rgba(0,0,0,0.22) 0px,rgba(0,0,0,0.22) calc(5.8% - 2px),transparent calc(5.8% - 2px),transparent 5.8%)" }} />
-              {/* 4 linhas principais — gradiente simula divisão entre teclas */}
-              {[0,1,2,3].map((r) => (
-                <div key={r} style={{ height: "8px", borderRadius: "2px", backgroundImage: "repeating-linear-gradient(90deg,rgba(0,0,0,0.22) 0px,rgba(0,0,0,0.22) calc(7% - 2.5px),transparent calc(7% - 2.5px),transparent 7%)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1)" }} />
-              ))}
+            {/* ── Área do teclado com grades de alto-falante nos lados ── */}
+            <div style={{ display: "flex", alignItems: "flex-start", gap: "8px", marginBottom: "10px" }}>
+
+              {/* Grade do alto-falante esquerdo */}
+              <div style={{
+                width: "12%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "2.5px",
+                paddingTop: "6px",
+                opacity: 0.55,
+              }}>
+                {[0,1,2,3].map((r) => (
+                  <div key={r} style={{
+                    height: "3px",
+                    borderRadius: "1.5px",
+                    backgroundImage: "repeating-linear-gradient(90deg, rgba(0,0,0,0.35) 0px, rgba(0,0,0,0.35) 1.5px, transparent 1.5px, transparent 3px)",
+                  }} />
+                ))}
+              </div>
+
+              {/* Teclado CSS — centro */}
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "3px" }}>
+                {/* Linha de funções — teclas menores */}
+                <div style={{
+                  height: "4.5px",
+                  borderRadius: "1.5px",
+                  backgroundImage: "repeating-linear-gradient(90deg,rgba(0,0,0,0.24) 0px,rgba(0,0,0,0.24) calc(5.8% - 2px),transparent calc(5.8% - 2px),transparent 5.8%)",
+                  marginBottom: "1px",
+                }} />
+                {/* 4 linhas principais */}
+                {[0,1,2,3].map((r) => (
+                  <div key={r} style={{
+                    height: "9px",
+                    borderRadius: "2px",
+                    backgroundImage: "repeating-linear-gradient(90deg,rgba(0,0,0,0.24) 0px,rgba(0,0,0,0.24) calc(7% - 2.5px),transparent calc(7% - 2.5px),transparent 7%)",
+                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -1px 0 rgba(0,0,0,0.1)",
+                  }} />
+                ))}
+              </div>
+
+              {/* Grade do alto-falante direito */}
+              <div style={{
+                width: "12%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "2.5px",
+                paddingTop: "6px",
+                opacity: 0.55,
+              }}>
+                {[0,1,2,3].map((r) => (
+                  <div key={r} style={{
+                    height: "3px",
+                    borderRadius: "1.5px",
+                    backgroundImage: "repeating-linear-gradient(90deg, rgba(0,0,0,0.35) 0px, rgba(0,0,0,0.35) 1.5px, transparent 1.5px, transparent 3px)",
+                  }} />
+                ))}
+              </div>
             </div>
 
-            {/* ── Trackpad ── */}
+            {/* ── Trackpad Force Touch — vidro fosco ── */}
             <div style={{ display: "flex", justifyContent: "center" }}>
               <div
                 style={{
-                  width: "34%",
-                  height: "18px",
-                  background: "linear-gradient(180deg, #B4B4B6 0%, #A8A8AA 100%)",
-                  borderRadius: "6px",
+                  width: "33%",
+                  height: "20px",
+                  background:
+                    "linear-gradient(180deg, #AEAEB0 0%, #A4A4A6 50%, #9E9EA0 100%)",
+                  borderRadius: "7px",
                   boxShadow:
-                    "0 0 0 0.75px rgba(0,0,0,0.3), " +
-                    "inset 0 1px 0 rgba(255,255,255,0.35), " +
-                    "inset 0 -1px 0 rgba(0,0,0,0.1)",
+                    "0 0 0 0.75px rgba(0,0,0,0.32), " +
+                    "inset 0 1.5px 0 rgba(255,255,255,0.38), " +
+                    "inset 0 -1px 0 rgba(0,0,0,0.12), " +
+                    "inset 0 0 0 0.5px rgba(255,255,255,0.1)",
                 }}
               />
             </div>
           </div>
-          {/* ════ END BASE ════ */}
+          {/* ════ FIM DA BASE ════ */}
+
+          {/* Borda inferior — perfil frontal do MacBook */}
+          <div
+            style={{
+              height: "4px",
+              background: "linear-gradient(180deg, #A0A0A2 0%, #8E8E90 100%)",
+              borderRadius: "0 0 8px 8px",
+              boxShadow: "inset 0 -1px 0 rgba(0,0,0,0.15)",
+            }}
+          />
 
           {/* Sombra projetada na superfície — dupla camada para realismo */}
           <div
@@ -751,7 +823,7 @@ function ProjectSection({
 
         {/* ── MacBook block ── */}
         <div style={{ display: "flex", justifyContent: "center" }}>
-          <div style={{ width: "min(1080px, 100%)" }}>
+          <div style={{ width: "min(960px, 100%)" }}>
             <ScrollMacBook project={project} />
           </div>
         </div>
