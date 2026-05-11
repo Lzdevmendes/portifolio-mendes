@@ -152,82 +152,142 @@ const PROJECTS: Record<Lang, Project[]> = {
   ],
 };
 
-/* ─── Placeholder do conteúdo da tela ─── */
+/* ─── Placeholder macOS realista — simula interface de dashboard ─── */
 function MacOSPlaceholder({ accent }: { accent: string }) {
+  const bars = [40, 65, 45, 80, 55, 90, 70, 85, 60, 75, 95, 65];
+  const menuItems = ["File", "Edit", "View", "Window"];
+  const sideItems = ["Dashboard", "Analytics", "Users", "Payments", "Settings"];
+  const stats = [
+    { label: "Revenue", value: "$1.2M" },
+    { label: "Users",   value: "8.4K" },
+    { label: "Uptime",  value: "99.9%" },
+  ];
+
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        background: "#0d1117",
-        position: "relative",
-        overflow: "hidden",
+    <div style={{ width: "100%", height: "100%", background: "#0e0e12", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+
+      {/* ── macOS Menu Bar ── */}
+      <div style={{
+        height: "22px",
+        background: "rgba(22,22,26,0.97)",
+        borderBottom: "1px solid rgba(255,255,255,0.05)",
         display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      {/* Barra de menu macOS */}
-      <div
-        style={{
-          height: "24px",
-          background: "#1c1c1e",
-          borderBottom: "1px solid rgba(255,255,255,0.06)",
-          display: "flex",
-          alignItems: "center",
-          padding: "0 14px",
-          gap: "7px",
-          flexShrink: 0,
-        }}
-      >
-        {(["#FF5F57", "#FFBD2E", "#28C840"] as string[]).map((c) => (
-          <div
-            key={c}
-            style={{ width: 9, height: 9, borderRadius: "50%", background: c, opacity: 0.9 }}
-          />
-        ))}
-      </div>
-      {/* Conteúdo */}
-      <div
-        style={{
-          flex: 1,
-          background: `linear-gradient(135deg, #0d1117 0%, ${accent}18 55%, #0d1117 100%)`,
-          padding: "20px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "10px",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        {/* Grade de pontos decorativa */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage: "radial-gradient(rgba(255,255,255,0.035) 1px, transparent 1px)",
-            backgroundSize: "22px 22px",
-            pointerEvents: "none",
-          }}
-        />
-        <div style={{ width: "55%", height: "8px", background: `${accent}55`, borderRadius: "4px" }} />
-        <div style={{ width: "38%", height: "6px", background: "rgba(255,255,255,0.07)", borderRadius: "4px" }} />
-        <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
-          {([1, 2, 3] as number[]).map((i) => (
-            <div
-              key={i}
-              style={{
-                flex: 1,
-                height: "62px",
-                background: "rgba(255,255,255,0.04)",
-                borderRadius: "8px",
-                border: `1px solid ${accent}1a`,
-              }}
-            />
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "0 10px",
+        flexShrink: 0,
+      }}>
+        {/* Esquerda: apple + menus */}
+        <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+          <svg viewBox="0 0 14 17" width="11" height="13" fill="rgba(255,255,255,0.55)" aria-hidden="true">
+            <path d="M13.3 11.4c-.3.7-.6 1.3-1 1.9-.5.8-.9 1.3-1.3 1.6-.5.5-1.1.7-1.7.7-.4 0-.9-.1-1.5-.4-.6-.2-1.1-.4-1.6-.4s-1 .1-1.6.4c-.6.2-1.1.4-1.5.4-.6 0-1.2-.2-1.7-.7-.4-.3-.9-.9-1.3-1.6C.7 12.5.3 11.8.1 11 0 10.1 0 9.3 0 8.5c0-.9.2-1.7.6-2.4.3-.5.7-1 1.3-1.3.6-.4 1.2-.6 1.9-.6.4 0 1 .1 1.6.4.7.3 1.1.4 1.3.4.2 0 .7-.2 1.5-.5.8-.3 1.4-.4 1.9-.3 1.3.1 2.3.6 2.9 1.6-1.2.7-1.7 1.7-1.7 3 0 1 .4 1.9 1.1 2.6.3.3.7.6 1 .7l-.1.3zM9.8.9C9.8 1.7 9.5 2.4 9 3c-.6.6-1.2 1-1.9 1h-.1c0-.8.3-1.5.8-2.1C8.3 1.3 9 .8 9.8.7v.2z" />
+          </svg>
+          {menuItems.map((m) => (
+            <span key={m} style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.45)", fontFamily: "system-ui,sans-serif" }}>{m}</span>
           ))}
         </div>
-        <div style={{ width: "75%", height: "6px", background: "rgba(255,255,255,0.04)", borderRadius: "4px" }} />
-        <div style={{ width: "52%", height: "6px", background: "rgba(255,255,255,0.04)", borderRadius: "4px" }} />
-        <div style={{ width: "65%", height: "6px", background: "rgba(255,255,255,0.03)", borderRadius: "4px" }} />
+        {/* Direita: status */}
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <div style={{ width: "20px", height: "10px", border: "1px solid rgba(255,255,255,0.25)", borderRadius: "3px", position: "relative" }}>
+            <div style={{ position: "absolute", inset: "2px 4px 2px 2px", background: "#34C759", borderRadius: "1px" }} />
+            <div style={{ position: "absolute", right: "-3px", top: "3px", width: "2px", height: "4px", background: "rgba(255,255,255,0.25)", borderRadius: "0 1px 1px 0" }} />
+          </div>
+          <span style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-mono)" }}>9:41</span>
+        </div>
+      </div>
+
+      {/* ── Conteúdo principal ── */}
+      <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
+
+        {/* Sidebar */}
+        <div style={{
+          width: "130px",
+          background: "rgba(18,18,22,0.97)",
+          borderRight: "1px solid rgba(255,255,255,0.05)",
+          padding: "10px 6px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "3px",
+          flexShrink: 0,
+        }}>
+          {sideItems.map((item, i) => (
+            <div key={item} style={{
+              padding: "5px 8px",
+              borderRadius: "6px",
+              background: i === 0 ? `${accent}22` : "transparent",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+            }}>
+              <div style={{ width: "4px", height: "4px", borderRadius: "50%", background: i === 0 ? accent : "rgba(255,255,255,0.15)", flexShrink: 0 }} />
+              <span style={{ fontSize: "0.55rem", color: i === 0 ? accent : "rgba(255,255,255,0.3)", fontFamily: "system-ui,sans-serif" }}>{item}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Área principal */}
+        <div style={{
+          flex: 1,
+          padding: "12px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "8px",
+          background: `linear-gradient(145deg, #0e0e12 0%, ${accent}0e 100%)`,
+          overflow: "hidden",
+        }}>
+
+          {/* Cards de stats */}
+          <div style={{ display: "flex", gap: "6px" }}>
+            {stats.map((s) => (
+              <div key={s.label} style={{
+                flex: 1,
+                padding: "8px 10px",
+                background: "rgba(255,255,255,0.03)",
+                borderRadius: "8px",
+                border: `1px solid ${accent}18`,
+              }}>
+                <div style={{ fontSize: "0.48rem", color: "rgba(255,255,255,0.3)", marginBottom: "3px", fontFamily: "system-ui,sans-serif" }}>{s.label}</div>
+                <div style={{ fontSize: "0.72rem", color: accent, fontFamily: "var(--font-mono)", fontWeight: 700, letterSpacing: "-0.02em" }}>{s.value}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Gráfico de barras */}
+          <div style={{
+            flex: 1,
+            background: "rgba(255,255,255,0.02)",
+            borderRadius: "8px",
+            border: "1px solid rgba(255,255,255,0.04)",
+            padding: "8px 10px",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+          }}>
+            <div style={{ fontSize: "0.48rem", color: "rgba(255,255,255,0.2)", marginBottom: "6px", fontFamily: "system-ui,sans-serif" }}>Activity — Last 12 weeks</div>
+            <div style={{ display: "flex", alignItems: "flex-end", gap: "2.5px", flex: 1 }}>
+              {bars.map((h, i) => (
+                <div key={i} style={{
+                  flex: 1,
+                  height: `${h}%`,
+                  background: i === bars.length - 2
+                    ? accent
+                    : `${accent}${i > bars.length - 4 ? "60" : "30"}`,
+                  borderRadius: "2px 2px 0 0",
+                }} />
+              ))}
+            </div>
+          </div>
+
+          {/* Lista de itens */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+            {[80, 60, 45].map((w, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <div style={{ width: "4px", height: "4px", borderRadius: "50%", background: `${accent}80`, flexShrink: 0 }} />
+                <div style={{ height: "5px", width: `${w}%`, background: "rgba(255,255,255,0.06)", borderRadius: "3px" }} />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -271,8 +331,8 @@ function ScrollMacBook({ project }: { project: Project }) {
       />
 
       <motion.div style={{ y: translateY, opacity, position: "relative", zIndex: 1 }}>
-        {/* ── 3D Perspective container ── */}
-        <div style={{ perspective: "1400px", perspectiveOrigin: "50% 56%" }}>
+        {/* ── Container de perspectiva 3D — ângulo levemente elevado para naturalidade ── */}
+        <div style={{ perspective: "1400px", perspectiveOrigin: "50% 48%" }}>
 
           {/* ════ LID ════ */}
           <motion.div
@@ -290,13 +350,16 @@ function ScrollMacBook({ project }: { project: Project }) {
             */}
             <div
               style={{
-                background: "linear-gradient(175deg, #D8D8DA 0%, #C8C8CA 40%, #BEBEC0 100%)",
+                /* Tampa alumínio — gradiente com specular highlight para efeito metálico */
+                background: "linear-gradient(158deg, #E4E4E6 0%, #D8D8DA 12%, #CACACA 42%, #BCBCBE 72%, #B4B4B6 100%)",
                 borderRadius: "14px 14px 3px 3px",
                 padding: "5px 5px 6px",
                 boxShadow:
-                  "inset 0 0 0 0.5px rgba(255,255,255,0.7), " +
-                  "inset 0 2px 0 rgba(255,255,255,0.5), " +
-                  "0 0 0 0.5px rgba(0,0,0,0.25)",
+                  "inset 0 0 0 0.5px rgba(255,255,255,0.75), " +
+                  "inset 0 2px 0 rgba(255,255,255,0.6), " +
+                  "inset 0 -1px 0 rgba(0,0,0,0.08), " +
+                  "0 0 0 0.5px rgba(0,0,0,0.28), " +
+                  "0 -2px 8px rgba(0,0,0,0.15)",
               }}
             >
               {/*
@@ -311,8 +374,8 @@ function ScrollMacBook({ project }: { project: Project }) {
                   position: "relative",
                 }}
               >
-                {/* Screen content */}
-                <div style={{ aspectRatio: "16/10", overflow: "hidden", display: "flex" }}>
+                {/* Conteúdo da tela */}
+                <div style={{ aspectRatio: "16/10", overflow: "hidden", display: "flex", position: "relative" }}>
                   {project.video ? (
                     <video
                       src={project.video}
@@ -332,6 +395,18 @@ function ScrollMacBook({ project }: { project: Project }) {
                   ) : (
                     <MacOSPlaceholder accent={project.accent} />
                   )}
+                  {/* Reflexo de vidro diagonal — simula brilho da tela */}
+                  <div
+                    aria-hidden="true"
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      background:
+                        "linear-gradient(135deg, rgba(255,255,255,0.07) 0%, transparent 35%, transparent 70%, rgba(255,255,255,0.03) 100%)",
+                      pointerEvents: "none",
+                      zIndex: 3,
+                    }}
+                  />
                 </div>
 
                 {/*
@@ -421,14 +496,23 @@ function ScrollMacBook({ project }: { project: Project }) {
           </div>
           {/* ════ END BASE ════ */}
 
-          {/* Surface shadow */}
+          {/* Sombra projetada na superfície — dupla camada para realismo */}
           <div
             style={{
-              marginTop: "10px",
-              height: "28px",
+              marginTop: "0px",
+              height: "40px",
               background:
-                "radial-gradient(ellipse at 50% 0%, rgba(0,0,0,0.55) 0%, transparent 68%)",
-              filter: "blur(8px)",
+                "radial-gradient(ellipse 90% 100% at 50% 0%, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 50%, transparent 80%)",
+              filter: "blur(10px)",
+            }}
+          />
+          <div
+            style={{
+              marginTop: "-16px",
+              height: "60px",
+              background:
+                "radial-gradient(ellipse 70% 100% at 50% 0%, rgba(0,0,0,0.25) 0%, transparent 70%)",
+              filter: "blur(18px)",
             }}
           />
         </div>
@@ -667,7 +751,7 @@ function ProjectSection({
 
         {/* ── MacBook block ── */}
         <div style={{ display: "flex", justifyContent: "center" }}>
-          <div style={{ width: "min(960px, 100%)" }}>
+          <div style={{ width: "min(1080px, 100%)" }}>
             <ScrollMacBook project={project} />
           </div>
         </div>
