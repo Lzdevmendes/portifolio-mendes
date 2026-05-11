@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import { Github, ExternalLink } from "lucide-react";
 import { useLanguage } from "@/contexts/language";
 import type { Lang } from "@/contexts/language";
@@ -234,7 +234,7 @@ function MacOSPlaceholder({ accent }: { accent: string }) {
 }
 
 /* ─── Montagem completa do MacBook — fiel ao MacBook Pro 14" ─── */
-function ScrollMacBook({ project, isMobile }: { project: Project; isMobile: boolean }) {
+function ScrollMacBook({ project }: { project: Project }) {
   const macbookRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -249,38 +249,8 @@ function ScrollMacBook({ project, isMobile }: { project: Project; isMobile: bool
   const opacity     = useTransform(scrollYProgress, [0, 0.20], [0, 1]);
   // Tampa abre progressivamente — totalmente aberta com 100% visível
   const lidRotateX  = useTransform(scrollYProgress, [0.05, 1.0], [-102, -17]);
-  // Brilho cresce junto com a abertura da tampa (desativado no mobile)
-  const glowOpacity = useTransform(scrollYProgress, [0.12, 1.0], [0, isMobile ? 0 : 0.7]);
-
-  /* Versão mobile: apenas a tela sem 3D, sem teclado, sem animações pesadas */
-  if (isMobile) {
-    return (
-      <motion.div
-        ref={macbookRef}
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-40px" }}
-        transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
-        style={{
-          borderRadius: "14px",
-          overflow: "hidden",
-          border: `1px solid ${project.accent}30`,
-          boxShadow: `0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04)`,
-          aspectRatio: "16/10",
-          position: "relative",
-        }}
-      >
-        {project.video ? (
-          <video src={project.video} autoPlay muted loop playsInline style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-        ) : project.image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={project.image} alt={project.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-        ) : (
-          <MacOSPlaceholder accent={project.accent} />
-        )}
-      </motion.div>
-    );
-  }
+  // Brilho cresce junto com a abertura da tampa
+  const glowOpacity = useTransform(scrollYProgress, [0.12, 1.0], [0, 0.7]);
 
   return (
     <div ref={macbookRef} style={{ position: "relative" }}>
@@ -659,12 +629,10 @@ function ProjectSection({
   project,
   index,
   lang,
-  isMobile,
 }: {
   project: Project;
   index: number;
   lang: Lang;
-  isMobile: boolean;
 }) {
   const isLast = index === 4;
 
@@ -700,7 +668,7 @@ function ProjectSection({
         {/* ── MacBook block ── */}
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div style={{ width: "min(960px, 100%)" }}>
-            <ScrollMacBook project={project} isMobile={isMobile} />
+            <ScrollMacBook project={project} />
           </div>
         </div>
       </div>
@@ -731,15 +699,6 @@ function ProjectSection({
 export default function ProjectsShowcase() {
   const { lang } = useLanguage();
   const projects = PROJECTS[lang];
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 768px)");
-    setIsMobile(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
 
   return (
     <div>
@@ -809,7 +768,7 @@ export default function ProjectsShowcase() {
 
       {/* Projects */}
       {projects.map((project, i) => (
-        <ProjectSection key={project.num} project={project} index={i} lang={lang} isMobile={isMobile} />
+        <ProjectSection key={project.num} project={project} index={i} lang={lang} />
       ))}
 
       {/* Responsive */}
