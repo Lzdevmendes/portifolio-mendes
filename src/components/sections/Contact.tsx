@@ -156,10 +156,11 @@ export default function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.65, delay: 0.08, ease }}
+          className="contact-heading"
           style={{
             fontFamily: "var(--font-syne)",
             fontWeight: 800,
-            fontSize: "clamp(3rem, 8vw, 5.5rem)",
+            fontSize: "clamp(2.8rem, 8vw, 5.5rem)",
             letterSpacing: "-0.04em",
             lineHeight: 1.0,
             color: "var(--color-text)",
@@ -263,9 +264,21 @@ export default function Contact() {
 
       <style>{`
         @media (max-width: 560px) {
-          #contact { padding: 72px 20px 96px !important; }
-          .contact-channel-card { width: 100% !important; flex-direction: row !important; text-align: left !important; padding: 16px 20px !important; }
-          .contact-channel-icon { margin: 0 !important; }
+          #contact { padding: 72px 20px 80px !important; }
+          .contact-channel-card {
+            width: 100% !important;
+            flex-direction: row !important;
+            text-align: left !important;
+            padding: 16px 20px !important;
+            gap: 16px !important;
+            align-items: center !important;
+          }
+          .contact-channel-icon { margin: 0 !important; flex-shrink: 0; }
+          .contact-channel-arrow { display: none !important; }
+        }
+        @media (max-width: 400px) {
+          #contact { padding: 56px 16px 72px !important; }
+          .contact-heading { font-size: 2.5rem !important; }
         }
       `}</style>
     </section>
@@ -339,7 +352,7 @@ const ChannelCard = memo(function ChannelCard({
         }}
       />
 
-      {/* Icon */}
+      {/* Ícone do canal */}
       <div
         className="contact-channel-icon"
         style={{
@@ -386,7 +399,7 @@ const ChannelCard = memo(function ChannelCard({
 
       {/* Arrow indicator */}
       {external && (
-        <div style={{ color, opacity: 0.5, marginTop: "2px" }}>
+        <div className="contact-channel-arrow" style={{ color, opacity: 0.5, marginTop: "2px" }}>
           <ArrowUpRight size={13} />
         </div>
       )}

@@ -168,6 +168,13 @@ export default function Skills() {
         .skill-pill {
           transition: border-color 0.18s, color 0.18s, background-color 0.18s;
         }
+        @media (max-width: 560px) {
+          #skills { padding: 64px 16px !important; }
+          .skills-header-desc { display: none !important; }
+        }
+        @media (max-width: 400px) {
+          #skills { padding: 48px 12px !important; }
+        }
       `}</style>
 
       {/* Separator */}

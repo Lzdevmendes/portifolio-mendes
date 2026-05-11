@@ -773,6 +773,7 @@ function ProjectSection({
       />
 
       <div
+        className="projects-section-inner"
         style={{
           maxWidth: "1280px",
           margin: "0 auto",
@@ -793,9 +794,9 @@ function ProjectSection({
         </div>
       </div>
 
-      {/* Separator — 64px acima da linha, 64px abaixo (próx. projeto paddingTop) */}
       {!isLast && (
         <div
+          className="project-separator"
           style={{
             maxWidth: "1280px",
             margin: "64px auto 0",
@@ -828,6 +829,7 @@ export default function ProjectsShowcase() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+        className="projects-header"
         style={{
           maxWidth: "1280px",
           margin: "0 auto",
@@ -897,6 +899,17 @@ export default function ProjectsShowcase() {
             grid-template-columns: 1fr !important;
             gap: 24px !important;
           }
+        }
+        /* Reduce padding on mobile so content doesn't get crushed */
+        @media (max-width: 600px) {
+          .projects-section-inner { padding: 0 20px !important; }
+          .projects-header { padding: 60px 20px 0 !important; }
+          .project-section { padding-bottom: 60px !important; }
+          .project-separator { padding: 0 20px !important; margin-top: 48px !important; }
+        }
+        @media (max-width: 400px) {
+          .projects-section-inner { padding: 0 16px !important; }
+          .projects-header { padding: 48px 16px 0 !important; }
         }
       `}</style>
     </div>
