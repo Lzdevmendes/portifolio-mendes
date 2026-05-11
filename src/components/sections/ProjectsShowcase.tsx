@@ -558,15 +558,6 @@ function ScrollMacBook({ project }: { project: Project }) {
           </div>
           {/* ════ FIM DA BASE ════ */}
 
-          {/* Borda inferior — perfil frontal do MacBook */}
-          <div
-            style={{
-              height: "4px",
-              background: "linear-gradient(180deg, #A0A0A2 0%, #8E8E90 100%)",
-              borderRadius: "0 0 8px 8px",
-              boxShadow: "inset 0 -1px 0 rgba(0,0,0,0.15)",
-            }}
-          />
 
           {/* Sombra projetada na superfície — dupla camada para realismo */}
           <div
