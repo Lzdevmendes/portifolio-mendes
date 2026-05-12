@@ -3,6 +3,26 @@
 import { motion } from "framer-motion";
 import { memo, useState } from "react";
 import { ExternalLink, Award } from "lucide-react";
+import { useLanguage } from "@/contexts/language";
+
+const CERTS_T = {
+  pt: {
+    label: "Formação",
+    heading: "Certificações &",
+    headingAccent: "Cursos",
+    count: (n: number) => `${n} certificações em plataformas reconhecidas globalmente`,
+    viewCert: "Ver certificado",
+    ariaPrefix: "Certificação:",
+  },
+  en: {
+    label: "Education",
+    heading: "Certifications &",
+    headingAccent: "Courses",
+    count: (n: number) => `${n} certifications from globally recognized platforms`,
+    viewCert: "View certificate",
+    ariaPrefix: "Certification:",
+  },
+};
 
 interface Certification {
   title: string;
@@ -92,10 +112,13 @@ const cardVariants = {
 };
 
 export default function Certifications() {
+  const { lang } = useLanguage();
+  const t = CERTS_T[lang];
+
   return (
     <section
       id="certifications"
-      aria-label="Certificações e Cursos"
+      aria-label={lang === "pt" ? "Certificações e Cursos" : "Certifications and Courses"}
       style={{ padding: "80px 24px", position: "relative" }}
     >
       <style>{`
@@ -146,7 +169,7 @@ export default function Certifications() {
               marginBottom: "16px",
             }}
           >
-            Formação
+            {t.label}
           </span>
           <div
             style={{
@@ -167,8 +190,8 @@ export default function Certifications() {
                 color: "var(--color-text)",
               }}
             >
-              Certificações &{" "}
-              <span style={{ color: "var(--color-teal)" }}>Cursos</span>
+              {t.heading}{" "}
+              <span style={{ color: "var(--color-teal)" }}>{t.headingAccent}</span>
             </h2>
             <p
               style={{
@@ -179,7 +202,7 @@ export default function Certifications() {
                 whiteSpace: "nowrap",
               }}
             >
-              {certifications.length} certificações em plataformas reconhecidas globalmente
+              {t.count(certifications.length)}
             </p>
           </div>
         </motion.div>
@@ -240,7 +263,7 @@ export default function Certifications() {
           }}
         >
           {certifications.map((cert) => (
-            <CertCard key={cert.title} cert={cert} />
+            <CertCard key={cert.title} cert={cert} viewCertLabel={t.viewCert} ariaPrefix={t.ariaPrefix} />
           ))}
         </motion.div>
       </div>
@@ -248,14 +271,22 @@ export default function Certifications() {
   );
 }
 
-const CertCard = memo(function CertCard({ cert }: { cert: Certification }) {
+const CertCard = memo(function CertCard({
+  cert,
+  viewCertLabel,
+  ariaPrefix,
+}: {
+  cert: Certification;
+  viewCertLabel: string;
+  ariaPrefix: string;
+}) {
   const [hovered, setHovered] = useState(false);
 
   return (
     <motion.div
       variants={cardVariants}
       role="article"
-      aria-label={`Certificação: ${cert.title} — ${cert.issuer}, ${cert.date}`}
+      aria-label={`${ariaPrefix} ${cert.title} — ${cert.issuer}, ${cert.date}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -419,7 +450,7 @@ const CertCard = memo(function CertCard({ cert }: { cert: Certification }) {
           href={cert.credentialUrl}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label={`Ver certificado de ${cert.title} na ${cert.issuer} (abre em nova aba)`}
+          aria-label={`${viewCertLabel} — ${cert.title} (${cert.issuer})`}
           animate={{
             color: hovered ? cert.color : "var(--color-muted)",
           }}
@@ -437,7 +468,7 @@ const CertCard = memo(function CertCard({ cert }: { cert: Certification }) {
             paddingTop: "4px",
           }}
         >
-          Ver certificado
+          {viewCertLabel}
           <ExternalLink size={12} strokeWidth={2} />
         </motion.a>
       )}

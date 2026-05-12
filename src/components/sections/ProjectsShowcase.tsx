@@ -60,30 +60,6 @@ const PROJECTS: Record<Lang, Project[]> = {
       image: null,
       video: null,
     },
-    {
-      num: "04",
-      client: "A definir",
-      title: "Projeto 04 — título a preencher",
-      description: "Descrição a preencher pelo usuário após implementação.",
-      stack: [],
-      github: "https://github.com/Lzdevmendes",
-      live: null,
-      accent: "#EC4899",
-      image: null,
-      video: null,
-    },
-    {
-      num: "05",
-      client: "A definir",
-      title: "Projeto 05 — título a preencher",
-      description: "Descrição a preencher pelo usuário após implementação.",
-      stack: [],
-      github: "https://github.com/Lzdevmendes",
-      live: null,
-      accent: "#8B5CF6",
-      image: null,
-      video: null,
-    },
   ],
   en: [
     {
@@ -122,30 +98,6 @@ const PROJECTS: Record<Lang, Project[]> = {
       github: "https://github.com/Lzdevmendes",
       live: null,
       accent: "#F59E0B",
-      image: null,
-      video: null,
-    },
-    {
-      num: "04",
-      client: "TBD",
-      title: "Project 04 — title to be filled",
-      description: "Description to be provided by user after implementation.",
-      stack: [],
-      github: "https://github.com/Lzdevmendes",
-      live: null,
-      accent: "#EC4899",
-      image: null,
-      video: null,
-    },
-    {
-      num: "05",
-      client: "TBD",
-      title: "Project 05 — title to be filled",
-      description: "Description to be provided by user after implementation.",
-      stack: [],
-      github: "https://github.com/Lzdevmendes",
-      live: null,
-      accent: "#8B5CF6",
       image: null,
       video: null,
     },
@@ -775,13 +727,14 @@ function ProjectInfoPanel({ project, lang }: { project: Project; lang: Lang }) {
 function ProjectSection({
   project,
   index,
+  isLast,
   lang,
 }: {
   project: Project;
   index: number;
+  isLast: boolean;
   lang: Lang;
 }) {
-  const isLast = index === 4;
 
   return (
     <section
@@ -915,7 +868,7 @@ export default function ProjectsShowcase() {
 
       {/* Projects */}
       {projects.map((project, i) => (
-        <ProjectSection key={project.num} project={project} index={i} lang={lang} />
+        <ProjectSection key={project.num} project={project} index={i} isLast={i === projects.length - 1} lang={lang} />
       ))}
 
       {/* Responsive */}

@@ -2,8 +2,10 @@
 
 import { motion } from "framer-motion";
 import { MapPin, ArrowUp } from "lucide-react";
+import { useLanguage } from "@/contexts/language";
 
 export default function Footer() {
+  const { lang } = useLanguage();
   const year = new Date().getFullYear();
 
   return (
@@ -82,7 +84,7 @@ export default function Footer() {
           }}
         >
           <ArrowUp size={12} />
-          Voltar ao topo
+          {lang === "pt" ? "Voltar ao topo" : "Back to top"}
         </motion.button>
 
         {/* Copyright */}
@@ -93,7 +95,7 @@ export default function Footer() {
             color: "var(--color-muted)",
           }}
         >
-          © {year} Luiz Mendes. Todos os direitos reservados.
+          © {year} Luiz Mendes. {lang === "pt" ? "Todos os direitos reservados." : "All rights reserved."}
         </span>
       </div>
     </footer>

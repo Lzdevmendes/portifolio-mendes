@@ -3,8 +3,10 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/contexts/language";
 
 export default function BackToTop() {
+  const { lang } = useLanguage();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -35,7 +37,7 @@ export default function BackToTop() {
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             whileHover={{ scale: 1.1, y: -3, boxShadow: "0 12px 32px rgba(13,148,136,0.3)" }}
             whileTap={{ scale: 0.92 }}
-            aria-label="Voltar ao topo da página"
+            aria-label={lang === "pt" ? "Voltar ao topo da página" : "Back to top"}
             style={{
               position: "fixed",
               right: "20px",
