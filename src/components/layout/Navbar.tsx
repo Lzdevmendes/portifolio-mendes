@@ -200,7 +200,7 @@ export default function Navbar() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.42 }}
           >
-            <HireButton />
+            <HireButton lang={lang} />
           </motion.li>
           <motion.li
             initial={{ opacity: 0, scale: 0.9 }}
@@ -224,7 +224,7 @@ export default function Navbar() {
             display: "none",
           }}
           className="show-mobile"
-          aria-label="Abrir menu"
+          aria-label={lang === "pt" ? "Abrir menu" : "Open menu"}
         >
           <AnimatePresence mode="wait" initial={false}>
             <motion.span
@@ -294,7 +294,7 @@ export default function Navbar() {
                 );
               })}
               <li style={{ paddingTop: "16px" }}>
-                <HireButton />
+                <HireButton lang={lang} />
               </li>
               <li style={{ paddingTop: "10px" }}>
                 <LangToggle lang={lang} toggle={toggle} />
@@ -439,7 +439,7 @@ function LangToggle({ lang, toggle }: { lang: "pt" | "en"; toggle: () => void })
   );
 }
 
-function HireButton() {
+function HireButton({ lang }: { lang: "pt" | "en" }) {
   return (
     <motion.a
       href="#contact"
@@ -456,7 +456,7 @@ function HireButton() {
         fontWeight: 500,
       }}
     >
-      Me contratar
+      {lang === "pt" ? "Me contratar" : "Hire me"}
     </motion.a>
   );
 }

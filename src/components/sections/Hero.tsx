@@ -473,6 +473,7 @@ function HeroBackground() {
 
 // ─── Code terminal ────────────────────────────────────────────────────────────
 function CodeTerminal() {
+  const { lang } = useLanguage();
   const [visible, setVisible] = useState(0);
   const [blink, setBlink] = useState(true);
   const [done, setDone] = useState(false);
@@ -608,7 +609,7 @@ function CodeTerminal() {
             }}
           >
             <span style={{ color: "#14B8A6" }}>❯</span>
-            <span style={{ color: "rgba(255,255,255,0.3)" }}>Pronto para colaborar</span>
+            <span style={{ color: "rgba(255,255,255,0.3)" }}>{lang === "pt" ? "Pronto para colaborar" : "Ready to collaborate"}</span>
             <span
               style={{
                 display: "inline-block",

@@ -71,7 +71,7 @@ export default function MobileBottomNav() {
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1], delay: 0.6 }}
-        aria-label="Navegação inferior"
+        aria-label={lang === "pt" ? "Navegação inferior" : "Bottom navigation"}
         style={{
           position: "fixed",
           bottom: 0,
