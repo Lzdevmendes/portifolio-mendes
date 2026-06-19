@@ -264,7 +264,7 @@ export default function About() {
               ))}
               <span style={{ color: "rgba(255,255,255,0.22)", fontSize: "0.65rem", marginLeft: "4px" }}>profile.ts</span>
             </div>
-            <div><span style={{ color: "#5C6370" }}>// Luiz Mendes</span></div>
+            <div><span style={{ color: "#5C6370" }}>{"// Luiz Mendes"}</span></div>
             <div>
               <span style={{ color: "#C678DD" }}>const </span>
               <span style={{ color: "#E5C07B" }}>profile </span>
@@ -292,7 +292,7 @@ export default function About() {
               <span style={{ color: "#E06C75" }}>coffee</span>
               <span style={{ color: "#ABB2BF" }}>: </span>
               <span style={{ color: "#D19A66" }}>Infinity</span>
-              <span style={{ color: "#5C6370" }}> // ☕</span>
+              <span style={{ color: "#5C6370" }}>{" // ☕"}</span>
             </div>
             <div>
               <span style={{ color: "#ABB2BF" }}>{"}"}</span>

@@ -20,6 +20,7 @@ export default function MobileBottomNav() {
 
   // Monta apenas no cliente — evita SSR mismatch e garante que matchMedia existe
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
