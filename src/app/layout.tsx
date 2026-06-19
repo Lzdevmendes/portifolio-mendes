@@ -23,6 +23,7 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://lz.dev.br"),
   icons: {
     icon: "/favicon.png",
     apple: "/favicon.png",
