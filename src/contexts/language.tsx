@@ -16,6 +16,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const saved = localStorage.getItem("portfolio-lang") as Lang | null;
+    // Lê a preferência salva só no cliente (evita mismatch de hidratação).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (saved === "en" || saved === "pt") setLang(saved);
   }, []);
 

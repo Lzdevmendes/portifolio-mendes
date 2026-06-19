@@ -726,12 +726,10 @@ function ProjectInfoPanel({ project, lang }: { project: Project; lang: Lang }) {
 /* ─── Seção de um único projeto ─── */
 function ProjectSection({
   project,
-  index,
   isLast,
   lang,
 }: {
   project: Project;
-  index: number;
   isLast: boolean;
   lang: Lang;
 }) {
@@ -868,7 +866,7 @@ export default function ProjectsShowcase() {
 
       {/* Projects */}
       {projects.map((project, i) => (
-        <ProjectSection key={project.num} project={project} index={i} isLast={i === projects.length - 1} lang={lang} />
+        <ProjectSection key={project.num} project={project} isLast={i === projects.length - 1} lang={lang} />
       ))}
 
       {/* Responsive */}
