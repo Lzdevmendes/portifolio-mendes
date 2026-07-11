@@ -1,4 +1,22 @@
 import Providers from "@/components/layout/Providers";
+import Maintenance from "@/components/sections/Maintenance";
+
+// ─────────────────────────────────────────────────────────────
+// MODO MANUTENÇÃO ATIVO
+// O portfólio completo está preservado abaixo (comentado).
+// Para voltar ao ar: descomente o bloco do portfólio, remova o
+// <Maintenance /> e apague este aviso.
+// ─────────────────────────────────────────────────────────────
+
+export default function Home() {
+  return (
+    <Providers>
+      <Maintenance />
+    </Providers>
+  );
+}
+
+/* ── PORTFÓLIO COMPLETO (restaurar quando terminar) ──────────────
 import Navbar from "@/components/layout/Navbar";
 import MobileBottomNav from "@/components/layout/MobileBottomNav";
 import BackToTop from "@/components/layout/BackToTop";
@@ -33,3 +51,4 @@ export default function Home() {
     </Providers>
   );
 }
+──────────────────────────────────────────────────────────────── */
