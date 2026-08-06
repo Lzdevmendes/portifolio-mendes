@@ -1,9 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { memo, useState } from "react";
 import { ExternalLink, Award } from "lucide-react";
 import { useLanguage } from "@/contexts/language";
+import { CERTIFICATIONS as certifications, type Certification } from "@/data/certifications";
 
 const CERTS_T = {
   pt: {
@@ -23,73 +24,6 @@ const CERTS_T = {
     ariaPrefix: "Certification:",
   },
 };
-
-interface Certification {
-  title: string;
-  issuer: string;
-  date: string;
-  credentialUrl?: string;
-  skills: string[];
-  color: string;
-  tag: string;
-}
-
-const certifications: Certification[] = [
-  {
-    title: "Full-Stack Training",
-    issuer: "Rocketseat",
-    date: "2024",
-    credentialUrl: "https://app.rocketseat.com.br",
-    skills: ["Node.js", "React", "TypeScript", "REST API"],
-    color: "#7C3AED",
-    tag: "Full-Stack",
-  },
-  {
-    title: "React Developer",
-    issuer: "Rocketseat",
-    date: "2024",
-    credentialUrl: "https://app.rocketseat.com.br",
-    skills: ["React", "Next.js", "Hooks", "Context API"],
-    color: "#06B6D4",
-    tag: "Frontend",
-  },
-  {
-    title: "Node.js Developer",
-    issuer: "Rocketseat",
-    date: "2023",
-    credentialUrl: "https://app.rocketseat.com.br",
-    skills: ["Node.js", "NestJS", "PostgreSQL", "Prisma"],
-    color: "#0D9488",
-    tag: "Backend",
-  },
-  {
-    title: "AWS Cloud Practitioner",
-    issuer: "Amazon Web Services",
-    date: "2024",
-    credentialUrl: "https://aws.amazon.com/certification",
-    skills: ["AWS", "Cloud", "EC2", "S3", "Lambda"],
-    color: "#F59E0B",
-    tag: "Cloud",
-  },
-  {
-    title: "JavaScript Algorithms & Data Structures",
-    issuer: "freeCodeCamp",
-    date: "2023",
-    credentialUrl: "https://www.freecodecamp.org",
-    skills: ["JavaScript", "Algorithms", "ES6+"],
-    color: "#3B82F6",
-    tag: "Fundamentals",
-  },
-  {
-    title: "Advanced TypeScript",
-    issuer: "DIO",
-    date: "2023",
-    credentialUrl: "https://www.dio.me",
-    skills: ["TypeScript", "Generics", "Decorators", "OOP"],
-    color: "#EC4899",
-    tag: "Language",
-  },
-];
 
 const containerVariants = {
   hidden: {},
@@ -150,7 +84,7 @@ export default function Certifications() {
 
       <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
         {/* Header */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -205,10 +139,10 @@ export default function Certifications() {
               {t.count(certifications.length)}
             </p>
           </div>
-        </motion.div>
+        </m.div>
 
         {/* Platform badges */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -223,10 +157,10 @@ export default function Certifications() {
           }}
         >
           {[
-            { name: "Rocketseat", color: "#7C3AED" },
-            { name: "Amazon Web Services", color: "#F59E0B" },
-            { name: "freeCodeCamp", color: "#3B82F6" },
-            { name: "DIO", color: "#EC4899" },
+            { name: "IFSP", color: "#06B6D4" },
+            { name: "DIO", color: "#0D9488" },
+            { name: "Universia", color: "#8B5CF6" },
+            { name: "Anhanguera", color: "#F59E0B" },
           ].map((p) => (
             <span
               key={p.name}
@@ -248,10 +182,10 @@ export default function Certifications() {
               {p.name}
             </span>
           ))}
-        </motion.div>
+        </m.div>
 
         {/* Grid */}
-        <motion.div
+        <m.div
           className="certs-grid"
           variants={containerVariants}
           initial="hidden"
@@ -265,7 +199,7 @@ export default function Certifications() {
           {certifications.map((cert) => (
             <CertCard key={cert.title} cert={cert} viewCertLabel={t.viewCert} ariaPrefix={t.ariaPrefix} />
           ))}
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );
@@ -283,7 +217,7 @@ const CertCard = memo(function CertCard({
   const [hovered, setHovered] = useState(false);
 
   return (
-    <motion.div
+    <m.div
       variants={cardVariants}
       role="article"
       aria-label={`${ariaPrefix} ${cert.title} — ${cert.issuer}, ${cert.date}`}
@@ -304,7 +238,7 @@ const CertCard = memo(function CertCard({
       }}
     >
       {/* Top accent bar */}
-      <motion.div
+      <m.div
         animate={{ opacity: hovered ? 1 : 0 }}
         transition={{ duration: 0.25 }}
         style={{
@@ -446,7 +380,7 @@ const CertCard = memo(function CertCard({
 
       {/* Credential link */}
       {cert.credentialUrl && (
-        <motion.a
+        <m.a
           href={cert.credentialUrl}
           target="_blank"
           rel="noopener noreferrer"
@@ -470,8 +404,8 @@ const CertCard = memo(function CertCard({
         >
           {viewCertLabel}
           <ExternalLink size={12} strokeWidth={2} />
-        </motion.a>
+        </m.a>
       )}
-    </motion.div>
+    </m.div>
   );
 });

@@ -1,108 +1,11 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { m, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Github, ExternalLink } from "lucide-react";
 import { useLanguage } from "@/contexts/language";
 import type { Lang } from "@/contexts/language";
-
-interface Project {
-  num: string;
-  client: string;
-  title: string;
-  description: string;
-  stack: string[];
-  github: string;
-  live: string | null;
-  accent: string;
-  image?: string | null;
-  video?: string | null;
-}
-
-const PROJECTS: Record<Lang, Project[]> = {
-  pt: [
-    {
-      num: "01",
-      client: "Multiclínica",
-      title: "Plataforma de Gestão de Saúde",
-      description:
-        "Plataforma completa de gestão de pacientes, prontuários e faturamento com $1.0M+ em transações processadas via Stripe. Sistema de agendamento em tempo real com WebSockets e automação de prontuários que reduziu 40% no tempo de atendimento.",
-      stack: ["React", "Node.js", "TypeScript", "PostgreSQL", "Stripe", "AWS"],
-      github: "https://github.com/Lzdevmendes",
-      live: null,
-      accent: "#0D9488",
-      image: null,
-      video: null,
-    },
-    {
-      num: "02",
-      client: "Obracon × Sabesp",
-      title: "Sistema de Inspeção de Infraestrutura",
-      description:
-        "Gestão de infraestrutura hídrica para a Sabesp com módulos de checklist para inspeção em campo, integração com APIs de geolocalização e IoT. Arquitetura escalável com entrega end-to-end em ambiente de alta disponibilidade.",
-      stack: ["Node.js", "React", ".NET", "PostgreSQL", "Docker", "Azure"],
-      github: "https://github.com/Lzdevmendes",
-      live: null,
-      accent: "#6366F1",
-      image: null,
-      video: null,
-    },
-    {
-      num: "03",
-      client: "GCB × Petrobras",
-      title: "Gestão Operacional Offshore",
-      description:
-        "Sistemas internos de gestão operacional para unidades offshore da Petrobras. Relatórios de produção em tempo real, otimização de queries SQL com 60% de redução no tempo de resposta e pipeline CI/CD com Azure DevOps.",
-      stack: [".NET", "React", "SQL Server", "C#", "Azure DevOps"],
-      github: "https://github.com/Lzdevmendes",
-      live: null,
-      accent: "#F59E0B",
-      image: null,
-      video: null,
-    },
-  ],
-  en: [
-    {
-      num: "01",
-      client: "Multiclínica",
-      title: "Healthcare Management Platform",
-      description:
-        "Complete patient management, medical records, and billing platform with $1.0M+ in transactions processed via Stripe. Real-time scheduling with WebSockets and automation that reduced service time by 40%.",
-      stack: ["React", "Node.js", "TypeScript", "PostgreSQL", "Stripe", "AWS"],
-      github: "https://github.com/Lzdevmendes",
-      live: null,
-      accent: "#0D9488",
-      image: null,
-      video: null,
-    },
-    {
-      num: "02",
-      client: "Obracon × Sabesp",
-      title: "Water Infrastructure Inspection System",
-      description:
-        "Water infrastructure management system for Sabesp with field inspection checklists, geolocation and IoT API integrations. Scalable architecture with end-to-end feature delivery in high-availability environment.",
-      stack: ["Node.js", "React", ".NET", "PostgreSQL", "Docker", "Azure"],
-      github: "https://github.com/Lzdevmendes",
-      live: null,
-      accent: "#6366F1",
-      image: null,
-      video: null,
-    },
-    {
-      num: "03",
-      client: "GCB × Petrobras",
-      title: "Offshore Operations Management",
-      description:
-        "Internal operational management systems for Petrobras offshore units. Real-time production reports, SQL query optimization with 60% reduction in response time, and complete CI/CD pipeline with Azure DevOps.",
-      stack: [".NET", "React", "SQL Server", "C#", "Azure DevOps"],
-      github: "https://github.com/Lzdevmendes",
-      live: null,
-      accent: "#F59E0B",
-      image: null,
-      video: null,
-    },
-  ],
-};
+import { PROJECTS, type Project } from "@/data/projects";
 
 /* ─── Placeholder macOS realista — simula interface de dashboard ─── */
 function MacOSPlaceholder({ accent }: { accent: string }) {
@@ -267,7 +170,7 @@ function ScrollMacBook({ project }: { project: Project }) {
   return (
     <div ref={macbookRef} style={{ position: "relative" }}>
       {/* Brilho accent atrás da tela — blur leve para melhor performance */}
-      <motion.div
+      <m.div
         style={{
           position: "absolute",
           top: "-10%",
@@ -282,12 +185,12 @@ function ScrollMacBook({ project }: { project: Project }) {
         }}
       />
 
-      <motion.div style={{ y: translateY, opacity, position: "relative", zIndex: 1 }}>
+      <m.div style={{ y: translateY, opacity, position: "relative", zIndex: 1 }}>
         {/* ── Container de perspectiva 3D — ângulo levemente elevado para naturalidade ── */}
         <div style={{ perspective: "1400px", perspectiveOrigin: "50% 48%" }}>
 
           {/* ════ LID ════ */}
-          <motion.div
+          <m.div
             style={{
               transformOrigin: "center bottom",
               rotateX: lidRotateX,
@@ -395,7 +298,7 @@ function ScrollMacBook({ project }: { project: Project }) {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </m.div>
           {/* ════ END LID ════ */}
 
           {/* ── Dobradiça — estrutura em 3 camadas para profundidade real ── */}
@@ -531,7 +434,7 @@ function ScrollMacBook({ project }: { project: Project }) {
             }}
           />
         </div>
-      </motion.div>
+      </m.div>
     </div>
   );
 }
@@ -539,7 +442,7 @@ function ScrollMacBook({ project }: { project: Project }) {
 /* ─── Project info panel — same 960px width as MacBook ─── */
 function ProjectInfoPanel({ project, lang }: { project: Project; lang: Lang }) {
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
@@ -666,7 +569,7 @@ function ProjectInfoPanel({ project, lang }: { project: Project; lang: Lang }) {
 
           {/* CTAs */}
           <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-            <motion.a
+            <m.a
               href={project.github}
               target="_blank"
               rel="noopener noreferrer"
@@ -690,9 +593,9 @@ function ProjectInfoPanel({ project, lang }: { project: Project; lang: Lang }) {
             >
               <Github size={14} />
               GitHub
-            </motion.a>
+            </m.a>
             {project.live && (
-              <motion.a
+              <m.a
                 href={project.live}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -714,12 +617,12 @@ function ProjectInfoPanel({ project, lang }: { project: Project; lang: Lang }) {
               >
                 <ExternalLink size={14} />
                 {lang === "pt" ? "Ver Projeto" : "Live Demo"}
-              </motion.a>
+              </m.a>
             )}
           </div>
         </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -801,7 +704,7 @@ export default function ProjectsShowcase() {
   return (
     <div>
       {/* Section header */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -862,7 +765,7 @@ export default function ProjectsShowcase() {
             ? "Projetos que geraram impacto real em produção."
             : "Projects that generated real impact in production."}
         </p>
-      </motion.div>
+      </m.div>
 
       {/* Projects */}
       {projects.map((project, i) => (
