@@ -1,109 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Briefcase, ArrowUpRight } from "lucide-react";
 import { useLanguage } from "@/contexts/language";
 import type { Lang } from "@/contexts/language";
-
-interface Experience {
-  period: string;
-  current: boolean;
-  role: string;
-  company: string;
-  client?: string;
-  description: string;
-  stack: string[];
-  highlights: string[];
-}
-
-const EXPERIENCES: Record<Lang, Experience[]> = {
-  pt: [
-    {
-      period: "Mar. 2023 — Mar. 2026",
-      current: false,
-      role: "Desenvolvedor Full Stack",
-      company: "Obracon",
-      client: "Sabesp",
-      description: "Desenvolvimento de sistemas de inspeção e gestão de infraestrutura hídrica para a Sabesp. Atuei em funcionalidades críticas de produção, integrações com APIs externas e manutenção de arquitetura escalável.",
-      stack: ["Node.js", "React", ".NET", "PostgreSQL", "Docker", "Azure"],
-      highlights: [
-        "Implementação de módulos de checklist para inspeção em campo",
-        "Integração com APIs de geolocalização e IoT",
-        "Entrega de features end-to-end em ambiente de alta disponibilidade",
-      ],
-    },
-    {
-      period: "2022 — 2023",
-      current: false,
-      role: "Desenvolvedor Full Stack",
-      company: "Multiclínica",
-      description: "Desenvolvimento de plataforma de gestão de pacientes, prontuários e faturamento. Implementação de soluções de pagamento que processaram mais de $1.5M em transações.",
-      stack: ["React", "Node.js", "TypeScript", "PostgreSQL", "Stripe", "AWS"],
-      highlights: [
-        "Integração de gateway de pagamento com +$1.0M processados",
-        "Sistema de agendamento em tempo real com WebSockets",
-        "Redução de 40% no tempo de atendimento via automação de prontuários",
-      ],
-    },
-    {
-      period: "2021 — 2022",
-      current: false,
-      role: "Desenvolvedor Full Stack",
-      company: "GCB",
-      client: "Petrobras",
-      description: "Desenvolvimento de sistemas internos de gestão operacional para a Petrobras via GCB. Foco em performance e confiabilidade de aplicações de negócio críticas.",
-      stack: [".NET", "React", "SQL Server", "C#", "Azure DevOps"],
-      highlights: [
-        "Sistemas de relatórios operacionais para unidades offshore",
-        "Otimização de queries SQL com redução de 60% no tempo de resposta",
-        "Implementação de CI/CD com Azure DevOps",
-      ],
-    },
-  ],
-  en: [
-    {
-      period: "Mar. 2023 — Mar. 2026",
-      current: false,
-      role: "Full Stack Developer",
-      company: "Obracon",
-      client: "Sabesp",
-      description: "Development of water infrastructure inspection and management systems for Sabesp. Worked on critical production features, external API integrations and scalable architecture maintenance.",
-      stack: ["Node.js", "React", ".NET", "PostgreSQL", "Docker", "Azure"],
-      highlights: [
-        "Implementation of field inspection checklist modules",
-        "Integration with geolocation and IoT APIs",
-        "End-to-end feature delivery in high-availability environment",
-      ],
-    },
-    {
-      period: "2022 — 2023",
-      current: false,
-      role: "Full Stack Developer",
-      company: "Multiclínica",
-      description: "Development of patient management, medical records and billing platform. Implementation of payment solutions that processed over $1.5M in transactions.",
-      stack: ["React", "Node.js", "TypeScript", "PostgreSQL", "Stripe", "AWS"],
-      highlights: [
-        "Payment gateway integration with +$1.0M processed",
-        "Real-time scheduling system with WebSockets",
-        "40% reduction in service time via medical record automation",
-      ],
-    },
-    {
-      period: "2021 — 2022",
-      current: false,
-      role: "Full Stack Developer",
-      company: "GCB",
-      client: "Petrobras",
-      description: "Development of internal operational management systems for Petrobras via GCB. Focus on performance and reliability of critical business applications.",
-      stack: [".NET", "React", "SQL Server", "C#", "Azure DevOps"],
-      highlights: [
-        "Operational reporting systems for offshore units",
-        "SQL query optimization with 60% reduction in response time",
-        "CI/CD implementation with Azure DevOps",
-      ],
-    },
-  ],
-};
+import { EXPERIENCES, type Experience } from "@/data/experience";
 
 const SECTION_LABELS: Record<Lang, { label: string; heading: string; highlight: string; current: string }> = {
   pt: { label: "Carreira", heading: "Experiência", highlight: "Profissional", current: "atual" },
@@ -136,7 +37,7 @@ export default function Experience() {
 
       <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
         {/* Section header */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -170,7 +71,7 @@ export default function Experience() {
             {sl.heading}{" "}
             <span style={{ color: "var(--color-teal)" }}>{sl.highlight}</span>
           </h2>
-        </motion.div>
+        </m.div>
 
         {/* Timeline */}
         <div style={{ position: "relative", display: "flex", gap: "0" }}>
@@ -203,7 +104,7 @@ export default function Experience() {
           {/* Entries */}
           <div style={{ display: "flex", flexDirection: "column", gap: "0", flex: 1 }}>
             {experiences.map((exp, i) => (
-              <ExperienceItem key={exp.company} exp={exp} index={i} isLast={i === experiences.length - 1} currentLabel={sl.current} />
+              <ExperienceItem key={`${exp.company}-${exp.period}`} exp={exp} index={i} isLast={i === experiences.length - 1} currentLabel={sl.current} />
             ))}
           </div>
         </div>
@@ -221,7 +122,7 @@ export default function Experience() {
 function ExperienceItem({ exp, index, isLast, currentLabel }: { exp: Experience; index: number; isLast: boolean; currentLabel: string }) {
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, x: -24 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: "-60px" }}
@@ -292,7 +193,7 @@ function ExperienceItem({ exp, index, isLast, currentLabel }: { exp: Experience;
       </div>
 
       {/* Content card */}
-      <motion.div
+      <m.div
         whileHover={{
           borderColor: "rgba(13,148,136,0.38)",
           boxShadow: "0 16px 48px rgba(13,148,136,0.07)",
@@ -419,7 +320,7 @@ function ExperienceItem({ exp, index, isLast, currentLabel }: { exp: Experience;
           }}
         >
           {exp.highlights.map((h, hi) => (
-            <motion.li
+            <m.li
               key={h}
               initial={{ opacity: 0, x: -10 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -450,7 +351,7 @@ function ExperienceItem({ exp, index, isLast, currentLabel }: { exp: Experience;
                 <ArrowUpRight size={13} />
               </span>
               {h}
-            </motion.li>
+            </m.li>
           ))}
         </ul>
 
@@ -475,7 +376,7 @@ function ExperienceItem({ exp, index, isLast, currentLabel }: { exp: Experience;
             </span>
           ))}
         </div>
-      </motion.div>
+      </m.div>
 
       <style>{`
         @media (max-width: 767px) {
@@ -497,6 +398,6 @@ function ExperienceItem({ exp, index, isLast, currentLabel }: { exp: Experience;
           .exp-stack span { font-size: 0.625rem !important; padding: 2px 8px !important; }
         }
       `}</style>
-    </motion.div>
+    </m.div>
   );
 }

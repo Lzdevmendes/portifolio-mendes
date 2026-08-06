@@ -1,12 +1,14 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Mail, FileText, ArrowUpRight } from "lucide-react";
-import { memo } from "react";
+import { memo, type ComponentType } from "react";
 import { useLanguage } from "@/contexts/language";
 import type { Lang } from "@/contexts/language";
+import { EASE } from "@/lib/motion";
+import { CONTACT_CHANNELS, CV_PATH, type ContactChannel } from "@/data/profile";
 
-const ease = [0.4, 0, 0.2, 1] as [number, number, number, number];
+const ease = EASE.out;
 
 const CONTACT_T: Record<Lang, {
   label: string;
@@ -47,35 +49,18 @@ function IconGithub() {
   );
 }
 
-const CHANNELS = [
-  {
-    id: "email",
-    Icon: Mail,
-    label: "Email",
-    handle: "lzmendestechdev\n@gmail.com",
-    href: "mailto:lzmendestechdev@gmail.com",
-    color: "#0D9488",
-    external: false,
-  },
-  {
-    id: "linkedin",
-    Icon: IconLinkedin,
-    label: "LinkedIn",
-    handle: "/in/lzmendess",
-    href: "https://linkedin.com/in/lzmendess",
-    color: "#0A66C2",
-    external: true,
-  },
-  {
-    id: "github",
-    Icon: IconGithub,
-    label: "GitHub",
-    handle: "Lzdevmendes",
-    href: "https://github.com/Lzdevmendes",
-    color: "#A8B3CF",
-    external: true,
-  },
-] as const;
+type ChannelWithIcon = ContactChannel & { Icon: ComponentType<{ size?: number; strokeWidth?: number }> };
+
+const CHANNEL_ICONS: Record<ContactChannel["id"], ChannelWithIcon["Icon"]> = {
+  email: Mail,
+  linkedin: IconLinkedin,
+  github: IconGithub,
+};
+
+const CHANNELS: ChannelWithIcon[] = CONTACT_CHANNELS.map((ch) => ({
+  ...ch,
+  Icon: CHANNEL_ICONS[ch.id],
+}));
 
 export default function Contact() {
   const { lang } = useLanguage();
@@ -121,7 +106,7 @@ export default function Contact() {
       <div style={{ maxWidth: "720px", margin: "0 auto", position: "relative" }}>
 
         {/* Section label with flanking lines */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -148,10 +133,10 @@ export default function Contact() {
             {t.label}
           </span>
           <div style={{ flex: 1, height: "1px", background: "linear-gradient(to left, transparent, var(--color-border))" }} />
-        </motion.div>
+        </m.div>
 
         {/* Heading */}
-        <motion.h2
+        <m.h2
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -177,10 +162,10 @@ export default function Contact() {
           >
             {t.headingAccent}
           </span>
-        </motion.h2>
+        </m.h2>
 
         {/* Tagline */}
-        <motion.p
+        <m.p
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -195,10 +180,10 @@ export default function Contact() {
           }}
         >
           {t.tagline}
-        </motion.p>
+        </m.p>
 
         {/* ── Channel cards — centered row ── */}
-        <motion.div
+        <m.div
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
@@ -214,18 +199,18 @@ export default function Contact() {
           {CHANNELS.map((ch) => (
             <ChannelCard key={ch.id} channel={ch} />
           ))}
-        </motion.div>
+        </m.div>
 
         {/* ── CV download — centered ── */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.32, ease }}
           style={{ display: "flex", justifyContent: "center" }}
         >
-          <motion.a
-            href="/cv_luizmendes.pdf"
+          <m.a
+            href={CV_PATH}
             download
             whileHover={{ scale: 1.03, y: -2 }}
             whileTap={{ scale: 0.97 }}
@@ -258,8 +243,8 @@ export default function Contact() {
             <FileText size={14} strokeWidth={2} />
             {t.download}
             <ArrowUpRight size={13} style={{ opacity: 0.7 }} />
-          </motion.a>
-        </motion.div>
+          </m.a>
+        </m.div>
       </div>
 
       <style>{`
@@ -293,7 +278,7 @@ const ChannelCard = memo(function ChannelCard({
   const { Icon, label, handle, href, color, external } = channel;
 
   return (
-    <motion.a
+    <m.a
       href={href}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
@@ -403,6 +388,6 @@ const ChannelCard = memo(function ChannelCard({
           <ArrowUpRight size={13} />
         </div>
       )}
-    </motion.a>
+    </m.a>
   );
 });
