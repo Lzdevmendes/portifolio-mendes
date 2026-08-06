@@ -1,46 +1,19 @@
 "use client";
 
-import { motion, animate, useInView, AnimatePresence } from "framer-motion";
+import { m, animate, useInView, AnimatePresence } from "framer-motion";
 import { ArrowRight, MapPin } from "lucide-react";
 import { memo, useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/contexts/language";
+import gsap from "gsap";
+import { SplitText } from "gsap/SplitText";
+import { useGSAP } from "@gsap/react";
+import { EASE, prefersReducedMotion } from "@/lib/motion";
+import { HERO_CODE, HERO_TECH_CHIPS, HERO_STATS } from "@/data/profile";
 
-// ─── Syntax-highlighted code lines ───────────────────────────────────────────
-type Token = { t: string; c: string };
-type CodeLine = { n: number; tokens: Token[] };
-
-const CODE: CodeLine[] = [
-  { n: 1, tokens: [{ t: "const ", c: "#C678DD" }, { t: "dev", c: "#E5C07B" }, { t: " = {", c: "#ABB2BF" }] },
-  { n: 2, tokens: [{ t: "  name", c: "#E06C75" }, { t: ": ", c: "#ABB2BF" }, { t: '"Luiz Mendes"', c: "#98C379" }, { t: ",", c: "#ABB2BF" }] },
-  { n: 3, tokens: [{ t: "  role", c: "#E06C75" }, { t: ": ", c: "#ABB2BF" }, { t: '"Full Stack Dev"', c: "#98C379" }, { t: ",", c: "#ABB2BF" }] },
-  { n: 4, tokens: [{ t: "  from", c: "#E06C75" }, { t: ": ", c: "#ABB2BF" }, { t: '"Brasil 🇧🇷"', c: "#98C379" }, { t: ",", c: "#ABB2BF" }] },
-  { n: 5, tokens: [{ t: "  stack", c: "#E06C75" }, { t: ": [", c: "#ABB2BF" }] },
-  { n: 6, tokens: [{ t: '    "React"', c: "#98C379" }, { t: ", ", c: "#ABB2BF" }, { t: '"Next.js"', c: "#98C379" }, { t: ",", c: "#ABB2BF" }] },
-  { n: 7, tokens: [{ t: '    "Flutter"', c: "#98C379" }, { t: ", ", c: "#ABB2BF" }, { t: '"Node.js"', c: "#98C379" }, { t: ",", c: "#ABB2BF" }] },
-  { n: 8, tokens: [{ t: '    ".NET"', c: "#98C379" }, { t: ", ", c: "#ABB2BF" }, { t: '"Go"', c: "#98C379" }] },
-  { n: 9, tokens: [{ t: "  ],", c: "#ABB2BF" }] },
-  { n: 10, tokens: [{ t: "  payments", c: "#E06C75" }, { t: ": ", c: "#ABB2BF" }, { t: '"$1.0M+"', c: "#14B8A6" }, { t: ",", c: "#ABB2BF" }] },
-  { n: 11, tokens: [{ t: "  status", c: "#E06C75" }, { t: ": ", c: "#ABB2BF" }, { t: '"available"', c: "#14B8A6" }, { t: "  // 🟢", c: "#5C6370" }] },
-  { n: 12, tokens: [{ t: "};", c: "#ABB2BF" }] },
-];
-
-const TECH_CHIPS = ["React", "Next.js", "TypeScript", "Flutter", "Node.js", ".NET", "Go", "AWS", "Docker", "PostgreSQL"];
-
-const STATS: Record<string, Array<{ end: number; decimals: number; prefix: string; suffix: string; label: string }>> = {
-  pt: [
-    { end: 1.5, decimals: 1, prefix: "", suffix: "+", label: "Anos de experiência" },
-    { end: 1,   decimals: 0, prefix: "$", suffix: "M+", label: "Em pagamentos" },
-    { end: 3,   decimals: 0, prefix: "", suffix: "", label: "Grandes clientes" },
-  ],
-  en: [
-    { end: 1.5, decimals: 1, prefix: "", suffix: "+", label: "Years of experience" },
-    { end: 1,   decimals: 0, prefix: "$", suffix: "M+", label: "In payments" },
-    { end: 3,   decimals: 0, prefix: "", suffix: "", label: "Major clients" },
-  ],
-};
+gsap.registerPlugin(SplitText);
 
 // ─── Animation presets ────────────────────────────────────────────────────────
-const ease = [0.4, 0, 0.2, 1] as [number, number, number, number];
+const ease = EASE.out;
 
 const container = {
   hidden: {},
@@ -57,6 +30,7 @@ export default function Hero() {
   const { lang } = useLanguage();
   const [isDesktop, setIsDesktop] = useState(false);
   const glowRef = useRef<HTMLDivElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 920);
@@ -64,6 +38,35 @@ export default function Hero() {
     window.addEventListener("resize", check, { passive: true });
     return () => window.removeEventListener("resize", check);
   }, []);
+
+  /*
+   * SplitText no headline — dono: GSAP (não Framer). Reveal caractere a
+   * caractere, timed pra entrar junto com o resto do stagger do Framer
+   * (badges → nome → cargo → bio → CTAs → stats). Ver agent/CONTEXT.md §14.
+   */
+  useGSAP(
+    () => {
+      if (!headlineRef.current) return;
+
+      if (prefersReducedMotion()) {
+        gsap.set(headlineRef.current, { opacity: 1 });
+        return;
+      }
+
+      const split = SplitText.create(headlineRef.current, { type: "chars" });
+      gsap.from(split.chars, {
+        yPercent: 110,
+        opacity: 0,
+        duration: 0.8,
+        delay: 0.32,
+        ease: "power4.out",
+        stagger: 0.02,
+      });
+
+      return () => split.revert();
+    },
+    { scope: headlineRef }
+  );
 
   function onMouseMove(e: React.MouseEvent<HTMLElement>) {
     if (!glowRef.current) return;
@@ -117,14 +120,14 @@ export default function Hero() {
         }}
       >
         {/* ── Left: text content ── */}
-        <motion.div
+        <m.div
           variants={container}
           initial="hidden"
           animate="show"
           style={{ display: "flex", flexDirection: "column", paddingTop: "96px", paddingBottom: "96px" }}
         >
           {/* Status badges */}
-          <motion.div variants={fadeUp} style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "8px", marginBottom: "28px" }}>
+          <m.div variants={fadeUp} style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "8px", marginBottom: "28px" }}>
             <span
               style={{
                 display: "inline-flex",
@@ -161,11 +164,12 @@ export default function Hero() {
               <MapPin size={10} />
               Brasil
             </span>
-          </motion.div>
+          </m.div>
 
-          {/* Name */}
-          <motion.h1
-            variants={fadeUp}
+          {/* Name — dono do reveal: GSAP SplitText, não Framer (data-anim="gsap") */}
+          <h1
+            ref={headlineRef}
+            data-anim="gsap"
             style={{
               fontFamily: "var(--font-syne)",
               fontWeight: 800,
@@ -174,15 +178,16 @@ export default function Hero() {
               letterSpacing: "-0.04em",
               color: "var(--color-text)",
               marginBottom: "20px",
+              opacity: 0,
             }}
           >
             Luiz
             <br />
             <span style={{ color: "var(--color-teal)" }}>Mendes</span>
-          </motion.h1>
+          </h1>
 
           {/* Role + level */}
-          <motion.div
+          <m.div
             variants={fadeUp}
             style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "10px", marginBottom: "18px" }}
           >
@@ -206,10 +211,10 @@ export default function Hero() {
               <span style={{ opacity: 0.35 }}>→</span>
               <span style={{ color: "var(--color-teal-light)", fontWeight: 700 }}>Pleno</span>
             </span>
-          </motion.div>
+          </m.div>
 
           {/* Bio */}
-          <motion.p
+          <m.p
             variants={fadeUp}
             style={{
               fontFamily: "var(--font-inter)",
@@ -222,15 +227,18 @@ export default function Hero() {
             }}
           >
             React, Next.js, Flutter · Node.js, .NET, Go ·{" "}
-            <span style={{ color: "var(--color-teal-light)", fontWeight: 600 }}>$1.0M+</span>{" "}
-            {lang === "pt" ? "em soluções de pagamento." : "in payment solutions."}{" "}
+            {lang === "pt"
+              ? "apps web e mobile para infraestrutura, óleo & gás e saúde ·"
+              : "web and mobile apps for infrastructure, oil & gas and healthcare ·"}{" "}
+            <span style={{ color: "var(--color-teal-light)", fontWeight: 600 }}>+90 POIs</span>{" "}
+            {lang === "pt" ? "mapeados no Litoral na Palma." : "mapped on Litoral na Palma."}{" "}
             UI/UX · Design Systems.
             <br />
-            Obracon (Sabesp) · Multiclínica · GCB (Petrobras).
-          </motion.p>
+            Obracon (Sabesp) · GCB (Petrobras) · Litoral na Palma.
+          </m.p>
 
           {/* CTAs */}
-          <motion.div
+          <m.div
             variants={fadeUp}
             className="hero-ctas"
             style={{ display: "flex", flexWrap: "wrap", gap: "12px", marginBottom: "40px" }}
@@ -241,10 +249,10 @@ export default function Hero() {
             <GhostButton href="https://github.com/Lzdevmendes">
               <GitHubIcon /> GitHub
             </GhostButton>
-          </motion.div>
+          </m.div>
 
           {/* Stats */}
-          <motion.div
+          <m.div
             variants={fadeUp}
             className="hero-stats"
             style={{
@@ -255,15 +263,15 @@ export default function Hero() {
               borderTop: "1px solid rgba(255,255,255,0.06)",
             }}
           >
-            {STATS[lang].map((s) => (
+            {HERO_STATS[lang].map((s) => (
               <AnimatedStat key={s.label} {...s} />
             ))}
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
 
         {/* ── Right: terminal + tech chips (desktop only — avoids JS timers on mobile) ── */}
         {isDesktop && (
-          <motion.div
+          <m.div
             className="hero-right"
             initial={{ opacity: 0, x: 36, scale: 0.98 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
@@ -272,12 +280,12 @@ export default function Hero() {
           >
             <CodeTerminal />
             <TechChips />
-          </motion.div>
+          </m.div>
         )}
       </div>
 
       {/* Scroll indicator */}
-      <motion.div
+      <m.div
         className="hero-scroll"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -307,7 +315,7 @@ export default function Hero() {
         >
           {lang === "pt" ? "rolar" : "scroll"}
         </span>
-        <motion.div
+        <m.div
           animate={{ y: [0, 9, 0] }}
           transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
           style={{
@@ -316,7 +324,7 @@ export default function Hero() {
             background: "linear-gradient(to bottom, var(--color-teal), transparent)",
           }}
         />
-      </motion.div>
+      </m.div>
 
       <style>{`
         @media (max-width: 920px) {
@@ -362,7 +370,7 @@ function TitleBracket() {
           >
             <AnimatePresence>
               {isActive && (
-                <motion.div
+                <m.div
                   layoutId="title-bracket"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -483,7 +491,7 @@ function CodeTerminal() {
     const iv = setInterval(() => {
       i++;
       setVisible(i);
-      if (i >= CODE.length) {
+      if (i >= HERO_CODE.length) {
         clearInterval(iv);
         setDone(true);
       }
@@ -540,7 +548,7 @@ function CodeTerminal() {
 
       {/* Code area */}
       <div style={{ padding: "14px 0 14px", minHeight: "256px" }}>
-        {CODE.map((line, i) => (
+        {HERO_CODE.map((line, i) => (
           <div
             key={line.n}
             style={{
@@ -595,7 +603,7 @@ function CodeTerminal() {
 
         {/* Terminal prompt after done */}
         {done && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4 }}
@@ -620,7 +628,7 @@ function CodeTerminal() {
                 transition: "opacity 0.08s",
               }}
             />
-          </motion.div>
+          </m.div>
         )}
       </div>
     </div>
@@ -631,8 +639,8 @@ function CodeTerminal() {
 function TechChips() {
   return (
     <div style={{ display: "flex", flexWrap: "wrap", gap: "7px" }}>
-      {TECH_CHIPS.map((name, i) => (
-        <motion.span
+      {HERO_TECH_CHIPS.map((name, i) => (
+        <m.span
           key={name}
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -651,7 +659,7 @@ function TechChips() {
           }}
         >
           {name}
-        </motion.span>
+        </m.span>
       ))}
     </div>
   );
@@ -682,7 +690,7 @@ const PrimaryButton = memo(function PrimaryButton({
   children: React.ReactNode;
 }) {
   return (
-    <motion.a
+    <m.a
       href={href}
       whileHover={{ scale: 1.03, y: -1 }}
       whileTap={{ scale: 0.97 }}
@@ -702,7 +710,7 @@ const PrimaryButton = memo(function PrimaryButton({
       }}
     >
       {children}
-    </motion.a>
+    </m.a>
   );
 });
 
@@ -714,7 +722,7 @@ const GhostButton = memo(function GhostButton({
   children: React.ReactNode;
 }) {
   return (
-    <motion.a
+    <m.a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
@@ -737,7 +745,7 @@ const GhostButton = memo(function GhostButton({
       }}
     >
       {children}
-    </motion.a>
+    </m.a>
   );
 });
 
