@@ -1,10 +1,17 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { m } from "framer-motion";
 import { memo, useRef, useCallback, useEffect, useState } from "react";
 import { Code2, Server, Smartphone, GitPullRequest, ArrowUpRight, Briefcase, Palette } from "lucide-react";
 import { useLanguage } from "@/contexts/language";
 import type { Lang } from "@/contexts/language";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+import { EASE, GSAP_EASE, prefersReducedMotion } from "@/lib/motion";
+import { ABOUT_STATS } from "@/data/profile";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const FOCUS_AREAS: Record<Lang, Array<{ icon: React.ReactNode; title: string; color: string; techs: string; desc: string }>> = {
   pt: [
@@ -32,11 +39,6 @@ const T = {
     bio: "Desenvolvedor Full Stack apaixonado por código limpo, boas práticas e experiências memoráveis. Atuo do frontend ao backend, entregando produtos completos com qualidade e atenção aos detalhes.",
     available: "Disponível para Trabalho",
     availableSub: "Disponível imediatamente · CLT, PJ ou freelance",
-    stats: [
-      { n: "10+", l: "projetos entregues" },
-      { n: "2",   l: "orgs no GitHub" },
-      { n: "7+",  l: "stacks dominadas" },
-    ],
     quote: "Código bom não é o que funciona — é o que qualquer pessoa consegue entender e manter.",
     sendEmail: "Enviar e-mail",
     bgText: "SOBRE",
@@ -49,18 +51,13 @@ const T = {
     bio: "Full Stack Developer passionate about clean code, best practices and memorable experiences. I work from frontend to backend, delivering complete products with quality and attention to detail.",
     available: "Open to Work",
     availableSub: "Available immediately · Full-time, contract or freelance",
-    stats: [
-      { n: "10+", l: "projects delivered" },
-      { n: "2",   l: "GitHub orgs" },
-      { n: "7+",  l: "stacks mastered" },
-    ],
     quote: "Good code is not what works — it's what anyone can understand and maintain.",
     sendEmail: "Send email",
     bgText: "ABOUT",
   },
 };
 
-const ease = [0.4, 0, 0.2, 1] as [number, number, number, number];
+const ease = EASE.out;
 
 export default function About() {
   const { lang } = useLanguage();
@@ -68,6 +65,9 @@ export default function About() {
   const focusAreas = FOCUS_AREAS[lang];
   const sectionRef = useRef<HTMLElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
+  const bgTextRef = useRef<HTMLDivElement>(null);
+  const leftPanelRef = useRef<HTMLDivElement>(null);
+  const rightPanelRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -77,21 +77,65 @@ export default function About() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
+  /*
+   * GSAP é dono do scroll desta seção (agent/CONTEXT.md §14 — Opção A).
+   * Framer Motion não toca `bgTextRef`/`leftPanelRef`/`rightPanelRef` — só
+   * `whileInView`/`whileHover` em elementos que NÃO têm scroll-linking.
+   */
+  useGSAP(
+    () => {
+      if (isMobile || !sectionRef.current || prefersReducedMotion()) return;
 
-  /* Parallax no texto "SOBRE" decorativo */
-  const bgY = useTransform(scrollYProgress, [0, 1], ["-12%", "12%"]);
+      /* -50% é a centralização vertical estática; -12%/+12% é o parallax (igual ao useTransform antigo) */
+      gsap.fromTo(
+        bgTextRef.current,
+        { yPercent: -62 },
+        {
+          yPercent: -38,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        }
+      );
 
-  /* Entrada do painel esquerdo ligada ao scroll */
-  const leftOpacity = useTransform(scrollYProgress, [0.05, 0.22], [0, 1]);
-  const leftY = useTransform(scrollYProgress, [0.05, 0.22], ["24px", "0px"]);
+      gsap.fromTo(
+        leftPanelRef.current,
+        { opacity: 0, y: 24 },
+        {
+          opacity: 1,
+          y: 0,
+          ease: GSAP_EASE.out,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 85%",
+            end: "top 45%",
+            scrub: true,
+          },
+        }
+      );
 
-  /* Coluna direita: desliza suavemente com o scroll */
-  const rightY = useTransform(scrollYProgress, [0.05, 0.88], ["28px", "-28px"]);
-  const rightOpacity = useTransform(scrollYProgress, [0.07, 0.25], [0, 1]);
+      gsap.fromTo(
+        rightPanelRef.current,
+        { opacity: 0, y: 28 },
+        {
+          opacity: 1,
+          y: 0,
+          ease: GSAP_EASE.out,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 80%",
+            end: "top 20%",
+            scrub: true,
+          },
+        }
+      );
+    },
+    { scope: sectionRef, dependencies: [isMobile] }
+  );
 
   /* Mouse glow — DOM direto, zero setState */
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
@@ -142,15 +186,16 @@ export default function About() {
         }}
       />
 
-      {/* Parallax background text */}
-      <motion.div
+      {/* Parallax background text — dono do scroll: GSAP (data-anim="gsap") */}
+      <div
+        ref={bgTextRef}
+        data-anim="gsap"
         aria-hidden="true"
         style={{
           position: "absolute",
           top: "50%",
           left: "-1%",
-          translateY: "-50%",
-          y: bgY,
+          transform: "translateY(-50%)",
           pointerEvents: "none",
           userSelect: "none",
           zIndex: 0,
@@ -171,7 +216,7 @@ export default function About() {
         >
           {t.bgText}
         </span>
-      </motion.div>
+      </div>
 
       <div
         style={{
@@ -186,14 +231,14 @@ export default function About() {
         }}
         className="about-grid"
       >
-        {/* ── LEFT: sticky panel com fade de entrada ligado ao scroll ── */}
-        <motion.div
+        {/* ── LEFT: sticky panel, fade de entrada — dono do scroll: GSAP ── */}
+        <div
+          ref={leftPanelRef}
+          data-anim="gsap"
           className="about-sticky"
           style={{
             position: "sticky",
             top: "120px",
-            opacity: isMobile ? 1 : leftOpacity,
-            y: isMobile ? 0 : leftY,
             willChange: "transform, opacity",
           }}
         >
@@ -242,7 +287,7 @@ export default function About() {
           </p>
 
           {/* Code card */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -298,10 +343,10 @@ export default function About() {
               <span style={{ color: "#ABB2BF" }}>{"}"}</span>
               <span style={{ color: "#ABB2BF" }}>;</span>
             </div>
-          </motion.div>
+          </m.div>
 
           {/* Open to Work badge */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -355,7 +400,7 @@ export default function About() {
                 {t.availableSub}
               </span>
             </div>
-          </motion.div>
+          </m.div>
 
           {/* Divider */}
           <div style={{ display: "flex", alignItems: "center", gap: "12px", marginTop: "32px" }}>
@@ -365,7 +410,7 @@ export default function About() {
 
           {/* Mini stats */}
           <div className="about-stats" style={{ display: "flex", gap: "32px", marginTop: "32px", flexWrap: "wrap" }}>
-            {t.stats.map((s) => (
+            {ABOUT_STATS[lang].map((s) => (
               <div key={s.l} style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                 <span style={{ fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: "1.5rem", color: "var(--color-teal-light)", letterSpacing: "-0.02em" }}>
                   {s.n}
@@ -376,17 +421,17 @@ export default function About() {
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
 
-        {/* ── RIGHT: desliza suavemente com o scroll ── */}
-        <motion.div
+        {/* ── RIGHT: desliza suavemente com o scroll — dono do scroll: GSAP ── */}
+        <div
+          ref={rightPanelRef}
+          data-anim="gsap"
           className="about-right"
           style={{
             display: "flex",
             flexDirection: "column",
             gap: "20px",
-            y: isMobile ? 0 : rightY,
-            opacity: isMobile ? 1 : rightOpacity,
             willChange: "transform, opacity",
           }}
         >
@@ -395,7 +440,7 @@ export default function About() {
           ))}
 
           {/* Quote */}
-          <motion.blockquote
+          <m.blockquote
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -414,17 +459,17 @@ export default function About() {
             <footer style={{ marginTop: "12px", fontFamily: "var(--font-inter)", fontSize: "0.75rem", color: "var(--color-muted)" }}>
               — Luiz Mendes
             </footer>
-          </motion.blockquote>
+          </m.blockquote>
 
           {/* Contact CTA */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.38, ease }}
             style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}
           >
-            <motion.a
+            <m.a
               href="mailto:lzmendestechdev@gmail.com"
               whileHover={{ scale: 1.03, y: -1 }}
               whileTap={{ scale: 0.97 }}
@@ -444,8 +489,8 @@ export default function About() {
             >
               {t.sendEmail}
               <ArrowUpRight size={13} />
-            </motion.a>
-            <motion.a
+            </m.a>
+            <m.a
               href="https://linkedin.com/in/lzmendess"
               target="_blank"
               rel="noopener noreferrer"
@@ -468,9 +513,9 @@ export default function About() {
             >
               LinkedIn
               <ArrowUpRight size={13} />
-            </motion.a>
-          </motion.div>
-        </motion.div>
+            </m.a>
+          </m.div>
+        </div>
       </div>
 
       <style>{`
@@ -497,7 +542,7 @@ const FocusCard = memo(function FocusCard({
   index: number;
 }) {
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, x: 24 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: "-40px" }}
@@ -562,6 +607,6 @@ const FocusCard = memo(function FocusCard({
       <span style={{ color: area.color, flexShrink: 0, opacity: 0.6, marginTop: "2px", display: "flex" }}>
         <ArrowUpRight size={14} />
       </span>
-    </motion.div>
+    </m.div>
   );
 });
