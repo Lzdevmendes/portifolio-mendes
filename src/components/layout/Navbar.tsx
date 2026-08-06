@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
+import { m, useScroll, useSpring, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
@@ -98,7 +98,7 @@ export default function Navbar() {
   }
 
   return (
-    <motion.header
+    <m.header
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
@@ -116,7 +116,7 @@ export default function Navbar() {
       }}
     >
       {/* Scroll progress bar */}
-      <motion.div
+      <m.div
         style={{
           position: "absolute",
           bottom: 0,
@@ -145,7 +145,7 @@ export default function Navbar() {
       >
         {/* Logo */}
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <motion.span
+          <m.span
             whileHover={{ scale: 1.05 }}
             style={{
               fontFamily: "var(--font-syne)",
@@ -156,7 +156,7 @@ export default function Navbar() {
             }}
           >
             LM
-          </motion.span>
+          </m.span>
           <span
             style={{
               fontFamily: "var(--font-syne)",
@@ -181,7 +181,7 @@ export default function Navbar() {
           className="hidden-mobile"
         >
           {navLinks.map((link, i) => (
-            <motion.li
+            <m.li
               key={link.href}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -193,26 +193,26 @@ export default function Navbar() {
               >
                 {link.label}
               </NavLink>
-            </motion.li>
+            </m.li>
           ))}
-          <motion.li
+          <m.li
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.42 }}
           >
             <HireButton lang={lang} />
-          </motion.li>
-          <motion.li
+          </m.li>
+          <m.li
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.5 }}
           >
             <LangToggle lang={lang} toggle={toggle} />
-          </motion.li>
+          </m.li>
         </ul>
 
         {/* Mobile Toggle */}
-        <motion.button
+        <m.button
           onClick={() => setIsOpen(!isOpen)}
           whileTap={{ scale: 0.92 }}
           style={{
@@ -227,7 +227,7 @@ export default function Navbar() {
           aria-label={lang === "pt" ? "Abrir menu" : "Open menu"}
         >
           <AnimatePresence mode="wait" initial={false}>
-            <motion.span
+            <m.span
               key={isOpen ? "close" : "open"}
               initial={{ rotate: -90, opacity: 0 }}
               animate={{ rotate: 0, opacity: 1 }}
@@ -236,15 +236,15 @@ export default function Navbar() {
               style={{ display: "flex" }}
             >
               {isOpen ? <X size={20} /> : <Menu size={20} />}
-            </motion.span>
+            </m.span>
           </AnimatePresence>
-        </motion.button>
+        </m.button>
       </nav>
 
       {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
@@ -269,7 +269,7 @@ export default function Navbar() {
               {navLinks.map((link, i) => {
                 const s = getStrength(link.href.slice(1));
                 return (
-                  <motion.li
+                  <m.li
                     key={link.href}
                     initial={{ opacity: 0, x: -12 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -290,7 +290,7 @@ export default function Navbar() {
                     >
                       {link.label}
                     </a>
-                  </motion.li>
+                  </m.li>
                 );
               })}
               <li style={{ paddingTop: "16px" }}>
@@ -300,7 +300,7 @@ export default function Navbar() {
                 <LangToggle lang={lang} toggle={toggle} />
               </li>
             </ul>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 
@@ -313,7 +313,7 @@ export default function Navbar() {
           .show-mobile { display: none !important; }
         }
       `}</style>
-    </motion.header>
+    </m.header>
   );
 }
 
@@ -357,7 +357,7 @@ function NavLink({
       {children}
 
       {/* Always rendered — animates between none/dim/bright without mount/unmount flicker */}
-      <motion.span
+      <m.span
         animate={dotAnimate}
         transition={{ type: "spring", stiffness: 260, damping: 28 }}
         style={{
@@ -379,7 +379,7 @@ function NavLink({
 
 function LangToggle({ lang, toggle }: { lang: "pt" | "en"; toggle: () => void }) {
   return (
-    <motion.button
+    <m.button
       onClick={toggle}
       whileTap={{ scale: 0.96 }}
       aria-label={lang === "pt" ? "Switch to English" : "Mudar para Português"}
@@ -419,7 +419,7 @@ function LangToggle({ lang, toggle }: { lang: "pt" | "en"; toggle: () => void })
         >
           {/* Sliding teal pill — layoutId animates between PT and EN positions */}
           {lang === l && (
-            <motion.span
+            <m.span
               layoutId="lang-pill"
               style={{
                 position: "absolute",
@@ -435,13 +435,13 @@ function LangToggle({ lang, toggle }: { lang: "pt" | "en"; toggle: () => void })
           {l.toUpperCase()}
         </span>
       ))}
-    </motion.button>
+    </m.button>
   );
 }
 
 function HireButton({ lang }: { lang: "pt" | "en" }) {
   return (
-    <motion.a
+    <m.a
       href="#contact"
       whileHover={{ scale: 1.04, y: -1 }}
       whileTap={{ scale: 0.96 }}
@@ -457,6 +457,6 @@ function HireButton({ lang }: { lang: "pt" | "en" }) {
       }}
     >
       {lang === "pt" ? "Me contratar" : "Hire me"}
-    </motion.a>
+    </m.a>
   );
 }

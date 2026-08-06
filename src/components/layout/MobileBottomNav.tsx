@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Briefcase, Code2, Home, Layers, Mail } from "lucide-react";
 import { useLanguage } from "@/contexts/language";
@@ -67,7 +67,7 @@ export default function MobileBottomNav() {
 
   return (
     <AnimatePresence>
-      <motion.nav
+      <m.nav
         key="mobile-bottom-nav"
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -124,7 +124,7 @@ export default function MobileBottomNav() {
               {/* Ícone com indicador de ativo */}
               <span style={{ position: "relative", display: "flex" }}>
                 {isActive && (
-                  <motion.span
+                  <m.span
                     layoutId="mobile-nav-pill"
                     style={{
                       position: "absolute",
@@ -164,7 +164,7 @@ export default function MobileBottomNav() {
             .mobile-bottom-nav { display: none !important; }
           }
         `}</style>
-      </motion.nav>
+      </m.nav>
     </AnimatePresence>
   );
 }

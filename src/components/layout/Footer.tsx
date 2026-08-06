@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { MapPin, ArrowUp } from "lucide-react";
 import { useLanguage } from "@/contexts/language";
 
@@ -63,7 +63,7 @@ export default function Footer() {
         </div>
 
         {/* Back to top */}
-        <motion.button
+        <m.button
           className="footer-back-top"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           whileHover={{ borderColor: "var(--color-teal)", color: "var(--color-teal-light)", y: -2 }}
@@ -85,7 +85,7 @@ export default function Footer() {
         >
           <ArrowUp size={12} />
           {lang === "pt" ? "Voltar ao topo" : "Back to top"}
-        </motion.button>
+        </m.button>
 
         {/* Copyright */}
         <span
