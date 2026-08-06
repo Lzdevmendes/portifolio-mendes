@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Github, Linkedin, Mail } from "lucide-react";
 
 const CONTACTS = [
@@ -84,7 +84,7 @@ export default function Maintenance() {
         }}
       />
 
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
@@ -230,7 +230,7 @@ export default function Maintenance() {
         >
           © {new Date().getFullYear()} Luiz Mendes · Brasil
         </p>
-      </motion.div>
+      </m.div>
     </main>
   );
 }

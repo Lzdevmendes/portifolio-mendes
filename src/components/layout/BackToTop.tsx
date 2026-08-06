@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/contexts/language";
@@ -27,7 +27,7 @@ export default function BackToTop() {
 
       <AnimatePresence>
         {visible && (
-          <motion.button
+          <m.button
             key="btt"
             className="back-to-top"
             initial={{ opacity: 0, scale: 0.75, y: 12 }}
@@ -59,7 +59,7 @@ export default function BackToTop() {
             }}
           >
             <ArrowUp size={17} strokeWidth={2.2} />
-          </motion.button>
+          </m.button>
         )}
       </AnimatePresence>
     </>
