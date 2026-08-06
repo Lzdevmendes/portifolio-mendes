@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   },
   title: "Luiz Mendes — Desenvolvedor Fullstack JR / Pleno",
   description:
-    "Desenvolvedor Fullstack JR / Pleno especializado em arquiteturas escaláveis com .NET, Go, Node.js e Flutter. Mais de R$ 1,0 milhão processados em soluções de pagamento.",
+    "Desenvolvedor Fullstack JR / Pleno especializado em arquiteturas escaláveis com .NET, Go, Node.js e Flutter.",
   keywords: [
     "Full Stack Developer",
     "Desenvolvedor Fullstack",
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Luiz Mendes — Desenvolvedor Fullstack JR / Pleno",
     description:
-      "Desenvolvedor Fullstack JR / Pleno especializado em arquiteturas escaláveis com .NET, Go, Node.js e Flutter. Mais de R$ 1,0 milhão processados em soluções de pagamento.",
+      "Desenvolvedor Fullstack JR / Pleno especializado em arquiteturas escaláveis com .NET, Go, Node.js e Flutter.",
     type: "website",
     locale: "pt_BR",
     siteName: "Luiz Mendes",
