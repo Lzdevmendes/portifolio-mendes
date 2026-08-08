@@ -1,7 +1,8 @@
 "use client";
 
 import { m } from "framer-motion";
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Download, Github, Linkedin, Mail } from "lucide-react";
+import { CV_PATH } from "@/data/profile";
 
 const CONTACTS = [
   {
@@ -216,6 +217,27 @@ export default function Maintenance() {
               {label}
             </a>
           ))}
+          <a
+            href={CV_PATH}
+            download
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.55rem",
+              padding: "0.7rem 1.15rem",
+              border: "1px solid var(--color-teal-light)",
+              borderRadius: "12px",
+              background: "rgba(13,148,136,0.1)",
+              color: "var(--color-teal-light)",
+              fontFamily: "var(--font-inter)",
+              fontSize: "0.9rem",
+              fontWeight: 500,
+              transition: "border-color 0.25s var(--ease-smooth), color 0.25s",
+            }}
+          >
+            <Download size={17} strokeWidth={1.8} />
+            Currículo
+          </a>
         </div>
 
         {/* Footer */}
