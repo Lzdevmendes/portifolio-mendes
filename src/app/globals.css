@@ -22,8 +22,7 @@
 }
 
 html {
-  /* scroll-behavior: smooth removido — conflita com Lenis (dono do scroll a
-     partir da Fase 1, ver src/lib/scroll/LenisProvider.tsx) */
+  scroll-behavior: smooth;
   scroll-padding-top: 80px;
 }
 
