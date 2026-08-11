@@ -1,22 +1,5 @@
 import Providers from "@/components/layout/Providers";
 import Maintenance from "@/components/sections/Maintenance";
-
-// ─────────────────────────────────────────────────────────────
-// MODO MANUTENÇÃO ATIVO
-// O portfólio completo está preservado abaixo (comentado).
-// Para voltar ao ar: descomente o bloco do portfólio, remova o
-// <Maintenance /> e apague este aviso.
-// ─────────────────────────────────────────────────────────────
-
-export default function Home() {
-  return (
-    <Providers>
-      <Maintenance />
-    </Providers>
-  );
-}
-
-/* ── PORTFÓLIO COMPLETO (restaurar quando terminar) ──────────────
 import Navbar from "@/components/layout/Navbar";
 import MobileBottomNav from "@/components/layout/MobileBottomNav";
 import BackToTop from "@/components/layout/BackToTop";
@@ -29,7 +12,26 @@ import Certifications from "@/components/sections/Certifications";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/layout/Footer";
 
+/**
+ * Produção fica em manutenção por padrão — só mostra o site completo quando
+ * SHOW_FULL_SITE=true é definido em build-time. O GitHub Actions
+ * (.github/workflows/deploy.yml) e `npm run build`/`deploy` não definem essa
+ * var, então production é sempre segura por padrão. Pra pré-visualizar
+ * localmente, `npm run dev` já lê SHOW_FULL_SITE=true de
+ * .env.development.local (não versionado — Next.js só carrega esse arquivo
+ * em `next dev`, nunca em `next build`, então não vaza pro deploy).
+ */
+const SHOW_FULL_SITE = process.env.SHOW_FULL_SITE === "true";
+
 export default function Home() {
+  if (!SHOW_FULL_SITE) {
+    return (
+      <Providers>
+        <Maintenance />
+      </Providers>
+    );
+  }
+
   return (
     <Providers>
       <a href="#main-content" className="skip-link">
@@ -51,4 +53,3 @@ export default function Home() {
     </Providers>
   );
 }
-──────────────────────────────────────────────────────────────── */
