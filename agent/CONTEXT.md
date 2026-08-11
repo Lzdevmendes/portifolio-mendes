@@ -33,7 +33,7 @@
 | GSAP + @gsap/react | ^3.15 / ^2.1 — dono do scroll e de timelines (ver §14) |
 | Lucide React | ^0.575 (ícones) |
 | Fontes | Inter (corpo) + Syne (display/títulos) via `next/font/google` |
-| Deploy | GitHub Pages via `gh-pages -d out` (`npm run deploy`) |
+| Deploy | GitHub Pages — `.github/workflows/deploy.yml` builda e publica em todo push pra `main` (domínio `lz.dev.br`); `npm run deploy` (`gh-pages -d out`) é um caminho manual separado, mesmo destino |
 | Imagens | `unoptimized: true`, remotePatterns: avatars.githubusercontent.com |
 
 **Decisão (2026-08-04): Three.js está sendo reintroduzido.** Motivo: rebuild da camada de apresentação
@@ -60,9 +60,10 @@ aqui.
 │   │   ├── globals.css          ← tokens de cor, keyframes, scrollbar, reset global
 │   │   ├── layout.tsx           ← fontes (Inter, Syne, Space Mono), <html lang="pt-BR">, metadata SEO
 │   │   ├── opengraph-image.tsx  ← imagem OG gerada via next/og (1200×630)
-│   │   └── page.tsx             ← ⚠️ MODO MANUTENÇÃO ATIVO: renderiza só <Maintenance/>. O portfólio
-│   │                              completo (Hero→About→Projects→Experience→Skills→Certs→Contact→Footer)
-│   │                              está comentado no mesmo arquivo, pronto pra restaurar.
+│   │   └── page.tsx             ← ⚠️ MODO MANUTENÇÃO ATIVO em produção. As duas árvores (Maintenance
+│   │                              e o portfólio completo) são código real no mesmo arquivo — troca
+│   │                              via `const SHOW_FULL_SITE = process.env.SHOW_FULL_SITE === "true"`.
+│   │                              Ver "Manutenção vs. preview local" logo abaixo.
 │   ├── data/                    ← NOVO (2026-08-04): fonte única de conteúdo de negócio. profile.ts,
 │   │                              experience.ts, projects.ts, skills.ts, certifications.ts — cada
 │   │                              componente de seção importa daqui em vez de manter array local. Copy
@@ -96,6 +97,27 @@ aqui.
 foi abandonada — `ProjectsShowcase.tsx` hoje tem os projetos hardcoded em `Record<Lang, Project[]>`.
 `next.config.ts` ainda tem `images.remotePatterns` pra `avatars.githubusercontent.com` de uma época
 em que isso era usado — hoje é config morta (nenhum `next/image` no projeto).
+
+### Manutenção vs. preview local (2026-08-11)
+
+O dono quer continuar iterando no portfólio completo (Hero→Footer, já 100% funcional) sem que isso
+volte ao ar em produção até ele decidir explicitamente lançar. `.github/workflows/deploy.yml` builda
+e publica em **todo push pra `main`**, sem definir nenhuma env var — por isso `page.tsx` usa uma flag
+com default seguro:
+
+```tsx
+const SHOW_FULL_SITE = process.env.SHOW_FULL_SITE === "true";
+```
+
+- **Sem a var (CI, `npm run build`/`deploy` manual) → sempre Maintenance.** Não precisa mexer no
+  workflow — o default já protege produção.
+- **Localmente, `npm run dev` já mostra o site completo** — existe um `.env.development.local`
+  (não versionado, `.gitignore` cobre `.env*`) com `SHOW_FULL_SITE=true`. Next.js só carrega esse
+  arquivo em `next dev`, nunca em `next build`, então não tem como vazar pro deploy mesmo sem querer.
+- Pode commitar e dar push à vontade enquanto trabalha — o gate protege mesmo com o push automático
+  do CI.
+- **Pra lançar quando estiver pronto:** um commit removendo o `if (!SHOW_FULL_SITE)` (e o
+  import/uso de `Maintenance`) em `page.tsx`, deixando só a árvore completa.
 
 ---
 
