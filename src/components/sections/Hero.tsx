@@ -9,6 +9,8 @@ import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
 import { EASE, prefersReducedMotion } from "@/lib/motion";
 import { HERO_CODE, HERO_TECH_CHIPS, HERO_STATS } from "@/data/profile";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useIsPageVisible } from "@/hooks/useIsPageVisible";
 
 gsap.registerPlugin(SplitText);
 
@@ -28,16 +30,9 @@ const fadeUp = {
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 export default function Hero() {
   const { lang } = useLanguage();
-  const [isDesktop, setIsDesktop] = useState(false);
+  const isDesktop = useMediaQuery("(min-width: 920px)");
   const glowRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
-
-  useEffect(() => {
-    const check = () => setIsDesktop(window.innerWidth >= 920);
-    check();
-    window.addEventListener("resize", check, { passive: true });
-    return () => window.removeEventListener("resize", check);
-  }, []);
 
   /*
    * SplitText no headline — dono: GSAP (não Framer). Reveal caractere a
@@ -53,7 +48,9 @@ export default function Hero() {
         return;
       }
 
-      const split = SplitText.create(headlineRef.current, { type: "chars" });
+      const split = SplitText.create(headlineRef.current, { type: "words, chars" });
+      gsap.set(headlineRef.current, { opacity: 1 });
+      gsap.set(split.words, { whiteSpace: "nowrap" });
       gsap.from(split.chars, {
         yPercent: 110,
         opacity: 0,
@@ -352,11 +349,14 @@ function TitleBracket() {
   const { lang } = useLanguage();
   const words = lang === "pt" ? ["Desenvolvedor", "Full Stack"] : ["Developer", "Full Stack"];
   const [active, setActive] = useState(0);
+  const isVisible = useIsPageVisible();
+  const reduced = prefersReducedMotion();
 
   useEffect(() => {
+    if (!isVisible) return;
     const id = setInterval(() => setActive((i) => (i + 1) % words.length), 2400);
     return () => clearInterval(id);
-  }, [words.length]);
+  }, [words.length, isVisible]);
 
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "4px", flexWrap: "wrap" }}>
@@ -393,7 +393,7 @@ function TitleBracket() {
                 fontWeight: 700,
                 fontSize: "clamp(1rem, 1.8vw, 1.35rem)",
                 color: isActive ? "var(--color-teal-light)" : "var(--color-muted)",
-                filter: isActive ? "blur(0px)" : "blur(4px)",
+                filter: isActive || reduced ? "blur(0px)" : "blur(1.5px)",
                 transition: "filter 1.5s ease, color 0.5s ease",
                 display: "block",
                 position: "relative",
@@ -485,9 +485,16 @@ function CodeTerminal() {
   const [visible, setVisible] = useState(0);
   const [blink, setBlink] = useState(true);
   const [done, setDone] = useState(false);
+  const isPageVisible = useIsPageVisible();
+  const visibleRef = useRef(visible);
 
   useEffect(() => {
-    let i = 0;
+    visibleRef.current = visible;
+  }, [visible]);
+
+  useEffect(() => {
+    if (!isPageVisible) return;
+    let i = visibleRef.current;
     const iv = setInterval(() => {
       i++;
       setVisible(i);
@@ -501,7 +508,7 @@ function CodeTerminal() {
       clearInterval(iv);
       clearInterval(blinkIv);
     };
-  }, []);
+  }, [isPageVisible]);
 
   return (
     <div
