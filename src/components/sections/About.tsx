@@ -1,7 +1,7 @@
 "use client";
 
 import { m } from "framer-motion";
-import { memo, useRef, useCallback, useEffect, useState } from "react";
+import { memo, useRef, useCallback } from "react";
 import { Code2, Server, Smartphone, GitPullRequest, ArrowUpRight, Briefcase, Palette } from "lucide-react";
 import { useLanguage } from "@/contexts/language";
 import type { Lang } from "@/contexts/language";
@@ -10,6 +10,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { EASE, GSAP_EASE, prefersReducedMotion } from "@/lib/motion";
 import { ABOUT_STATS } from "@/data/profile";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -68,14 +69,7 @@ export default function About() {
   const bgTextRef = useRef<HTMLDivElement>(null);
   const leftPanelRef = useRef<HTMLDivElement>(null);
   const rightPanelRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth <= 768);
-    check();
-    window.addEventListener("resize", check, { passive: true });
-    return () => window.removeEventListener("resize", check);
-  }, []);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   /*
    * GSAP é dono do scroll desta seção (agent/CONTEXT.md §14 — Opção A).
