@@ -21,6 +21,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     if (saved === "en" || saved === "pt") setLang(saved);
   }, []);
 
+  useEffect(() => {
+    document.documentElement.lang = lang === "pt" ? "pt-BR" : "en";
+  }, [lang]);
+
   function toggle() {
     setLang((prev) => {
       const next: Lang = prev === "pt" ? "en" : "pt";
