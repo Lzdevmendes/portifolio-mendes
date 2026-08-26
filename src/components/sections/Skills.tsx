@@ -48,11 +48,11 @@ export default function Skills() {
         }
         @media (min-width: 900px) {
           .skills-row-1 { grid-template-columns: repeat(3, 1fr); }
-          .skills-row-2 { grid-template-columns: repeat(2, 1fr); }
+          .skills-row-2 { grid-template-columns: repeat(3, 1fr); }
         }
         @media (min-width: 1100px) {
           .skills-row-1 { grid-template-columns: repeat(4, 1fr); }
-          .skills-row-2 { grid-template-columns: repeat(4, 1fr); }
+          .skills-row-2 { grid-template-columns: repeat(3, 1fr); }
         }
         @media (max-width: 480px) {
           #skills { padding: 64px 16px !important; }
@@ -149,11 +149,11 @@ export default function Skills() {
           style={{ display: "grid", gap: "16px", marginBottom: "16px" }}
         >
           {categories.slice(0, 4).map((cat) => (
-            <CategoryCard key={cat.label} cat={cat} featured />
+            <CategoryCard key={cat.key} cat={cat} featured lang={lang} />
           ))}
         </m.div>
 
-        {/* Linha 2 — Banco de Dados, DevOps, Arquitetura, Pagamentos */}
+        {/* Linha 2 — Banco de Dados, DevOps, Arquitetura (3 categorias) */}
         <m.div
           className="skills-row-2"
           variants={containerVariants}
@@ -163,7 +163,7 @@ export default function Skills() {
           style={{ display: "grid", gap: "16px" }}
         >
           {categories.slice(4).map((cat) => (
-            <CategoryCard key={cat.label} cat={cat} />
+            <CategoryCard key={cat.key} cat={cat} lang={lang} />
           ))}
         </m.div>
       </div>
@@ -171,12 +171,12 @@ export default function Skills() {
   );
 }
 
-const CategoryCard = memo(function CategoryCard({ cat, featured = false }: { cat: SkillCategory; featured?: boolean }) {
+const CategoryCard = memo(function CategoryCard({ cat, featured = false, lang }: { cat: SkillCategory; featured?: boolean; lang: Lang }) {
   return (
     <m.div
       variants={cardVariants}
       role="region"
-      aria-label={`${cat.label} — ${cat.skills.length} tecnologias`}
+      aria-label={`${cat.label} — ${cat.skills.length} ${lang === "pt" ? "tecnologias" : "technologies"}`}
       style={{
         background: "var(--color-bg-card)",
         border: `1px solid ${featured ? `${cat.color}30` : "var(--color-border)"}`,
