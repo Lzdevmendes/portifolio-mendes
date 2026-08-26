@@ -104,7 +104,7 @@ export default function Experience() {
           {/* Entries */}
           <div style={{ display: "flex", flexDirection: "column", gap: "0", flex: 1 }}>
             {experiences.map((exp, i) => (
-              <ExperienceItem key={`${exp.company}-${exp.period}`} exp={exp} index={i} isLast={i === experiences.length - 1} currentLabel={sl.current} />
+              <ExperienceItem key={`${exp.company}-${exp.period}`} exp={exp} index={i} isLast={i === experiences.length - 1} currentLabel={sl.current} lang={lang} />
             ))}
           </div>
         </div>
@@ -119,7 +119,14 @@ export default function Experience() {
   );
 }
 
-function ExperienceItem({ exp, index, isLast, currentLabel }: { exp: Experience; index: number; isLast: boolean; currentLabel: string }) {
+function buildExperienceAriaLabel(exp: Experience, lang: Lang): string {
+  if (lang === "en") {
+    return `${exp.role} at ${exp.company}${exp.client ? ` for ${exp.client}` : ""}, ${exp.period}`;
+  }
+  return `${exp.role} na ${exp.company}${exp.client ? ` para ${exp.client}` : ""}, ${exp.period}`;
+}
+
+function ExperienceItem({ exp, index, isLast, currentLabel, lang }: { exp: Experience; index: number; isLast: boolean; currentLabel: string; lang: Lang }) {
 
   return (
     <m.div
@@ -132,7 +139,7 @@ function ExperienceItem({ exp, index, isLast, currentLabel }: { exp: Experience;
         ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
       }}
       role="article"
-      aria-label={`${exp.role} na ${exp.company}${exp.client ? ` para ${exp.client}` : ""}, ${exp.period}`}
+      aria-label={buildExperienceAriaLabel(exp, lang)}
       style={{
         display: "grid",
         gridTemplateColumns: "140px 1fr",

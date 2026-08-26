@@ -49,7 +49,7 @@ export const EXPERIENCES: Record<Lang, Experience[]> = {
       ],
     },
     {
-      period: "Mar. 2025 — Mar. 2026",
+      period: "Mai. 2025 — Mar. 2026",
       current: false,
       role: "Desenvolvedor Full Stack",
       company: "Obracon Engenharia",
@@ -106,7 +106,7 @@ export const EXPERIENCES: Record<Lang, Experience[]> = {
       ],
     },
     {
-      period: "Mar. 2025 — Mar. 2026",
+      period: "May 2025 — Mar. 2026",
       current: false,
       role: "Full Stack Developer",
       company: "Obracon Engenharia",
