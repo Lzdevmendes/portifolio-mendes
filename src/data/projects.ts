@@ -15,7 +15,7 @@ export interface Project {
   title: string;
   description: string;
   stack: string[];
-  github: string;
+  github?: string | null;
   live: string | null;
   accent: string;
   image?: string | null;
@@ -31,7 +31,7 @@ export const PROJECTS: Record<Lang, Project[]> = {
       description:
         "Gestão de infraestrutura hídrica para a Sabesp com módulos de checklist para inspeção em campo, integração com APIs de geolocalização e IoT. Arquitetura escalável com entrega end-to-end em ambiente de alta disponibilidade.",
       stack: ["Node.js", "React", ".NET", "PostgreSQL", "Docker", "Azure"],
-      github: "https://github.com/Lzdevmendes",
+      github: null,
       live: null,
       accent: "#6366F1",
       image: null,
@@ -44,7 +44,7 @@ export const PROJECTS: Record<Lang, Project[]> = {
       description:
         "Sistemas internos de gestão operacional para unidades offshore da Petrobras. Relatórios de produção em tempo real, otimização de queries SQL com 60% de redução no tempo de resposta e pipeline CI/CD com Azure DevOps.",
       stack: [".NET", "React", "SQL Server", "C#", "Azure DevOps"],
-      github: "https://github.com/Lzdevmendes",
+      github: null,
       live: null,
       accent: "#F59E0B",
       image: null,
@@ -59,7 +59,7 @@ export const PROJECTS: Record<Lang, Project[]> = {
       description:
         "Water infrastructure management system for Sabesp with field inspection checklists, geolocation and IoT API integrations. Scalable architecture with end-to-end feature delivery in high-availability environment.",
       stack: ["Node.js", "React", ".NET", "PostgreSQL", "Docker", "Azure"],
-      github: "https://github.com/Lzdevmendes",
+      github: null,
       live: null,
       accent: "#6366F1",
       image: null,
@@ -72,7 +72,7 @@ export const PROJECTS: Record<Lang, Project[]> = {
       description:
         "Internal operational management systems for Petrobras offshore units. Real-time production reports, SQL query optimization with 60% reduction in response time, and complete CI/CD pipeline with Azure DevOps.",
       stack: [".NET", "React", "SQL Server", "C#", "Azure DevOps"],
-      github: "https://github.com/Lzdevmendes",
+      github: null,
       live: null,
       accent: "#F59E0B",
       image: null,

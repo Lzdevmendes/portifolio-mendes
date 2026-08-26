@@ -1,14 +1,14 @@
 "use client";
 
 import { m, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import { Github, ExternalLink } from "lucide-react";
 import { useLanguage } from "@/contexts/language";
 import type { Lang } from "@/contexts/language";
 import { PROJECTS, type Project } from "@/data/projects";
 
 /* ─── Placeholder macOS realista — simula interface de dashboard ─── */
-function MacOSPlaceholder({ accent }: { accent: string }) {
+const MacOSPlaceholder = memo(function MacOSPlaceholder({ accent }: { accent: string }) {
   const bars = [40, 65, 45, 80, 55, 90, 70, 85, 60, 75, 95, 65];
   const menuItems = ["File", "Edit", "View", "Window"];
   const sideItems = ["Dashboard", "Analytics", "Users", "Payments", "Settings"];
@@ -146,6 +146,36 @@ function MacOSPlaceholder({ accent }: { accent: string }) {
       </div>
     </div>
   );
+});
+
+/* ─── Vídeo de projeto — play/pause por visibilidade real, isolado da animação de scroll do MacBook ─── */
+function ProjectVideo({ src }: { src: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) el.play().catch(() => {});
+        else el.pause();
+      },
+      { threshold: 0.25 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <video
+      ref={videoRef}
+      src={src}
+      muted
+      loop
+      playsInline
+      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+    />
+  );
 }
 
 /* ─── Montagem completa do MacBook — fiel ao MacBook Pro 14" ─── */
@@ -232,14 +262,7 @@ function ScrollMacBook({ project }: { project: Project }) {
                 {/* Conteúdo da tela */}
                 <div style={{ aspectRatio: "16/10", overflow: "hidden", display: "flex", position: "relative" }}>
                   {project.video ? (
-                    <video
-                      src={project.video}
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                    />
+                    <ProjectVideo src={project.video} />
                   ) : project.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -569,31 +592,33 @@ function ProjectInfoPanel({ project, lang }: { project: Project; lang: Lang }) {
 
           {/* CTAs */}
           <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-            <m.a
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.03, y: -1, borderColor: project.accent }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ duration: 0.18 }}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "7px",
-                padding: "10px 20px",
-                borderRadius: "9999px",
-                border: "1px solid rgba(255,255,255,0.12)",
-                color: "var(--color-muted)",
-                fontFamily: "var(--font-inter)",
-                fontSize: "0.8125rem",
-                fontWeight: 500,
-                textDecoration: "none",
-                transition: "border-color 0.2s",
-              }}
-            >
-              <Github size={14} />
-              GitHub
-            </m.a>
+            {project.github && (
+              <m.a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.03, y: -1, borderColor: project.accent }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ duration: 0.18 }}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "7px",
+                  padding: "10px 20px",
+                  borderRadius: "9999px",
+                  border: "1px solid rgba(255,255,255,0.12)",
+                  color: "var(--color-muted)",
+                  fontFamily: "var(--font-inter)",
+                  fontSize: "0.8125rem",
+                  fontWeight: 500,
+                  textDecoration: "none",
+                  transition: "border-color 0.2s",
+                }}
+              >
+                <Github size={14} />
+                GitHub
+              </m.a>
+            )}
             {project.live && (
               <m.a
                 href={project.live}
@@ -639,6 +664,7 @@ function ProjectSection({
 
   return (
     <section
+      className="project-section"
       style={{ position: "relative", paddingBottom: isLast ? "80px" : "0" }}
       aria-label={project.title}
     >
