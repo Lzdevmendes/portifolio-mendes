@@ -1,7 +1,6 @@
 "use client";
 
-import { m } from "framer-motion";
-import { MapPin, ArrowUp } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { useLanguage } from "@/contexts/language";
 
 export default function Footer() {
@@ -19,7 +18,6 @@ export default function Footer() {
       <style>{`
         @media (max-width: 480px) {
           .footer-bar { flex-direction: column !important; align-items: center !important; text-align: center !important; gap: 14px !important; }
-          .footer-back-top { display: none !important; }
         }
       `}</style>
 
@@ -61,31 +59,6 @@ export default function Footer() {
             Brasil
           </span>
         </div>
-
-        {/* Back to top */}
-        <m.button
-          className="footer-back-top"
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          whileHover={{ borderColor: "var(--color-teal)", color: "var(--color-teal-light)", y: -2 }}
-          whileTap={{ scale: 0.95 }}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "6px",
-            padding: "7px 16px",
-            borderRadius: "9999px",
-            border: "1px solid var(--color-border)",
-            background: "transparent",
-            color: "var(--color-muted)",
-            fontFamily: "var(--font-inter)",
-            fontSize: "0.8125rem",
-            fontWeight: 500,
-            cursor: "pointer",
-          }}
-        >
-          <ArrowUp size={12} />
-          {lang === "pt" ? "Voltar ao topo" : "Back to top"}
-        </m.button>
 
         {/* Copyright */}
         <span

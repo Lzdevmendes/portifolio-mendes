@@ -4,6 +4,7 @@ import { m, AnimatePresence } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/contexts/language";
+import { scrollToTop } from "@/lib/scroll";
 
 export default function BackToTop() {
   const { lang } = useLanguage();
@@ -34,7 +35,7 @@ export default function BackToTop() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.75, y: 12 }}
             transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            onClick={scrollToTop}
             whileHover={{ scale: 1.1, y: -3, boxShadow: "0 12px 32px rgba(13,148,136,0.3)" }}
             whileTap={{ scale: 0.92 }}
             aria-label={lang === "pt" ? "Voltar ao topo da página" : "Back to top"}
