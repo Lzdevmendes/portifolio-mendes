@@ -4,9 +4,17 @@ import { m } from "framer-motion";
 import { memo, useState } from "react";
 import { ExternalLink, Award } from "lucide-react";
 import { useLanguage } from "@/contexts/language";
-import { CERTIFICATIONS as certifications, type Certification } from "@/data/certifications";
+import type { Lang } from "@/contexts/language";
+import { CERTIFICATIONS, type Certification } from "@/data/certifications";
 
-const CERTS_T = {
+const CERTS_T: Record<Lang, {
+  label: string;
+  heading: string;
+  headingAccent: string;
+  count: (n: number) => string;
+  viewCert: string;
+  ariaPrefix: string;
+}> = {
   pt: {
     label: "Formação",
     heading: "Certificações &",
@@ -48,6 +56,7 @@ const cardVariants = {
 export default function Certifications() {
   const { lang } = useLanguage();
   const t = CERTS_T[lang];
+  const certifications = CERTIFICATIONS[lang];
 
   return (
     <section
@@ -65,6 +74,9 @@ export default function Certifications() {
         }
         @media (max-width: 480px) {
           #certifications { padding: 64px 16px !important; }
+        }
+        @media (max-width: 560px) {
+          .certs-header-desc { display: none !important; }
         }
       `}</style>
 
@@ -128,12 +140,12 @@ export default function Certifications() {
               <span style={{ color: "var(--color-teal)" }}>{t.headingAccent}</span>
             </h2>
             <p
+              className="certs-header-desc"
               style={{
                 fontFamily: "var(--font-inter)",
                 fontSize: "0.875rem",
                 color: "var(--color-muted)",
                 lineHeight: 1.6,
-                whiteSpace: "nowrap",
               }}
             >
               {t.count(certifications.length)}
@@ -197,7 +209,7 @@ export default function Certifications() {
           }}
         >
           {certifications.map((cert) => (
-            <CertCard key={cert.title} cert={cert} viewCertLabel={t.viewCert} ariaPrefix={t.ariaPrefix} />
+            <CertCard key={cert.id} cert={cert} viewCertLabel={t.viewCert} ariaPrefix={t.ariaPrefix} />
           ))}
         </m.div>
       </div>
