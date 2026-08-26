@@ -2,55 +2,31 @@
 
 import { m, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Briefcase, Code2, Home, Layers, Mail } from "lucide-react";
+import { Award, Briefcase, Code2, Home, Layers, Mail } from "lucide-react";
 import { useLanguage } from "@/contexts/language";
+import { useMostVisibleId } from "@/hooks/useSectionObserver";
 
 const NAV_ITEMS = [
-  { id: "about",      icon: Home,     pt: "Sobre",    en: "About" },
-  { id: "projects",   icon: Code2,    pt: "Projetos", en: "Projects" },
-  { id: "experience", icon: Briefcase,pt: "Exp.",     en: "Exp." },
-  { id: "skills",     icon: Layers,   pt: "Skills",   en: "Skills" },
-  { id: "contact",    icon: Mail,     pt: "Contato",  en: "Contact" },
+  { id: "about",          icon: Home,      pt: "Sobre",    en: "About" },
+  { id: "projects",       icon: Code2,     pt: "Projetos", en: "Projects" },
+  { id: "experience",     icon: Briefcase, pt: "Exp.",     en: "Exp." },
+  { id: "skills",         icon: Layers,    pt: "Skills",   en: "Skills" },
+  { id: "certifications", icon: Award,     pt: "Certs",    en: "Certs" },
+  { id: "contact",        icon: Mail,      pt: "Contato",  en: "Contact" },
 ];
+
+const NAV_IDS = NAV_ITEMS.map((i) => i.id);
 
 export default function MobileBottomNav() {
   const { lang } = useLanguage();
-  const [active, setActive] = useState("about");
   const [mounted, setMounted] = useState(false);
+  const active = useMostVisibleId(NAV_IDS, "about", { threshold: [0.2, 0.5], rootMargin: "0px 0px -20% 0px" });
 
   // Monta apenas no cliente — evita SSR mismatch e garante que matchMedia existe
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
-
-  // IntersectionObserver para marcar seção ativa
-  useEffect(() => {
-    if (!mounted) return;
-
-    const sections = NAV_ITEMS
-      .map(({ id }) => document.getElementById(id))
-      .filter(Boolean) as HTMLElement[];
-
-    if (sections.length === 0) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // Pega a seção com maior área visível
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-
-        if (visible.length > 0) {
-          setActive(visible[0].target.id);
-        }
-      },
-      { threshold: [0.2, 0.5], rootMargin: "0px 0px -20% 0px" }
-    );
-
-    sections.forEach((s) => observer.observe(s));
-    return () => observer.disconnect();
-  }, [mounted]);
 
   // Não renderiza nada no servidor — só monta no client após hidratação
   if (!mounted) return null;
@@ -62,7 +38,6 @@ export default function MobileBottomNav() {
     const offset = 80; // altura da top navbar
     const y = el.getBoundingClientRect().top + window.pageYOffset - offset;
     window.scrollTo({ top: y, behavior: "smooth" });
-    setActive(id);
   }
 
   return (

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { useLanguage } from "@/contexts/language";
+import { SECTION_IDS } from "@/lib/sections";
+import { useIntersectingIds } from "@/hooks/useSectionObserver";
 
 type DotStrength = "none" | "dim" | "bright";
 
@@ -13,7 +15,7 @@ const NAV_LABELS = {
   en: { about: "About", projects: "Projects", experience: "Experience", skills: "Skills", certs: "Certs", contact: "Contact" },
 };
 
-const NAV_HREFS = ["#about", "#projects", "#experience", "#skills", "#certifications", "#contact"] as const;
+const NAV_HREFS = SECTION_IDS.map((id) => `#${id}`);
 const NAV_KEYS = ["about", "projects", "experience", "skills", "certs", "contact"] as const;
 
 export default function Navbar() {
@@ -27,8 +29,8 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
   // Two independent sets: "nearby" (section visible anywhere) and "active" (center of viewport)
-  const [nearby, setNearby] = useState<Set<string>>(new Set(["about"]));
-  const [active, setActive] = useState<Set<string>>(new Set(["about"]));
+  const nearby = useIntersectingIds(SECTION_IDS, { rootMargin: "-5% 0px -5% 0px" });
+  const active = useIntersectingIds(SECTION_IDS, { rootMargin: "-40% 0px -40% 0px" });
 
   // Scroll progress bar
   const { scrollYProgress } = useScroll();
@@ -42,53 +44,6 @@ export default function Navbar() {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const ids = ["about", "projects", "experience", "skills", "certifications", "contact"];
-
-    // "Nearby" → section visible in the broad middle 90% of the viewport → dot dim
-    const nearbyObs = new IntersectionObserver(
-      (entries) => {
-        setNearby((prev) => {
-          const next = new Set(prev);
-          entries.forEach((e) => {
-            if (e.isIntersecting) next.add(e.target.id);
-            else next.delete(e.target.id);
-          });
-          return next;
-        });
-      },
-      { rootMargin: "-5% 0px -5% 0px" }
-    );
-
-    // "Active" → section reaches the center 20% of the viewport → dot bright
-    const activeObs = new IntersectionObserver(
-      (entries) => {
-        setActive((prev) => {
-          const next = new Set(prev);
-          entries.forEach((e) => {
-            if (e.isIntersecting) next.add(e.target.id);
-            else next.delete(e.target.id);
-          });
-          return next;
-        });
-      },
-      { rootMargin: "-40% 0px -40% 0px" }
-    );
-
-    ids.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) {
-        nearbyObs.observe(el);
-        activeObs.observe(el);
-      }
-    });
-
-    return () => {
-      nearbyObs.disconnect();
-      activeObs.disconnect();
-    };
   }, []);
 
   function getStrength(sectionId: string): DotStrength {
@@ -224,7 +179,13 @@ export default function Navbar() {
             display: "none",
           }}
           className="show-mobile"
-          aria-label={lang === "pt" ? "Abrir menu" : "Open menu"}
+          aria-expanded={isOpen}
+          aria-controls="mobile-menu"
+          aria-label={
+            isOpen
+              ? lang === "pt" ? "Fechar menu" : "Close menu"
+              : lang === "pt" ? "Abrir menu" : "Open menu"
+          }
         >
           <AnimatePresence mode="wait" initial={false}>
             <m.span
@@ -245,6 +206,7 @@ export default function Navbar() {
       <AnimatePresence>
         {isOpen && (
           <m.div
+            id="mobile-menu"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
