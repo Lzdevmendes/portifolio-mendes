@@ -50,12 +50,12 @@ export interface HeroStat {
 
 export const HERO_STATS: Record<Lang, HeroStat[]> = {
   pt: [
-    { end: 2, decimals: 0, prefix: "", suffix: "+", label: "Anos de experiência" },
+    { end: 1, decimals: 0, prefix: "", suffix: "+", label: "Ano de experiência" },
     { end: 90, decimals: 0, prefix: "", suffix: "+", label: "Pontos de interesse mapeados" },
     { end: 2, decimals: 0, prefix: "", suffix: "", label: "Grandes clientes" },
   ],
   en: [
-    { end: 2, decimals: 0, prefix: "", suffix: "+", label: "Years of experience" },
+    { end: 1, decimals: 0, prefix: "", suffix: "+", label: "Years of experience" },
     { end: 90, decimals: 0, prefix: "", suffix: "+", label: "Points of interest mapped" },
     { end: 2, decimals: 0, prefix: "", suffix: "", label: "Major clients" },
   ],
