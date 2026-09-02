@@ -14,7 +14,7 @@ export default async function Projects() {
         margin: "0 auto",
       }}
     >
-      <ProjectsHeader />
+      <ProjectsHeader count={repos.length} />
       <ProjectsGrid repos={repos} />
     </section>
   );

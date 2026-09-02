@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, useMotionValue, useSpring } from "framer-motion";
-import { Star, ExternalLink, ArrowUpRight } from "lucide-react";
-import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, ExternalLink, Star } from "lucide-react";
+import { useState } from "react";
 import type { GithubRepo } from "@/lib/github";
 
 const LANG_COLORS: Record<string, string> = {
@@ -19,26 +19,122 @@ const LANG_COLORS: Record<string, string> = {
   Dart: "#00B4AB",
 };
 
-export default function ProjectsGrid({ repos }: { repos: GithubRepo[] }) {
-  const [isTouch, setIsTouch] = useState(false);
+function formatDate(iso: string) {
+  return new Date(iso)
+    .toLocaleDateString("pt-BR", { month: "short", year: "numeric" })
+    .replace(".", "");
+}
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsTouch(window.matchMedia("(pointer: coarse)").matches);
-  }, []);
+export default function ProjectsGrid({ repos }: { repos: GithubRepo[] }) {
+  const [openId, setOpenId] = useState<number | null>(repos[0]?.id ?? null);
 
   return (
     <>
       <style>{`
-        .projects-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
-          gap: 16px;
+        .pf-list { border-top: 1px solid var(--color-border); }
+        .pf-row-header {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          padding: 26px 4px;
         }
-        @media (max-width: 480px) {
-          .projects-grid { gap: 12px; }
+        .pf-row-click {
+          display: flex;
+          align-items: baseline;
+          gap: 20px;
+          flex: 1;
+          min-width: 0;
+          background: transparent;
+          border: none;
+          text-align: left;
+          cursor: pointer;
+          padding: 0;
+        }
+        .pf-index {
+          font-family: var(--font-inter);
+          font-size: 0.75rem;
+          color: var(--color-muted);
+          flex-shrink: 0;
+          width: 22px;
+        }
+        .pf-title {
+          font-family: var(--font-syne);
+          font-weight: 700;
+          font-size: clamp(1.375rem, 3.4vw, 2.25rem);
+          letter-spacing: -0.02em;
+          color: var(--color-text);
+          text-transform: capitalize;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          transition: color 0.2s;
+        }
+        .pf-row-click:hover .pf-title { color: var(--color-teal-light); }
+        .pf-meta {
+          font-family: var(--font-inter);
+          font-size: 0.75rem;
+          color: var(--color-muted);
+          flex-shrink: 0;
+          display: none;
+        }
+        .pf-actions {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex-shrink: 0;
+        }
+        .pf-live {
+          font-family: var(--font-inter);
+          font-size: 0.75rem;
+          font-weight: 500;
+          padding: 8px 16px;
+          border-radius: 9999px;
+          border: 1px solid var(--color-border);
+          color: var(--color-muted);
+          white-space: nowrap;
+          transition: border-color 0.2s, color 0.2s;
+          display: none;
+        }
+        .pf-live:hover { border-color: var(--color-teal); color: var(--color-teal-light); }
+        .pf-expand-btn {
+          width: 32px;
+          height: 32px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 8px;
+          border: 1px solid var(--color-border);
+          background: transparent;
+          color: var(--color-muted);
+          cursor: pointer;
+          transition: border-color 0.2s, color 0.2s;
+        }
+        .pf-expand-btn:hover { border-color: var(--color-teal); color: var(--color-teal-light); }
+        .pf-panel-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 24px;
+          margin-top: 28px;
+        }
+        .pf-eyebrow {
+          font-family: var(--font-inter);
+          font-size: 0.6875rem;
+          font-weight: 600;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: var(--color-teal);
+          margin-bottom: 10px;
+        }
+        .pf-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        @media (min-width: 640px) {
+          .pf-meta { display: block; }
+          .pf-live { display: inline-flex; align-items: center; gap: 6px; }
+        }
+        @media (min-width: 860px) {
+          .pf-panel-grid { grid-template-columns: 1.4fr 1fr 1fr; gap: 40px; }
         }
       `}</style>
+
       {repos.length === 0 ? (
         <div
           style={{
@@ -66,13 +162,20 @@ export default function ProjectsGrid({ repos }: { repos: GithubRepo[] }) {
           </a>
         </div>
       ) : (
-        <div className="projects-grid">
+        <div className="pf-list">
           {repos.map((repo, i) => (
-            <ProjectCard key={repo.id} repo={repo} index={i} isTouch={isTouch} />
+            <ProjectRow
+              key={repo.id}
+              repo={repo}
+              index={i}
+              isOpen={openId === repo.id}
+              onToggle={() =>
+                setOpenId((cur) => (cur === repo.id ? null : repo.id))
+              }
+            />
           ))}
         </div>
       )}
-
 
       {/* Bottom CTA */}
       <motion.div
@@ -81,7 +184,7 @@ export default function ProjectsGrid({ repos }: { repos: GithubRepo[] }) {
         viewport={{ once: true }}
         transition={{ duration: 0.5, delay: 0.2 }}
         style={{
-          marginTop: "56px",
+          marginTop: "40px",
           display: "flex",
           justifyContent: "center",
         }}
@@ -115,103 +218,60 @@ export default function ProjectsGrid({ repos }: { repos: GithubRepo[] }) {
           }}
         >
           Ver todos os repositórios
-          <ArrowUpRight size={14} />
+          <ExternalLink size={14} />
         </a>
       </motion.div>
     </>
   );
 }
 
-function ProjectCard({ repo, index, isTouch }: { repo: GithubRepo; index: number; isTouch: boolean }) {
+function ProjectRow({
+  repo,
+  index,
+  isOpen,
+  onToggle,
+}: {
+  repo: GithubRepo;
+  index: number;
+  isOpen: boolean;
+  onToggle: () => void;
+}) {
   const langColor = repo.language ? (LANG_COLORS[repo.language] ?? "#555") : null;
-  const colDelay = (index % 3) * 0.08;
-
-  // 3-D tilt
-  const rotX = useMotionValue(0);
-  const rotY = useMotionValue(0);
-  const springRotX = useSpring(rotX, { stiffness: 200, damping: 22 });
-  const springRotY = useSpring(rotY, { stiffness: 200, damping: 22 });
-
-  function onTiltMove(e: React.MouseEvent<HTMLElement>) {
-    if (isTouch) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    rotX.set(((e.clientY - cy) / (rect.height / 2)) * -5);
-    rotY.set(((e.clientX - cx) / (rect.width / 2)) * 5);
-  }
-
-  function onTiltEnd(e: React.MouseEvent<HTMLElement>) {
-    rotX.set(0);
-    rotY.set(0);
-    (e.currentTarget as HTMLElement).style.borderColor = "var(--color-border)";
-  }
+  const [imgError, setImgError] = useState(false);
+  const ogImage = `https://opengraph.githubassets.com/1/${repo.full_name}`;
+  const liveHref = repo.homepage || repo.html_url;
+  const liveLabel = repo.homepage ? "Live site" : "Ver código";
 
   return (
-    <motion.article
-      onMouseMove={isTouch ? undefined : onTiltMove}
-      onMouseLeave={isTouch ? undefined : onTiltEnd}
-      whileTap={isTouch ? { scale: 0.97, borderColor: "rgba(13,148,136,0.5)" } : undefined}
-      initial={{ opacity: 0, y: 28 }}
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{
-        duration: 0.55,
-        delay: colDelay,
-        ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
-      }}
-      style={{
-        background: "var(--color-bg-card)",
-        border: "1px solid var(--color-border)",
-        borderRadius: "16px",
-        padding: "24px",
-        display: "flex",
-        flexDirection: "column",
-        gap: "12px",
-        position: "relative",
-        overflow: "hidden",
-        transition: "border-color 0.25s",
-        cursor: "default",
-        transformPerspective: 800,
-        rotateX: springRotX,
-        rotateY: springRotY,
-      }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.borderColor =
-          "rgba(13,148,136,0.4)";
-      }}
+      transition={{ duration: 0.45, delay: Math.min(index, 6) * 0.04 }}
+      style={{ borderBottom: "1px solid var(--color-border)" }}
     >
-      {/* Header row */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          gap: "12px",
-        }}
-      >
-        <h3
-          style={{
-            fontFamily: "var(--font-syne)",
-            fontWeight: 700,
-            fontSize: "0.9375rem",
-            color: "var(--color-text)",
-            letterSpacing: "-0.01em",
-            lineHeight: 1.3,
-            textTransform: "capitalize",
-          }}
-        >
-          {repo.name.replace(/-/g, " ")}
-        </h3>
-
+      <div className="pf-row-header">
         <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            flexShrink: 0,
+          className="pf-row-click"
+          role="button"
+          tabIndex={0}
+          aria-expanded={isOpen}
+          onClick={onToggle}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              onToggle();
+            }
           }}
         >
+          <span className="pf-index">{String(index + 1).padStart(2, "0")}</span>
+          <span className="pf-title">{repo.name.replace(/-/g, " ")}</span>
+          <span className="pf-meta">
+            {repo.language ?? "—"} · atualizado {formatDate(repo.updated_at)}
+          </span>
+        </div>
+
+        <div className="pf-actions">
           {repo.stargazers_count > 0 && (
             <span
               style={{
@@ -227,138 +287,186 @@ function ProjectCard({ repo, index, isTouch }: { repo: GithubRepo; index: number
               {repo.stargazers_count}
             </span>
           )}
-        </div>
-      </div>
-
-      {/* Description */}
-      <p
-        style={{
-          fontFamily: "var(--font-inter)",
-          fontSize: "0.8125rem",
-          color: "var(--color-muted)",
-          lineHeight: 1.65,
-          flex: 1,
-          display: "-webkit-box",
-          WebkitLineClamp: 3,
-          WebkitBoxOrient: "vertical",
-          overflow: "hidden",
-        }}
-      >
-        {repo.description ?? "Repositório sem descrição."}
-      </p>
-
-      {/* Topics */}
-      {repo.topics && repo.topics.length > 0 && (
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-          {repo.topics.slice(0, 3).map((topic) => (
-            <span
-              key={topic}
-              style={{
-                fontFamily: "var(--font-inter)",
-                fontSize: "0.6875rem",
-                color: "var(--color-teal)",
-                background: "rgba(13,148,136,0.08)",
-                border: "1px solid rgba(13,148,136,0.2)",
-                borderRadius: "4px",
-                padding: "2px 8px",
-                letterSpacing: "0.02em",
-              }}
-            >
-              {topic}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* Footer row */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          paddingTop: "12px",
-          borderTop: "1px solid var(--color-border)",
-          marginTop: "4px",
-        }}
-      >
-        {/* Language */}
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          {langColor && (
-            <span
-              style={{
-                width: "8px",
-                height: "8px",
-                borderRadius: "50%",
-                background: langColor,
-                flexShrink: 0,
-                boxShadow: `0 0 6px ${langColor}80`,
-              }}
-            />
-          )}
-          <span
-            style={{
-              fontFamily: "var(--font-inter)",
-              fontSize: "0.75rem",
-              color: "var(--color-muted)",
-            }}
+          <a
+            className="pf-live"
+            href={liveHref}
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            {repo.language ?? "—"}
-          </span>
-        </div>
-
-        {/* Links */}
-        <div style={{ display: "flex", gap: "8px" }}>
-          <IconLink href={repo.html_url} label="Código no GitHub">
-            <GitHubSvg />
-          </IconLink>
-          {repo.homepage && (
-            <IconLink href={repo.homepage} label="Ver projeto">
-              <ExternalLink size={13} />
-            </IconLink>
-          )}
+            {liveLabel}
+          </a>
+          <button
+            type="button"
+            className="pf-expand-btn"
+            aria-label={isOpen ? "Recolher projeto" : "Expandir projeto"}
+            aria-expanded={isOpen}
+            onClick={onToggle}
+          >
+            <motion.span
+              animate={{ rotate: isOpen ? 180 : 0 }}
+              transition={{ duration: 0.25 }}
+              style={{ display: "inline-flex" }}
+            >
+              <ChevronDown size={16} />
+            </motion.span>
+          </button>
         </div>
       </div>
-    </motion.article>
+
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+            style={{ overflow: "hidden" }}
+          >
+            <div style={{ padding: "4px 4px 36px" }}>
+              <div
+                style={{
+                  position: "relative",
+                  width: "100%",
+                  aspectRatio: "16 / 8",
+                  borderRadius: "16px",
+                  overflow: "hidden",
+                  border: "1px solid var(--color-border)",
+                  background: langColor
+                    ? `linear-gradient(135deg, ${langColor}22, var(--color-bg-card))`
+                    : "var(--color-bg-card)",
+                }}
+              >
+                {!imgError ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={ogImage}
+                    alt={`Preview de ${repo.name}`}
+                    onError={() => setImgError(true)}
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "100%",
+                      height: "100%",
+                      fontFamily: "var(--font-syne)",
+                      fontSize: "clamp(2.5rem, 8vw, 4.5rem)",
+                      fontWeight: 800,
+                      color: langColor ?? "var(--color-teal)",
+                      opacity: 0.4,
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {repo.name.slice(0, 2)}
+                  </div>
+                )}
+              </div>
+
+              <div className="pf-panel-grid">
+                <div>
+                  <h4 className="pf-eyebrow">Sobre</h4>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-inter)",
+                      fontSize: "0.9375rem",
+                      lineHeight: 1.7,
+                      color: "var(--color-text)",
+                    }}
+                  >
+                    {repo.description ?? "Repositório sem descrição."}
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="pf-eyebrow">Stack</h4>
+                  <div className="pf-tags">
+                    {repo.language && (
+                      <Tag>
+                        {langColor && (
+                          <span
+                            style={{
+                              width: 7,
+                              height: 7,
+                              borderRadius: "50%",
+                              background: langColor,
+                              display: "inline-block",
+                              marginRight: 6,
+                            }}
+                          />
+                        )}
+                        {repo.language}
+                      </Tag>
+                    )}
+                    {repo.topics?.map((topic) => <Tag key={topic}>{topic}</Tag>)}
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="pf-eyebrow">Links</h4>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                    <MetaLink href={repo.html_url}>
+                      <GitHubSvg /> Código no GitHub
+                    </MetaLink>
+                    {repo.homepage && (
+                      <MetaLink href={repo.homepage}>
+                        <ExternalLink size={13} /> Ver site ao vivo
+                      </MetaLink>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }
 
-function IconLink({
-  href,
-  label,
-  children,
-}: {
-  href: string;
-  label: string;
-  children: React.ReactNode;
-}) {
+function Tag({ children }: { children: React.ReactNode }) {
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        fontFamily: "var(--font-inter)",
+        fontSize: "0.6875rem",
+        color: "var(--color-teal-light)",
+        background: "rgba(13,148,136,0.08)",
+        border: "1px solid rgba(13,148,136,0.2)",
+        borderRadius: "4px",
+        padding: "3px 9px",
+        letterSpacing: "0.02em",
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+
+function MetaLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={label}
       style={{
         display: "inline-flex",
         alignItems: "center",
-        justifyContent: "center",
-        width: "28px",
-        height: "28px",
-        borderRadius: "8px",
-        border: "1px solid var(--color-border)",
+        gap: "8px",
+        fontFamily: "var(--font-inter)",
+        fontSize: "0.8125rem",
         color: "var(--color-muted)",
-        transition: "border-color 0.2s, color 0.2s, background 0.2s",
+        transition: "color 0.2s",
       }}
       onMouseEnter={(e) => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.borderColor = "var(--color-teal)";
-        el.style.color = "var(--color-teal-light)";
-        el.style.background = "rgba(13,148,136,0.08)";
+        (e.currentTarget as HTMLElement).style.color = "var(--color-teal-light)";
       }}
       onMouseLeave={(e) => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.borderColor = "var(--color-border)";
-        el.style.color = "var(--color-muted)";
-        el.style.background = "transparent";
+        (e.currentTarget as HTMLElement).style.color = "var(--color-muted)";
       }}
     >
       {children}

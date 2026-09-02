@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
-export default function ProjectsHeader() {
+export default function ProjectsHeader({ count }: { count?: number }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -55,6 +55,20 @@ export default function ProjectsHeader() {
         >
           Trabalhos{" "}
           <span style={{ color: "var(--color-teal)" }}>Recentes</span>
+          {typeof count === "number" && count > 0 && (
+            <span
+              style={{
+                fontFamily: "var(--font-inter)",
+                fontWeight: 500,
+                fontSize: "0.5em",
+                color: "var(--color-muted)",
+                marginLeft: "12px",
+                verticalAlign: "middle",
+              }}
+            >
+              ({count})
+            </span>
+          )}
         </motion.h2>
 
         <motion.a
