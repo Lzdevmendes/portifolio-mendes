@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Syne } from "next/font/google";
+import { basePath } from "@/lib/base-path";
 import "./globals.css";
 
 const inter = Inter({
@@ -17,8 +18,8 @@ const syne = Syne({
 
 export const metadata: Metadata = {
   icons: {
-    icon: "/favicon.png",
-    apple: "/favicon.png",
+    icon: `${basePath}/favicon.png`,
+    apple: `${basePath}/favicon.png`,
   },
   title: "Luiz Mendes — Desenvolvedor Fullstack JR / Pleno",
   description:
